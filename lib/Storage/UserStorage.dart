@@ -72,7 +72,7 @@ class UserStorage {
     if (res.statusCode == 200) {
       final resBody = json.decode(res.body);
       await saveUserInfo(resBody['data']['user']);
-
+      print('token: ' + (token ?? ''));
       return true;
     }
 
@@ -141,6 +141,7 @@ class UserStorage {
         .where((role) => roleStrings.contains(role.name))
         .toList();
   }
+
 //TODO не верно1!!!!
   /// Проверка, есть ли у пользователя одна из указанных ролей
   static Future<bool> whereInRole(List<UserRole> roles) async {

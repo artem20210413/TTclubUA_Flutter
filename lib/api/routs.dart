@@ -14,3 +14,6 @@ const URL_LOGOUT = '${_HOST}/api/logout';
 const URL_USER = '${_HOST}/api/user';
 
 const URL_CITIES = '${_HOST}/api/cities';
+
+const URL_MODELS = '${_HOST}/api/models';
+const URL_GENES = '${_HOST}/api/genes';

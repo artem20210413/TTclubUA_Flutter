@@ -34,6 +34,7 @@ dependencies:
   http: ^0.13.3
   shared_preferences: ^2.0.11
   local_auth: ^2.1.0  # Используйте актуальную версию плагина
+  dio: ^5.4.0
 
 
 
