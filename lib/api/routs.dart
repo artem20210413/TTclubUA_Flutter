@@ -12,6 +12,7 @@ Map<String, String> HEADERS([String? token = null]) {
 const URL_LOGIN = '${_HOST}/api/login';
 const URL_LOGOUT = '${_HOST}/api/logout';
 const URL_USER = '${_HOST}/api/user';
+const URL_CHANGE_PASSWORD = '${_HOST}/api/change-password';
 
 const URL_CITIES = '${_HOST}/api/cities';
 

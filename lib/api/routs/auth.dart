@@ -1,6 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:tt_club_ua/api/routs.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import '../../Storage/Auth/ChangePasswordDto.dart';
 
 // Map<String, String> _headers([String? token = null]) {
 //   return {
@@ -41,5 +44,17 @@ Future API_AUTH_CHECK(String? token) async {
   print(URL_USER);
   final response = await http.get(Uri.parse(URL_USER), headers: HEADERS(token));
   // return response.statusCode == 200;
+  return response;
+}
+
+Future<http.Response> API_CHANGE_PASSWORD(
+    String? token, ChangePasswordDto dto) async {
+  final response = await http.post(
+    Uri.parse(URL_CHANGE_PASSWORD),
+    headers: HEADERS(token),
+    body: jsonEncode(dto.toJson()),
+  );
+  print(jsonDecode(response.body));
+
   return response;
 }
