@@ -90,5 +90,26 @@ Widget customBuildDatePickerField(
   );
 }
 
+Widget customBuildPasswordField({
+  required String label,
+  required TextEditingController controller,
+  required bool obscureText,
+  required VoidCallback toggleObscure,
+  required String? Function(String?) validator, // Валидатор
+}) {
+  return TextFormField(
+    controller: controller,
+    decoration: InputDecoration(
+      labelText: label,
+      suffixIcon: IconButton(
+        icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
+        onPressed: toggleObscure,
+      ),
+    ),
+    obscureText: obscureText,
+    validator: validator, // Переданный валидатор
+  );
+}
+
 final customValidatorDefault = (value) =>
 value == null || value.isEmpty ? 'This field is required' : null;
