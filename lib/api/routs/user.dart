@@ -12,8 +12,16 @@ Future<http.Response> UPLOAD_USER(String? token, UserDTO user) async {
     headers: HEADERS(token),
     body: jsonEncode(user.toJson()),
   );
-//   print('Response status: ${response.statusCode}');
-//   print('Response body: ${jsonDecode(response.body)}');
+
+  return response;
+}
+
+Future<http.Response> SEARCH_USER(String? token, String search) async {
+
+  final response =
+      await http.get(Uri.parse(URL_SEARCH_USER + search), headers: HEADERS(token));
+  // print('Response status: ${response.statusCode}');
+  // print('Response body: ${jsonDecode(response.body)}');
 
   return response;
 }
