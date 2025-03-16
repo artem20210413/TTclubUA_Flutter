@@ -4,6 +4,7 @@ import 'package:tt_club_ua/components/CustomAppBar.dart';
 import 'package:tt_club_ua/components/generalModule.dart';
 import 'package:tt_club_ua/pages/Nav/Home.dart';
 import 'package:tt_club_ua/pages/Nav/Admin.dart';
+import 'package:tt_club_ua/pages/Nav/Mention.dart';
 import 'package:tt_club_ua/pages/Nav/User.dart';
 
 class Nav extends StatefulWidget {
@@ -79,6 +80,7 @@ class _NavState extends State<Nav> {
     setState(() {
       _screens = [
         const Home(),
+        const Mention(),
         if (_isAdmin) const Admin(),
         const User(),
       ];
@@ -86,7 +88,11 @@ class _NavState extends State<Nav> {
       _screensItems = [
         const BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          label: 'Home',
+          label: 'Головна',
+        ),
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.search),
+          label: 'Пошук авто',
         ),
         if (_isAdmin)
           const BottomNavigationBarItem(
@@ -94,11 +100,11 @@ class _NavState extends State<Nav> {
               Icons.admin_panel_settings,
               // color: Colors.lightBlueAccent,
             ),
-            label: 'Admin',
+            label: 'Адмін',
           ),
         const BottomNavigationBarItem(
           icon: Icon(Icons.person),
-          label: 'Profile',
+          label: 'Профіль',
         ),
       ];
     });

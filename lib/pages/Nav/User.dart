@@ -99,7 +99,7 @@ class _UserState extends State<User> {
       if (isSuccess) {
         UserStorage.saveUserInfo(json.decode(res.body)['data']['user']);
         MessageModule(
-            context, 'Profile updated successfully!', MessageType.success);
+            context, 'Профіль успішно оновлено!', MessageType.success);
       }
     }
   }
@@ -113,7 +113,30 @@ class _UserState extends State<User> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: _isLoading
-          ? CenterLoadingModule
+          ? Column(
+              children: [
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        _logout();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey,
+                      ),
+                      child: const Text(
+                        'Вихід',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    Spacer(),
+                  ],
+                ),
+                Spacer(),
+                CenterLoadingModule,
+                Spacer(),
+              ],
+            )
           : Form(
               key: _formKey,
               child: SingleChildScrollView(

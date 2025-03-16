@@ -83,7 +83,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                             EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         child: ListTile(
                           leading:  CircleAvatar(
-                            radius: 50,
+                            // radius: 50,
                             backgroundImage: dto.profileImage,
                           ),
                           title: Text(

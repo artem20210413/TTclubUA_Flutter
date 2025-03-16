@@ -48,8 +48,4 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Future<void> _logout() async {
-    await UserStorage.clearUserInfo();
-    Navigator.pushReplacementNamed(context, '/login');
-  }
 }

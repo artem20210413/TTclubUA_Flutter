@@ -15,6 +15,9 @@ const URL_USER = '${_HOST}/api/user';
 const URL_CHANGE_PASSWORD = '${_HOST}/api/change-password';
 const URL_SEARCH_USER = '${_HOST}/api/user/search/';
 
+const URL_SEARCH_CAR = '${_HOST}/api/car/search/';
+const URL_MENTION_CAR= '${_HOST}/api/mention/car/';
+
 const URL_CITIES = '${_HOST}/api/cities';
 
 const URL_MODELS = '${_HOST}/api/models';

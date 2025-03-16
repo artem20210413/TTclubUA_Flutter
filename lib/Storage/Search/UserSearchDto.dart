@@ -39,7 +39,7 @@ class UserSearchDto {
         //     : null,
         clubEntryDateText = json["club_entry_date"] ?? "Не вказано",
         occupationDescription = json['occupation_description'] ?? "Не вказано",
-        name = json['name'] ?? "Не вказано",
+        name = json['name'] ?? "Ім'я невідоме",
         profileImage = json["profile_image"] != null
             ? NetworkImage(json["profile_image"])
             : null,
@@ -47,14 +47,11 @@ class UserSearchDto {
             ? json["cars"].map((c) {
                 final gene = c["gene"]?["name"] ?? "Марка невідома";
                 final model = c["model"]?["name"] ?? "Модель невідома";
-                final plate =
-                    c["personalized_license_plate"]?.isNotEmpty == true
-                        ? c["personalized_license_plate"]
-                        : c["license_plate"] ?? "Номер невідомий";
-                return "$gene $model ($plate)";
+                final plate = c["general_license_plate"] ?? "Номер невідомий";
+                return "$model $gene ($plate)";
               }).join(" | ")
             : "Авто не вказано",
         citiesText = (json["cities"] != null && json["cities"].isNotEmpty)
             ? json["cities"].map((c) => c["name"]).join(", ")
-            : "Не вказано";
+            : "Міста не вказані";
 }
