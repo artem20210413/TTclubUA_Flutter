@@ -1,0 +1,2 @@
+D:/Work/Projects/TT/app/TTclubUA_Flutter/android/app/.cxx/RelWithDebInfo/41121v96/x86/CMakeFiles/edit_cache.dir
+D:/Work/Projects/TT/app/TTclubUA_Flutter/android/app/.cxx/RelWithDebInfo/41121v96/x86/CMakeFiles/rebuild_cache.dir

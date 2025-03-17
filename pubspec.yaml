@@ -36,6 +36,7 @@ dependencies:
   local_auth: ^2.1.0  # Используйте актуальную версию плагина
   dio: ^5.4.0
   image_picker: ^1.0.0
+  flutter_launcher_icons: ^0.13.1
 
 
 
@@ -56,6 +57,11 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.png"
 
 # The following section is specific to Flutter packages.
 flutter:
