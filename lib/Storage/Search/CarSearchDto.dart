@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:tt_club_ua/Storage/Search/ImageUrlDto.dart';
 import 'package:tt_club_ua/Storage/Search/UserSearchDto.dart';
 import 'package:tt_club_ua/config/default.dart';
 
@@ -16,7 +17,7 @@ class CarSearchDto {
   String geneName;
   UserSearchDto user;
   String modelName;
-  List<NetworkImage> images;
+  List<ImageUrlDto> images;
 
   // DateTime? birthDate;
   // String clubEntryDateText;
@@ -42,7 +43,7 @@ class CarSearchDto {
         geneName = json['gene']['name'] ?? "Не вказано",
         modelName = json['model']['name'] ?? "Не вказано",
         images = (json["imageUrls"] as List)
-            .map((url) => NetworkImage(url))
+            .map((img) => ImageUrlDto.fromJson(img))
             .toList(),
-        user =  UserSearchDto.fromJson(json['user'] ?? {});
+        user = UserSearchDto.fromJson(json['user'] ?? {});
 }

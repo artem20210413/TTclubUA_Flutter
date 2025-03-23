@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:tt_club_ua/Storage/UserDto.dart';
 import 'package:tt_club_ua/Storage/UserStorage.dart';
@@ -23,6 +26,7 @@ class User extends StatefulWidget {
 
 class _UserState extends State<User> {
   final _formKey = GlobalKey<FormState>();
+  final ImagePicker _picker = ImagePicker();
   bool _isLoading = true;
   UserDTO _userDTO = UserDTO();
   List<CityDTO> _cities = [];
@@ -109,6 +113,24 @@ class _UserState extends State<User> {
     Navigator.pushReplacementNamed(context, '/login');
   }
 
+  Future<void> _pickAndUploadImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+
+      final token = await UserStorage.getToken();
+      final res = await UPLOAD_USER_PHOTO(token, imageFile.path);
+      bool isSuccess = await CHECK_API(res, context);
+      if (isSuccess) {
+        var newImageUrl = jsonDecode(res.body)['data']['profile_image'];
+        setState(() {
+          userProfileImage = newImageUrl;
+        });
+      }
+    }
+  }
+
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -142,12 +164,38 @@ class _UserState extends State<User> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // Фото профиля
-                    CircleAvatar(
-                      radius: 70,
-                      backgroundImage: NetworkImage(userProfileImage),
-                      backgroundColor: Colors.grey[200],
+                    GestureDetector(
+                      onTap: _pickAndUploadImage,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 70,
+                            backgroundImage: NetworkImage(userProfileImage),
+                            backgroundColor: Colors.grey[200],
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: CircleAvatar(
+                              radius: 15,
+                              backgroundColor: Colors.black87,
+                              child: const Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                    // Фото профиля
+                    // CircleAvatar(
+                    //   radius: 70,
+                    //   backgroundImage: NetworkImage(userProfileImage),
+                    //   backgroundColor: Colors.grey[200],
+                    // ),
                     const SizedBox(height: 16),
 
                     // Имя пользователя
@@ -161,23 +209,23 @@ class _UserState extends State<User> {
                     const SizedBox(height: 8),
 
                     customBuildTextField(
-                        'Name', _nameController, customValidatorDefault),
+                        'Name', _nameController, customValidatorDefault, isEditable: false),
                     customBuildTextField(
                         'Email', _emailController, customValidatorDefault,
-                        keyboardType: TextInputType.emailAddress),
+                        keyboardType: TextInputType.emailAddress,  isEditable: false),
                     customBuildPhoneField('Phone number', _phoneController,
                         isEditable: false),
                     customBuildTextField(
-                        'Instagram', _instagramController, null),
-                    customBuildTextField('Telegram', _telegramController, null),
+                        'Instagram', _instagramController, null,  isEditable: false),
+                    customBuildTextField('Telegram', _telegramController, null,  isEditable: false),
                     customBuildDatePickerField(
-                        'Birth Date', _birthDateController, context),
+                        'Birth Date', _birthDateController, context, isEditable: false),
                     customBuildDatePickerField(
                         'Club Entry Date', _clubEntryDateController, context,
                         isEditable: false),
                     customBuildTextField('Occupation', _occupationController,
                         customValidatorDefault,
-                        maxLines: 5),
+                        maxLines: 5,  isEditable: true),
                     const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

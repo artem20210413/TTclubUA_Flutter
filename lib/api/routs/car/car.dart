@@ -66,8 +66,8 @@ Future<http.Response> SEND_MENTION(
     reasonPhrase: streamedResponse.reasonPhrase,
   );
 
-  print('Response status: ${res.statusCode}');
-  print('Response body: ${jsonDecode(res.body)}');
+  // print('Response status: ${res.statusCode}');
+  // print('Response body: ${jsonDecode(res.body)}');
 
   return res;
 }

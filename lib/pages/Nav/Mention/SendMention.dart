@@ -67,8 +67,11 @@ class _SendMentionScreenState extends State<SendMentionScreen> {
             borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             child: Image(
               image: widget.dto.images.isNotEmpty
-                  ? widget.dto.images.first
+                  ? widget.dto.images.first.networkImage
                   : NetworkImage(CAR_IMAGE_DEFAULT) as ImageProvider,
+              // image: widget.dto.images.isNotEmpty
+              //     ? widget.dto.images.first
+              //     : NetworkImage(CAR_IMAGE_DEFAULT) as ImageProvider,
               height: 180,
               width: double.infinity,
               fit: BoxFit.cover,

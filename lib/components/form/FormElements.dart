@@ -10,7 +10,7 @@ import 'package:tt_club_ua/config/default.dart';
 
 Widget customBuildTextField(
     String label, TextEditingController controller, dynamic validator,
-    {TextInputType keyboardType = TextInputType.text, int maxLines = 1}) {
+    {TextInputType keyboardType = TextInputType.text, int maxLines = 1, bool isEditable = true}) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),
     child: TextFormField(
@@ -26,6 +26,7 @@ Widget customBuildTextField(
       keyboardType: keyboardType,
       validator: validator,
       maxLines: maxLines, // Количество строк
+      readOnly: !isEditable,
     ),
   );
 }

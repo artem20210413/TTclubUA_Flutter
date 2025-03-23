@@ -44,8 +44,7 @@ class _MentionState extends State<Mention> {
       print(jsonDecode(res.body)['data']);
       setState(() {
         searchResults = jsonDecode(res.body)['data'];
-        if(searchResults.isEmpty){
-
+        if (searchResults.isEmpty) {
           MessageModule(context, 'Нічого не знайдено', MessageType.success);
         }
         isLoading = false;
@@ -90,10 +89,13 @@ class _MentionState extends State<Mention> {
                                 borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(12)),
                                 child: Image(
-                                  image: dto.images.isNotEmpty
-                                      ? dto.images.first
-                                      : NetworkImage(CAR_IMAGE_DEFAULT)
-                                          as ImageProvider,
+                                  image:dto.images.isNotEmpty
+                                      ? dto.images.first.networkImage
+                                      : NetworkImage(CAR_IMAGE_DEFAULT) as ImageProvider,
+                                  // image: dto.images.isNotEmpty
+                                  //     ? dto.images.first.networkImage
+                                  //     : NetworkImage(CAR_IMAGE_DEFAULT)
+                                  //         as ImageProvider,
                                   height: 180,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
