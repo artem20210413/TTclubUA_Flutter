@@ -6,7 +6,7 @@ import 'package:tt_club_ua/api/routs/root.dart';
 import 'package:tt_club_ua/api/routs/user.dart';
 
 import '../../../Storage/UserStorage.dart';
-import '../../../components/form/SearchBarWidgetState.dart';
+import '../../../components/interface/SearchBarWidgetState.dart';
 import '../../../components/generalModule.dart';
 
 class SearchUserScreen extends StatefulWidget {

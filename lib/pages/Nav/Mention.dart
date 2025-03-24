@@ -9,7 +9,7 @@ import '../../Storage/UserStorage.dart';
 import '../../api/routs/car/car.dart';
 import '../../api/routs/root.dart';
 import '../../api/routs/user.dart';
-import '../../components/form/SearchBarWidgetState.dart';
+import '../../components/interface/SearchBarWidgetState.dart';
 import '../../components/generalModule.dart';
 import '../../config/default.dart';
 import 'Admin/CreateCarScreen.dart';
@@ -76,6 +76,11 @@ class _MentionState extends State<Mention> {
                         final car = searchResults[index];
                         CarSearchDto dto = CarSearchDto.fromJson(car);
 
+                        final isActiveUser = dto.user.active;
+                        // final textDisableUser = 'Учасник покинув нас або не хоче будти з нами';
+                        final textDisableUser =
+                            'Учасник не бажає бути частиною клубу';
+
                         return Card(
                           margin:
                               EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -88,17 +93,23 @@ class _MentionState extends State<Mention> {
                               ClipRRect(
                                 borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(12)),
-                                child: Image(
-                                  image:dto.images.isNotEmpty
-                                      ? dto.images.first.networkImage
-                                      : NetworkImage(CAR_IMAGE_DEFAULT) as ImageProvider,
-                                  // image: dto.images.isNotEmpty
-                                  //     ? dto.images.first.networkImage
-                                  //     : NetworkImage(CAR_IMAGE_DEFAULT)
-                                  //         as ImageProvider,
-                                  height: 180,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
+                                child: ColorFiltered(
+                                  colorFilter: isActiveUser == true
+                                      ? ColorFilter.mode(
+                                          Colors.transparent, BlendMode.srcOver)
+                                      : ColorFilter.mode(
+                                          Colors.grey,
+                                          BlendMode
+                                              .saturation), // Применяем серый фильтр
+                                  child: Image(
+                                    image: dto.images.isNotEmpty
+                                        ? dto.images.first.networkImage
+                                        : NetworkImage(CAR_IMAGE_DEFAULT)
+                                            as ImageProvider,
+                                    height: 250,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                               Padding(
@@ -127,6 +138,9 @@ class _MentionState extends State<Mention> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
+                                            isActiveUser == false
+                                                ? Text("⚠️ ${textDisableUser} ")
+                                                : SizedBox.shrink(),
                                             Text(
                                                 "🚗 ${dto.modelName} ${dto.geneName} - ${dto.getFullLicensePlate()}"),
                                             SizedBox(height: 2),
@@ -134,18 +148,24 @@ class _MentionState extends State<Mention> {
                                                 "📍 ${dto.user.citiesText ?? '-'}"),
                                           ],
                                         ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SendMentionScreen(dto: dto),
-                                              ),
-                                            );
-                                          },
-                                          child: Text('Привітання'),
-                                        ),
+                                        isActiveUser == true
+                                            ? ElevatedButton(
+                                                // style: ElevatedButton.styleFrom(
+                                                //   // backgroundColor:  Colors.grey,
+                                                // ),
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          SendMentionScreen(
+                                                              dto: dto),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Text('Привітання'),
+                                              )
+                                            : SizedBox.shrink(),
                                       ],
                                     ),
                                   ],
