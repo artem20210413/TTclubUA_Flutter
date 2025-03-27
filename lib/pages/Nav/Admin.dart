@@ -7,8 +7,7 @@ import '../../components/interface/TileButton.dart';
 import '../../config/default.dart';
 import 'Admin/Approve/ApproveScreen.dart';
 import 'Admin/Publication/CreatePostScreen.dart';
-import 'Admin/CreateUserScreen.dart';
-import 'Admin/SearchUser.dart';
+import 'Admin/User/SearchUser.dart';
 
 class Admin extends StatefulWidget {
   const Admin({super.key});
@@ -109,6 +108,14 @@ class _AdminState extends State<Admin> {
         TileButton(
           icon: Icons.payment_outlined,
           title: 'Оплати',
+          // iconColor: COLOR_FIRST_LITE,
+          onTap: () {
+            MessageModule(context, 'Скоро буде...', MessageType.information);
+          },
+        ),
+        TileButton(
+          icon: Icons.download_sharp,
+          title: 'Завантажте всіх учасників в Excel',
           // iconColor: COLOR_FIRST_LITE,
           onTap: () {
             MessageModule(context, 'Скоро буде...', MessageType.information);
