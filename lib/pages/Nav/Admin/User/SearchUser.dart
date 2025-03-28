@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:tt_club_ua/Storage/Search/UserSearchDto.dart';
 import 'package:tt_club_ua/api/routs/root.dart';
 import 'package:tt_club_ua/api/routs/user.dart';
+import 'package:tt_club_ua/pages/Nav/Admin/User/UpdateUserScreen.dart';
 
 import '../../../../Storage/UserStorage.dart';
 import '../../../../components/interface/SearchBarWidgetState.dart';
@@ -82,12 +83,12 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                         margin:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         child: ListTile(
-                          leading:  CircleAvatar(
+                          leading: CircleAvatar(
                             // radius: 50,
                             backgroundImage: dto.profileImage,
                           ),
                           title: Text(
-                              dto.name,
+                            dto.name,
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Column(
@@ -104,14 +105,12 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                           ),
                           trailing: Icon(Icons.arrow_forward_ios),
                           onTap: () {
-
-
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-
-                              ), // Переход на экран публикаций
+                                builder: (context) =>
+                                    UpdateUserScreen(dtoSearch: dto),
+                              ),
                             );
                           },
                         ),
