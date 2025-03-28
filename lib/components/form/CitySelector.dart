@@ -102,21 +102,24 @@ class _CitySelectorState extends State<CitySelector> {
           const SizedBox(height: 10),
 
           // Список выбранных городов
-          Wrap(
-            spacing: 8.0, // Отступ между тегами по горизонтали
-            runSpacing: 4.0, // Отступ между строками тегов
-            children: List.generate(widget.selectedCities.length, (index) {
-              return Chip(
-                label: Text(widget.selectedCities[index].name),
-                deleteIcon: const Icon(Icons.close, color: Colors.red),
-                onDeleted: () {
-                  widget.onCityRemove(index);
-                },
-                backgroundColor: Colors.transparent,
-                labelStyle: const TextStyle(color: Colors.black),
-                elevation: 0, // Убираем тень
-              );
-            }),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+            child: Wrap(
+              spacing: 8.0, // Отступ между тегами по горизонтали
+              runSpacing: 4.0, // Отступ между строками тегов
+              children: List.generate(widget.selectedCities.length, (index) {
+                return Chip(
+                  label: Text(widget.selectedCities[index].name),
+                  deleteIcon: const Icon(Icons.close, color: Colors.red),
+                  onDeleted: () {
+                    widget.onCityRemove(index);
+                  },
+                  backgroundColor: Colors.transparent,
+                  labelStyle: const TextStyle(color: Colors.black),
+                  elevation: 0, // Убираем тень
+                );
+              }),
+            ),
           ),
         ],
       ),

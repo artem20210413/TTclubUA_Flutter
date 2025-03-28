@@ -124,22 +124,22 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                 child: Column(
                   children: [
                     customBuildTextField(
-                        'Name', dto.nameController, customValidatorDefault,
+                        'Ім\'я', dto.nameController, customValidatorDefault,
                         isEditable: true),
                     customBuildTextField(
-                        'Email', dto.emailController, customValidatorDefault,
+                        'Пошта', dto.emailController, customValidatorDefault,
                         keyboardType: TextInputType.emailAddress,
                         isEditable: true),
-                    customBuildPhoneField('Phone number', dto.phoneController,
+                    customBuildPhoneField('Телефон', dto.phoneController,
                         isEditable: false),
                     customBuildTextField(
-                        'Instagram', dto.instagramNicknameController, null,
+                        'Інстаграм', dto.instagramNicknameController, null,
                         isEditable: true),
                     customBuildTextField(
-                        'Telegram', dto.telegramNicknameController, null,
+                        'Телеграм', dto.telegramNicknameController, null,
                         isEditable: true),
                     customBuildDatePickerField(
-                        'Birth Date', dto.birthDateController, context,
+                        'Дата народження', dto.birthDateController, context,
                         isEditable: true),
                     CitySelector(
                       selectedCities: dto.cities,
@@ -155,7 +155,7 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                       },
                     ),
                     customBuildTextField(
-                        'Occupation',
+                        'Рід діяльності',
                         dto.occupationDescriptionController,
                         customValidatorDefault,
                         maxLines: 5,
