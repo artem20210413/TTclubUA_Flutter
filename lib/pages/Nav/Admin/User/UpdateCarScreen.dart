@@ -55,7 +55,7 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
 
   int? _selectedGene;
   int? _selectedModel;
-  List<G> _genes = [];
+  List<Map<String, dynamic>> _genes = [];
   List<Map<String, dynamic>> _models = [];
 
   @override
