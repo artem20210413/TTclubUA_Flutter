@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tt_club_ua/api/routs/Dto/City/CityDto.dart';
 import 'package:tt_club_ua/api/routs/Dto/User/UserUpdateDto.dart';
+import 'package:tt_club_ua/pages/Nav/Admin/User/UpdateCarScreen.dart';
 import '../../../../Storage/Search/UserSearchDto.dart';
 import '../../../../Storage/UserStorage.dart';
 import '../../../../api/routs/cities/city.dart';
 import '../../../../api/routs/root.dart';
+import '../../../../api/routs/user.dart';
 import '../../../../components/form/CitySelector.dart';
 import '../../../../components/form/FormElements.dart';
 import '../../../../components/generalModule.dart';
+import '../../../../config/default.dart';
 
 class UpdateUserScreen extends StatefulWidget {
   final UserSearchDto dtoSearch;
@@ -24,44 +27,47 @@ class UpdateUserScreen extends StatefulWidget {
 class _UpdateUserScreenState extends State<UpdateUserScreen> {
   late UserUpdateDto dto; // Переменная для хранения данных
   final _formKey = GlobalKey<FormState>();
+
   // List<CityDto> cities = [];
 
   @override
   void initState() {
     super.initState();
     dto = UserUpdateDto.fromJson(widget.dtoSearch.json);
-    // _getCities();
   }
-
-  // Future<void> _getCities() async {
-  //   final token = await UserStorage.getToken();
-  //   final resCities = await GET_CITIES(token);
-  //
-  //   final isSuccessCities = await CHECK_API(resCities, context);
-  //   if (!isSuccessCities) return;
-  //
-  //   final decodedBody = jsonDecode(resCities.body);
-  //
-  //   setState(() {
-  //     cities = ((decodedBody['data']['cities'] ?? []) as List)
-  //         .map((json) => CityDto.fromJson(json))
-  //         .toList();
-  //   });
-  // }
 
   Future<void> _saveUser() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
       print(dto.toJson());
-      // final token = await UserStorage.getToken();
-      // final res = await UPLOAD_USER(token, _userDTO);
-      // final isSuccess = await CHECK_API(res, context);
+      final token = await UserStorage.getToken();
+      final res = await UPLOAD_USER_BY_ID(token, dto);
+      final isSuccess = await CHECK_API(res, context);
 
-      // if (isSuccess) {
-      //   MessageModule(
-      //       context, 'Профіль успішно оновлено!', MessageType.success);
-      // }
+      if (isSuccess) {
+        final data = jsonDecode(res.body)['data'];
+        setState(() {
+          dto = UserUpdateDto.fromJson(data['user']);
+        });
+        MessageModule(
+            context, 'Профіль успішно оновлено!', MessageType.success);
+      }
+    }
+  }
+
+  Future<void> _changeActiveUser() async {
+    final token = await UserStorage.getToken();
+    final res = await CHANGE_ACTIVE_USER(token, dto.id);
+    final isSuccess = await CHECK_API(res, context);
+
+    if (isSuccess) {
+      final data = jsonDecode(res.body)['data'];
+      setState(() {
+        dto = UserUpdateDto.fromJson(data['user']);
+      });
+
+      MessageModule(context, 'Профіль успішно оновлено!', MessageType.success);
     }
   }
 
@@ -119,6 +125,111 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                 ),
               ),
               const SizedBox(height: 8),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 180, // Высота карточки машины
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: dto.cars.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index == dto.cars.length) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Открыть экран добавления авто
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => UpdateCarScreen()),
+                                  );
+                                },
+                                child: Container(
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(color: Colors.black12, blurRadius: 5),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.add, size: 50, color: Colors.black),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        "Додати авто",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+
+                          final car = dto.cars[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                MessageModule(
+                                    context, 'Скоро буде..', MessageType.success);
+                                // Действие при клике (например, переход на экран с деталями авто)
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(builder: (context) => CarDetailScreen(car: car)),
+                                // );
+                              },
+                              child: Container(
+                                width: 150,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(color: Colors.black12, blurRadius: 5),
+                                  ],
+                                ),
+                                child: Column(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                                      child: Image.network(
+                                        car.imageUrls.isNotEmpty && car.imageUrls.first?.url != null
+                                            ? car.imageUrls.first!.url
+                                            : CAR_IMAGE_DEFAULT,
+                                        width: 150,
+                                        height: 120,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "${car.model.name} ${car.gene.name} ${car.generalLicensePlate}",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
               Form(
                 key: _formKey,
                 child: Column(
@@ -158,62 +269,33 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                         'Рід діяльності',
                         dto.occupationDescriptionController,
                         customValidatorDefault,
-                        maxLines: 5,
+                        maxLines: 3,
                         isEditable: true),
-                    // const Text(
-                    //   "Міста",
-                    //   style:
-                    //       TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    // ),
-                    // Column(
-                    //   children: List.generate(dto.cities.length, (index) {
-                    //     return ListTile(
-                    //       trailing: IconButton(
-                    //         icon: const Icon(Icons.close, color: Colors.red),
-                    //         onPressed: () {
-                    //           setState(() {
-                    //             dto.cities.removeAt(index);
-                    //           });
-                    //         },
-                    //       ),
-                    //       title: Text(dto.cities[index].name),
-                    //     );
-                    //   }),
-                    // ),
-                    // const SizedBox(height: 10),
-                    // DropdownButtonFormField<String>(
-                    //   hint: const Text("Оберіть місто"),
-                    //   value: null,
-                    //   items: cities
-                    //       .map((city) => DropdownMenuItem<String>(
-                    //             value: city.name,
-                    //             child: Text(city.name),
-                    //           ))
-                    //       .toList(),
-                    //   onChanged: (selectedCityName) {
-                    //     if (selectedCityName != null) {
-                    //       final selectedCity = cities.firstWhere(
-                    //           (city) => city.name == selectedCityName);
-                    //       if (!dto.cities.contains(selectedCity)) {
-                    //         setState(() {
-                    //           dto.cities.add(selectedCity);
-                    //         });
-                    //       }
-                    //     }
-                    //   },
-                    // ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: _saveUser,
-                          child: const Text('Зберегти'),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Spacer(),
+                  ElevatedButton(
+                    onPressed: _changeActiveUser,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: dto.active
+                          ? Colors.redAccent // Нежный красный
+                          : Colors.lightGreen.shade700, // Нежный зеленый
+                      foregroundColor: Colors.white, // Цвет текста
+                    ),
+                    child:
+                        dto.active ? Text('Деактивувати') : Text('Активувати'),
+                  ),
+                  Spacer(),
+                  ElevatedButton(
+                    onPressed: _saveUser,
+                    child: const Text('Зберегти'),
+                  ),
+                  Spacer(),
+                ],
               ),
             ],
           ),

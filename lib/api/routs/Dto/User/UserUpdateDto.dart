@@ -5,7 +5,7 @@ import '../City/CityDto.dart';
 
 class UserUpdateDto {
   Map<String, dynamic> json;
-  int id;
+  int id = 0;
 
   // Контроллеры для полей, которые могут редактироваться
   TextEditingController nameController = TextEditingController();
@@ -17,10 +17,10 @@ class UserUpdateDto {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
 
-  bool active;
-  String profileImage;
-  List<CityDto> cities;
-  List<CarDto> cars;
+  bool active = false;
+  String profileImage ='';
+  List<CityDto> cities = [];
+  List<CarDto> cars = [];
 
   UserUpdateDto.fromJson(this.json)
       : active = json['active'] ?? false,
@@ -54,7 +54,7 @@ class UserUpdateDto {
       'occupation_description': occupationDescriptionController.text,
       'email': emailController.text,
       'phone': phoneController.text,
-      'active': active,
+      // 'active': active,
       // 'profile_image': profileImage,
       'cities': cities.map((city) => city.id).toList(),
       // 'cars': cars.map((car) => car.toJson()).toList(),

@@ -35,21 +35,27 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
-import '../../../Storage/UserStorage.dart';
-import '../../../api/routs/car/car.dart';
+import '../../../../Storage/UserStorage.dart';
+import '../../../../api/routs/Dto/Car/CarDto.dart';
+import '../../../../api/routs/car/car.dart';
 
-class CreateCarScreen extends StatefulWidget {
+class UpdateCarScreen extends StatefulWidget {
+
+  final CarDto? carDto;
+
+  UpdateCarScreen({Key? key, this.carDto}) : super(key: key);
+
   @override
-  _CreateCarScreenState createState() => _CreateCarScreenState();
+  _UpdateCarScreenState createState() => _UpdateCarScreenState();
 }
 
-class _CreateCarScreenState extends State<CreateCarScreen> {
+class _UpdateCarScreenState extends State<UpdateCarScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _licensePlateController = TextEditingController();
 
   int? _selectedGene;
   int? _selectedModel;
-  List<Map<String, dynamic>> _genes = [];
+  List<G> _genes = [];
   List<Map<String, dynamic>> _models = [];
 
   @override

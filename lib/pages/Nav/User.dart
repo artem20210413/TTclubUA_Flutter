@@ -54,6 +54,7 @@ class _UserState extends State<User> {
     final List<CityDTO> cities = await CityServices.getAllCities(context);
 
     setState(() {
+      // _userDTO = UserDTO.fromJson(json);
       _userDTO = UserDTO.fromJson(json);
       _cities = cities;
 

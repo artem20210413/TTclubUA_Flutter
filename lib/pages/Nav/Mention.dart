@@ -12,7 +12,6 @@ import '../../api/routs/user.dart';
 import '../../components/interface/SearchBarWidgetState.dart';
 import '../../components/generalModule.dart';
 import '../../config/default.dart';
-import 'Admin/CreateCarScreen.dart';
 import 'Admin/User/SearchUser.dart';
 
 class Mention extends StatefulWidget {

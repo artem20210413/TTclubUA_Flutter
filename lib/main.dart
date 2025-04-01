@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/pages/Login.dart';
 import 'package:tt_club_ua/pages/Nav.dart';
-import 'package:tt_club_ua/pages/Nav/Admin/CreateCarScreen.dart';
+import 'package:tt_club_ua/pages/Nav/Admin/User/UpdateCarScreen.dart';
 
 void main() => runApp(MaterialApp(
       theme: ThemeData(

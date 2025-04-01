@@ -1,3 +1,5 @@
+import 'package:tt_club_ua/config/default.dart';
+
 import '../../../../Storage/Search/ImageUrlDto.dart';
 import 'GeneDto.dart';
 import 'ModelDto.dart';
@@ -38,8 +40,8 @@ class CarDto {
       gene: GeneDto.fromJson(json['gene'] ?? {}),
       model: ModelDto.fromJson(json['model'] ?? {}),
       imageUrls: (json['imageUrls'] as List<dynamic>?)
-          ?.map((image) => ImageUrlDto.fromJson(image))
-          .toList() ??
+              ?.map((image) => ImageUrlDto.fromJson(image))
+              .toList() ??
           [],
       active: json['active'] == 1,
     );

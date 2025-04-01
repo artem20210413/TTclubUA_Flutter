@@ -31,10 +31,11 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
     setState(() {
       _searchController.text = widget.searchQuery;
     });
-    fetchSearchResults();
+    _performSearch();
   }
 
   void _performSearch() {
+    print('------------- _performSearch -------------');
     String searchText = _searchController.text.trim();
     if (searchText.isNotEmpty) {
       fetchSearchResults();
@@ -58,6 +59,8 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,13 +81,15 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                     itemBuilder: (context, index) {
                       final user = searchResults[index];
                       UserSearchDto dto = UserSearchDto.fromJson(user);
-
+                      bool isActiveUser = dto.active == true;
                       return Card(
+                        surfaceTintColor: isActiveUser ? Colors.transparent : Colors.red,
+                        // shadowColor: isActiveUser ? Colors.black : Colors.red,
                         margin:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         child: ListTile(
                           leading: CircleAvatar(
-                            // radius: 50,
+                            radius: 25,
                             backgroundImage: dto.profileImage,
                           ),
                           title: Text(
@@ -94,13 +99,22 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("📍 ${dto.citiesText}"),
+                              isActiveUser
+                                  ? SizedBox.shrink()
+                                  : Text("⚠️ Учасник не активний "),
+                              isActiveUser
+                                  ? Text("📍 ${dto.citiesText}")
+                          : SizedBox.shrink(),
                               Text("🚗 ${dto.carsText}"),
-                              Text("📅 ${dto.birthDateText}"),
-                              Text("📞 ${dto.phone}"),
-                              // Text(
-                              //     "📧 Email: ${user["email"] ?? "Не вказано"}"),
-                              Text("💼 ${dto.occupationDescription}"),
+                              isActiveUser
+                                  ? Text("📅 ${dto.birthDateText}")
+                                  : SizedBox.shrink(),
+                              isActiveUser
+                                  ? Text("📞 ${dto.phone}")
+                                  : SizedBox.shrink(),
+                              isActiveUser
+                                  ? Text("💼 ${dto.occupationDescription}")
+                                  : SizedBox.shrink(),
                             ],
                           ),
                           trailing: Icon(Icons.arrow_forward_ios),
