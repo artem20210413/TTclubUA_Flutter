@@ -4,10 +4,11 @@ import 'package:http/http.dart' as http;
 import 'package:tt_club_ua/Storage/Search/UserSearchDto.dart';
 import 'package:tt_club_ua/api/routs/root.dart';
 import 'package:tt_club_ua/api/routs/user.dart';
+import 'package:tt_club_ua/pages/Nav/Admin/User/UpdateUserScreen.dart';
 
-import '../../../Storage/UserStorage.dart';
-import '../../../components/form/SearchBarWidgetState.dart';
-import '../../../components/generalModule.dart';
+import '../../../../Storage/UserStorage.dart';
+import '../../../../components/interface/SearchBarWidgetState.dart';
+import '../../../../components/generalModule.dart';
 
 class SearchUserScreen extends StatefulWidget {
   final String searchQuery;
@@ -30,10 +31,11 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
     setState(() {
       _searchController.text = widget.searchQuery;
     });
-    fetchSearchResults();
+    _performSearch();
   }
 
   void _performSearch() {
+    print('------------- _performSearch -------------');
     String searchText = _searchController.text.trim();
     if (searchText.isNotEmpty) {
       fetchSearchResults();
@@ -57,6 +59,8 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,34 +81,51 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                     itemBuilder: (context, index) {
                       final user = searchResults[index];
                       UserSearchDto dto = UserSearchDto.fromJson(user);
-
+                      bool isActiveUser = dto.active == true;
                       return Card(
+                        surfaceTintColor: isActiveUser ? Colors.transparent : Colors.red,
+                        // shadowColor: isActiveUser ? Colors.black : Colors.red,
                         margin:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         child: ListTile(
-                          leading:  CircleAvatar(
-                            // radius: 50,
+                          leading: CircleAvatar(
+                            radius: 25,
                             backgroundImage: dto.profileImage,
                           ),
                           title: Text(
-                              dto.name,
+                            dto.name,
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("📍 ${dto.citiesText}"),
+                              isActiveUser
+                                  ? SizedBox.shrink()
+                                  : Text("⚠️ Учасник не активний "),
+                              isActiveUser
+                                  ? Text("📍 ${dto.citiesText}")
+                          : SizedBox.shrink(),
                               Text("🚗 ${dto.carsText}"),
-                              Text("📅 ${dto.birthDateText}"),
-                              Text("📞 ${dto.phone}"),
-                              // Text(
-                              //     "📧 Email: ${user["email"] ?? "Не вказано"}"),
-                              Text("💼 ${dto.occupationDescription}"),
+                              isActiveUser
+                                  ? Text("📅 ${dto.birthDateText}")
+                                  : SizedBox.shrink(),
+                              isActiveUser
+                                  ? Text("📞 ${dto.phone}")
+                                  : SizedBox.shrink(),
+                              isActiveUser
+                                  ? Text("💼 ${dto.occupationDescription}")
+                                  : SizedBox.shrink(),
                             ],
                           ),
                           trailing: Icon(Icons.arrow_forward_ios),
                           onTap: () {
-                            // Действие при нажатии
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    UpdateUserScreen(dtoSearch: dto),
+                              ),
+                            );
                           },
                         ),
                       );

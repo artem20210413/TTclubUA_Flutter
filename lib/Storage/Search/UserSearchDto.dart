@@ -19,6 +19,7 @@ class UserSearchDto {
   String? occupationDescription;
   String? carsText;
   String? citiesText;
+  bool? active;
 
   // UserDTO(this.list);
 
@@ -26,6 +27,7 @@ class UserSearchDto {
       : json = json,
         email = json['email'] ?? "Не вказано",
         phone = json["phone"] ?? "Не вказано",
+        active = json["active"] ?? false,
         telegramNickname = json['telegram_nickname'] ?? "Не вказано",
         instagramNickname = json['instagram_nickname'] ?? "Не вказано",
         // _cities =

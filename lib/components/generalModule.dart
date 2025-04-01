@@ -8,10 +8,11 @@ Widget LoadingModule = CircularProgressIndicator(
 
 Widget CenterLoadingModule = Center(child: LoadingModule);
 
-enum MessageType { success, error }
+enum MessageType { information, success, error}
 
 void MessageModule(BuildContext context, String text, MessageType type) {
   Color color;
+  Color colorText = Colors.white;
 
   switch (type) {
     case MessageType.success:
@@ -20,6 +21,10 @@ void MessageModule(BuildContext context, String text, MessageType type) {
     case MessageType.error:
       color = Colors.red;
       break;
+    // case MessageType.warning:
+    //   color = Colors.purple.shade100;
+    //   colorText = Colors.black;
+    //   break;
     default:
       color = Colors.black;
       break;
@@ -31,7 +36,8 @@ void MessageModule(BuildContext context, String text, MessageType type) {
         child: Text(
           text,
           style: TextStyle(
-            fontSize: 15, // Увеличиваем размер шрифта
+            fontSize: 15,
+            color: colorText// Увеличиваем размер шрифта
           ),
         ),
       ),

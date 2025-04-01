@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:tt_club_ua/pages/Nav/Admin/Publication/PublicationsScreen.dart';
 
-import '../../components/form/SearchBarWidgetState.dart';
-import 'Admin/CreateCarScreen.dart';
-import 'Admin/CreateUserScreen.dart';
-import 'Admin/SearchUser.dart';
+import '../../components/generalModule.dart';
+import '../../components/interface/SearchBarWidgetState.dart';
+import '../../components/interface/TileButton.dart';
+import '../../config/default.dart';
+import 'Admin/Approve/ApproveScreen.dart';
+import 'Admin/Publication/CreatePostScreen.dart';
+import 'Admin/User/SearchUser.dart';
 
 class Admin extends StatefulWidget {
   const Admin({super.key});
@@ -34,6 +38,7 @@ class _AdminState extends State<Admin> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -44,44 +49,78 @@ class _AdminState extends State<Admin> {
           controller: _searchController,
           onSearch: _performSearch,
         ),
-        SizedBox(height: 50),
-        Row(
-          children: [
-            Spacer(),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CreateUserScreen()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                  // backgroundColor: Color(0xFF8B0000),
-                  ),
-              child: const Text(
-                'Створити коричтувача',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-            Spacer(),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => CreateCarScreen()),
-            //     );
-            //   },
-            //   style: ElevatedButton.styleFrom(
-            //       // backgroundColor: Color(0xFF8B0000),
-            //       ),
-            //   child: const Text(
-            //     '+ Авто',
-            //     style: TextStyle(color: Colors.black),
-            //   ),
-            // ),
-            // Spacer(),
-          ],
-        )
+        SizedBox(height: 10),
+        // Row(
+        //   children: [
+        //     Spacer(),
+        //     ElevatedButton(
+        //       onPressed: () {
+        //         Navigator.push(
+        //           context,
+        //           MaterialPageRoute(builder: (context) => CreateUserScreen()),
+        //         );
+        //       },
+        //       style: ElevatedButton.styleFrom(
+        //           // backgroundColor: Colors.purple,
+        //           ),
+        //       child: const Text(
+        //         'Створити коричтувача',
+        //         style: TextStyle(color: Colors.black),
+        //       ),
+        //     ),
+        //     Spacer(),
+        //   ],
+        // ),
+        TileButton(
+          icon: Icons.check_circle_outline,
+          title: 'Затвердити учасників',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      ApproveScreen()), // Переход на экран публикаций
+            );
+          },
+          iconColor: Colors.green,
+        ),
+        TileButton(
+          icon: Icons.article,
+          title: 'Публікації',
+          // iconColor: COLOR_FIRST_LITE,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      PublicationsScreen()), // Переход на экран публикаций
+            );
+          },
+        ),
+        TileButton(
+          icon: Icons.image,
+          title: 'Банер',
+          // iconColor: COLOR_FIRST_LITE,
+          onTap: () {
+            MessageModule(context, 'Скоро буде...', MessageType.information);
+          },
+        ),
+        TileButton(
+          icon: Icons.payment_outlined,
+          title: 'Оплати',
+          // iconColor: COLOR_FIRST_LITE,
+          onTap: () {
+            MessageModule(context, 'Скоро буде...', MessageType.information);
+          },
+        ),
+        TileButton(
+          icon: Icons.download_sharp,
+          title: 'Завантажте всіх учасників в Excel',
+          // iconColor: COLOR_FIRST_LITE,
+          onTap: () {
+            MessageModule(context, 'Скоро буде...', MessageType.information);
+          },
+        ),
 
         // ElevatedButton(
         //   onPressed: () {

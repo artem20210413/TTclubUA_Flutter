@@ -14,6 +14,9 @@ const URL_LOGOUT = '${_HOST}/api/logout';
 const URL_USER = '${_HOST}/api/user';
 const URL_CHANGE_PASSWORD = '${_HOST}/api/change-password';
 const URL_SEARCH_USER = '${_HOST}/api/user/search/';
+const URL_USER_PICTURE = '${_HOST}/api/user/profile-picture';
+const URL_USER_CHANGE_ACTIVE = '${_HOST}/api/user/{id}/change-active';
+const URL_USER_UPDATE_BY_ID = '${_HOST}/api/user/{id}/update';
 
 const URL_SEARCH_CAR = '${_HOST}/api/car/search/';
 const URL_MENTION_CAR= '${_HOST}/api/mention/car/';
