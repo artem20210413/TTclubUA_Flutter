@@ -37,10 +37,10 @@ import 'package:dio/dio.dart';
 
 import '../../../../Storage/UserStorage.dart';
 import '../../../../api/routs/Dto/Car/CarDto.dart';
+import '../../../../api/routs/Dto/Car/GeneDto.dart';
 import '../../../../api/routs/car/car.dart';
 
 class UpdateCarScreen extends StatefulWidget {
-
   final CarDto? carDto;
 
   UpdateCarScreen({Key? key, this.carDto}) : super(key: key);
@@ -54,8 +54,10 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
   final TextEditingController _licensePlateController = TextEditingController();
 
   int? _selectedGene;
-  int? _selectedModel;
   List<Map<String, dynamic>> _genes = [];
+  // GeneDto? _selectedGene;
+  // List<GeneDto> _genes = []; // твой список поколений
+  int? _selectedModel;
   List<Map<String, dynamic>> _models = [];
 
   @override
@@ -69,8 +71,14 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
     try {
       final token = await UserStorage.getToken();
       final resGenes = await GET_GENES(token);
+
       setState(() {
-        _genes = List<Map<String, dynamic>>.from(resGenes.data['data']['genes']);
+        _genes = List<Map<String, dynamic>>.from(resGenes.data['data']);
+        _selectedGene = widget.carDto?.gene.id;
+        // _genes = (resGenes.data['data'] as List)
+        //     .map((item) => GeneDto.fromJson(item))
+        //     .toList();
+        // _selectedGene = widget.carDto?.gene;
       });
     } catch (e) {
       print('Ошибка загрузки genes: $e');
@@ -79,19 +87,12 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
 
   Future<void> _fetchModels() async {
     try {
-      final response = await Dio().get(
-        'https://tt.tishchenko.kiev.ua/api/models',
-        options: Options(
-          headers: {
-            'Authorization':
-                'Bearer 57|ttClub_JmWgBF9omP69V3yfwJF3zOUaEWhRMw7WiJenNVFK80462dd6',
-            // Заменить на реальный токен
-          },
-        ),
-      );
+      final token = await UserStorage.getToken();
+      final resModels = await GET_MODELS(token);
+
       setState(() {
-        _models = List<Map<String, dynamic>>.from(response.data['data']['genes']);
-        _selectedModel = null;
+        _models = List<Map<String, dynamic>>.from(resModels.data['data']);
+        _selectedModel = widget.carDto?.model.id;
       });
     } catch (e) {
       print('Ошибка загрузки models: $e');
@@ -127,6 +128,28 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
           key: _formKey,
           child: Column(
             children: [
+              // DropdownButtonFormField<GeneDto>(
+              //   value: _selectedGene,
+              //   hint: Text("Виберіть покоління"),
+              //   items: _genes.map((gene) {
+              //     return DropdownMenuItem<GeneDto>(
+              //       value: gene,
+              //       child: Text(gene.name),
+              //     );
+              //   }).toList(),
+              //   onChanged: (value) {
+              //     setState(() {
+              //       _selectedGene = value;
+              //       print("Вибрано ген: ${value?.id} - ${value?.name}");
+              //       if (value != null) {
+              //         widget.carDto?.gene = value;
+              //       }
+              //     });
+              //   },
+              //   validator: (value) =>
+              //       value == null ? "Виберіть покоління" : null,
+              // ),
+
               DropdownButtonFormField<int>(
                 value: _selectedGene,
                 hint: Text("Виберіть покоління"),
@@ -139,9 +162,13 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
                 onChanged: (value) {
                   setState(() {
                     _selectedGene = value;
+                    print(value);
+                    // print(gene);
+                    // widget.carDto?.gene =
                   });
                 },
-                validator: (value) => value == null ? "Виберіть покоління" : null,
+                validator: (value) =>
+                    value == null ? "Виберіть покоління" : null,
               ),
               SizedBox(height: 16),
               DropdownButtonFormField<int>(

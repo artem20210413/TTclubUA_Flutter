@@ -13,6 +13,7 @@ import '../../../../api/routs/user.dart';
 import '../../../../components/form/CitySelector.dart';
 import '../../../../components/form/FormElements.dart';
 import '../../../../components/generalModule.dart';
+import '../../../../components/interface/CarListWidget.dart';
 import '../../../../config/default.dart';
 
 class UpdateUserScreen extends StatefulWidget {
@@ -126,109 +127,136 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
               ),
               const SizedBox(height: 8),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 180, // Высота карточки машины
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: dto.cars.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index == dto.cars.length) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  // Открыть экран добавления авто
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => UpdateCarScreen()),
-                                  );
-                                },
-                                child: Container(
-                                  width: 150,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(color: Colors.black12, blurRadius: 5),
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.add, size: 50, color: Colors.black),
-                                      SizedBox(height: 10),
-                                      Text(
-                                        "Додати авто",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
 
-                          final car = dto.cars[index];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                MessageModule(
-                                    context, 'Скоро буде..', MessageType.success);
-                                // Действие при клике (например, переход на экран с деталями авто)
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(builder: (context) => CarDetailScreen(car: car)),
-                                // );
-                              },
-                              child: Container(
-                                width: 150,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(color: Colors.black12, blurRadius: 5),
-                                  ],
-                                ),
-                                child: Column(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                                      child: Image.network(
-                                        car.imageUrls.isNotEmpty && car.imageUrls.first?.url != null
-                                            ? car.imageUrls.first!.url
-                                            : CAR_IMAGE_DEFAULT,
-                                        width: 150,
-                                        height: 120,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "${car.model.name} ${car.gene.name} ${car.generalLicensePlate}",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
+              // CarListWidget(
+              //   cars: dto.cars,
+              //   isInteractive: true, // или false
+              // ),
 
-                        },
-                      ),
+              CarListWidget(
+                cars: dto.cars,
+                onCarTap: (car) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UpdateCarScreen(carDto: car),
                     ),
-                  ],
-                ),
+                  );
+                },
+                onAddTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UpdateCarScreen(),
+                    ),
+                  );
+                },
               ),
+
+
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(vertical: 15),
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       SizedBox(
+              //         height: 180, // Высота карточки машины
+              //         child: ListView.builder(
+              //           scrollDirection: Axis.horizontal,
+              //           itemCount: dto.cars.length + 1,
+              //           itemBuilder: (context, index) {
+              //             if (index == dto.cars.length) {
+              //               return Padding(
+              //                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              //                 child: GestureDetector(
+              //                   onTap: () {
+              //                     // Открыть экран добавления авто
+              //                     Navigator.push(
+              //                       context,
+              //                       MaterialPageRoute(builder: (context) => UpdateCarScreen()),
+              //                     );
+              //                   },
+              //                   child: Container(
+              //                     width: 150,
+              //                     decoration: BoxDecoration(
+              //                       borderRadius: BorderRadius.circular(12),
+              //                       color: Colors.white,
+              //                       boxShadow: [
+              //                         BoxShadow(color: Colors.black12, blurRadius: 5),
+              //                       ],
+              //                     ),
+              //                     child: Column(
+              //                       mainAxisAlignment: MainAxisAlignment.center,
+              //                       children: [
+              //                         Icon(Icons.add, size: 50, color: Colors.black),
+              //                         SizedBox(height: 10),
+              //                         Text(
+              //                           "Додати авто",
+              //                           textAlign: TextAlign.center,
+              //                           style: TextStyle(fontWeight: FontWeight.bold),
+              //                         ),
+              //                       ],
+              //                     ),
+              //                   ),
+              //                 ),
+              //               );
+              //             }
+              //
+              //             final car = dto.cars[index];
+              //             return Padding(
+              //               padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              //               child: GestureDetector(
+              //                 onTap: () {
+              //                   MessageModule(
+              //                       context, 'Скоро буде створеня авто ..', MessageType.success);
+              //                   // Действие при клике (например, переход на экран с деталями авто)
+              //                   // Navigator.push(
+              //                   //   context,
+              //                   //   MaterialPageRoute(builder: (context) => CarDetailScreen(car: car)),
+              //                   // );
+              //                 },
+              //                 child: Container(
+              //                   width: 150,
+              //                   decoration: BoxDecoration(
+              //                     borderRadius: BorderRadius.circular(12),
+              //                     color: Colors.white,
+              //                     boxShadow: [
+              //                       BoxShadow(color: Colors.black12, blurRadius: 5),
+              //                     ],
+              //                   ),
+              //                   child: Column(
+              //                     children: [
+              //                       ClipRRect(
+              //                         borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+              //                         child: Image.network(
+              //                           car.imageUrls.isNotEmpty && car.imageUrls.first?.url != null
+              //                               ? car.imageUrls.first!.url
+              //                               : CAR_IMAGE_DEFAULT,
+              //                           width: 150,
+              //                           height: 120,
+              //                           fit: BoxFit.cover,
+              //                         ),
+              //                       ),
+              //                       Padding(
+              //                         padding: const EdgeInsets.all(8.0),
+              //                         child: Text(
+              //                           "${car.model.name} ${car.gene.name} ${car.generalLicensePlate}",
+              //                           textAlign: TextAlign.center,
+              //                           style: TextStyle(fontWeight: FontWeight.bold),
+              //                         ),
+              //                       ),
+              //                     ],
+              //                   ),
+              //                 ),
+              //               ),
+              //             );
+              //
+              //           },
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
 
               Form(
                 key: _formKey,
