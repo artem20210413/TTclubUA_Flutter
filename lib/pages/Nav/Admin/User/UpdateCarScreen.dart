@@ -1,49 +1,20 @@
-// import 'package:flutter/material.dart';
-//
-// import '../../../components/CustomAppBar.dart';
-//
-// class CreateCarScreen extends StatelessWidget {
-//   const CreateCarScreen({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: CustomAppBar(
-//         'Створення авто',
-//         automaticallyImplyLeading: true,
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Text(
-//               'Створення авто',
-//               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-//             ),
-//             SizedBox(height: 20),
-//             ElevatedButton(
-//               onPressed: () => Navigator.pop(context),
-//               child: Text('Закрыть'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:tt_club_ua/api/routs/Dto/Car/ModelDto.dart';
 
 import '../../../../Storage/UserStorage.dart';
 import '../../../../api/routs/Dto/Car/CarDto.dart';
 import '../../../../api/routs/Dto/Car/GeneDto.dart';
+import '../../../../api/routs/Dto/User/UserUpdateDto.dart';
 import '../../../../api/routs/car/car.dart';
+import '../../../../components/form/FormElements.dart';
 
 class UpdateCarScreen extends StatefulWidget {
-  final CarDto? carDto;
+  CarDto carDto;
+  UserUpdateDto userDto;
 
-  UpdateCarScreen({Key? key, this.carDto}) : super(key: key);
+  UpdateCarScreen({Key? key, required this.carDto, required this.userDto})
+      : super(key: key);
 
   @override
   _UpdateCarScreenState createState() => _UpdateCarScreenState();
@@ -53,12 +24,10 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _licensePlateController = TextEditingController();
 
-  int? _selectedGene;
-  List<Map<String, dynamic>> _genes = [];
   // GeneDto? _selectedGene;
-  // List<GeneDto> _genes = []; // твой список поколений
-  int? _selectedModel;
-  List<Map<String, dynamic>> _models = [];
+  List<GeneDto> _genes = [];
+  // ModelDto? _selectedModel;
+  List<ModelDto> _models = [];
 
   @override
   void initState() {
@@ -67,18 +36,39 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
     _fetchModels();
   }
 
+  GeneDto? get selectedGene {
+    try {
+      return _genes.firstWhere(
+            (g) => g.id == widget.carDto.gene.id,
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+  ModelDto? get selectedModel {
+    try {
+      return _models.firstWhere(
+            (g) => g.id == widget.carDto.model.id,
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<void> _fetchGenes() async {
     try {
       final token = await UserStorage.getToken();
       final resGenes = await GET_GENES(token);
 
       setState(() {
-        _genes = List<Map<String, dynamic>>.from(resGenes.data['data']);
-        _selectedGene = widget.carDto?.gene.id;
-        // _genes = (resGenes.data['data'] as List)
-        //     .map((item) => GeneDto.fromJson(item))
-        //     .toList();
-        // _selectedGene = widget.carDto?.gene;
+        _genes = (resGenes.data['data'] as List)
+            .map((item) => GeneDto.fromJson(item))
+            .toList();
+
+        // widget.carDto.gene = _genes.firstWhere(
+        //       (g) => g.id == widget.carDto.gene.id,
+        //   orElse: () => _genes.first,
+        // );
       });
     } catch (e) {
       print('Ошибка загрузки genes: $e');
@@ -91,8 +81,10 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
       final resModels = await GET_MODELS(token);
 
       setState(() {
-        _models = List<Map<String, dynamic>>.from(resModels.data['data']);
-        _selectedModel = widget.carDto?.model.id;
+        _models = (resModels.data['data'] as List)
+            .map((item) => ModelDto.fromJson(item))
+            .toList();
+
       });
     } catch (e) {
       print('Ошибка загрузки models: $e');
@@ -100,17 +92,16 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
   }
 
   void _submitForm() {
-    if (_formKey.currentState!.validate() &&
-        _selectedGene != null &&
-        _selectedModel != null) {
+    if (_formKey.currentState!.validate()) {
       final data = {
-        "user_id": null,
-        "gene_id": _selectedGene,
-        "model_id": _selectedModel,
-        "name": null,
-        "vin_code": null,
-        "license_plate": _licensePlateController.text,
-        "personalized_license_plate": null
+        "id": widget.carDto.id ?? 0,
+        "user_id": widget.userDto.id,
+        "gene_id": widget.carDto.gene.id,
+        "model_id": widget.carDto.model.id,
+        "name": widget.carDto.nameController.text,
+        "vin_code":  widget.carDto.vinCodeController.text,
+        "license_plate":  widget.carDto.licensePlateController.text,
+        "personalized_license_plate":  widget.carDto.personalizedLicensePlateController.text
       };
       print("Отправка данных: $data");
     } else {
@@ -121,82 +112,65 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Создать авто")),
+      appBar: AppBar(title: Text("TT - ${widget.userDto.nameController.text}")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              // DropdownButtonFormField<GeneDto>(
-              //   value: _selectedGene,
-              //   hint: Text("Виберіть покоління"),
-              //   items: _genes.map((gene) {
-              //     return DropdownMenuItem<GeneDto>(
-              //       value: gene,
-              //       child: Text(gene.name),
-              //     );
-              //   }).toList(),
-              //   onChanged: (value) {
-              //     setState(() {
-              //       _selectedGene = value;
-              //       print("Вибрано ген: ${value?.id} - ${value?.name}");
-              //       if (value != null) {
-              //         widget.carDto?.gene = value;
-              //       }
-              //     });
-              //   },
-              //   validator: (value) =>
-              //       value == null ? "Виберіть покоління" : null,
-              // ),
-
-              DropdownButtonFormField<int>(
-                value: _selectedGene,
+              // SizedBox(height: 16),
+              DropdownButtonFormField<GeneDto>(
+                value: selectedGene,
                 hint: Text("Виберіть покоління"),
                 items: _genes.map((gene) {
-                  return DropdownMenuItem<int>(
-                    value: gene['id'],
-                    child: Text(gene['name']),
+                  return DropdownMenuItem<GeneDto>(
+                    value: gene,
+                    child: Text(gene.name),
                   );
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
-                    _selectedGene = value;
-                    print(value);
-                    // print(gene);
-                    // widget.carDto?.gene =
+                    if (value != null) {
+                      widget.carDto.gene = value;
+                    }
                   });
                 },
                 validator: (value) =>
                     value == null ? "Виберіть покоління" : null,
               ),
               SizedBox(height: 16),
-              DropdownButtonFormField<int>(
-                value: _selectedModel,
-                hint: Text("Выберите модель"),
+              DropdownButtonFormField<ModelDto>(
+                value: selectedModel,
+                hint: Text("Виберіть модель"),
                 items: _models.map((model) {
-                  return DropdownMenuItem<int>(
-                    value: model['id'],
-                    child: Text(model['name']),
+                  return DropdownMenuItem<ModelDto>(
+                    value: model,
+                    child: Text(model.name),
                   );
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
-                    _selectedModel = value;
+                    if (value != null) {
+                      widget.carDto.model = value;
+                    }
                   });
                 },
-                validator: (value) => value == null ? "Выберите модель" : null,
+                validator: (value) => value == null ? "Виберіть модель" : null,
               ),
               SizedBox(height: 16),
-              TextFormField(
-                controller: _licensePlateController,
-                decoration: InputDecoration(labelText: "Гос. номер"),
-                validator: (value) => value!.isEmpty ? "Введите номер" : null,
-              ),
+              customBuildTextField(
+                  'Держ. номер', widget.carDto.licensePlateController, customValidatorDefault,
+                  isEditable: true),
+              SizedBox(height: 16),
+              customBuildTextField(
+                  'Індивідуальний номер', widget.carDto.personalizedLicensePlateController, null,
+                  isEditable: true),
+
               SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _submitForm,
-                child: Text("Сохранить"),
+                child: Text("Зберегти"),
               ),
             ],
           ),

@@ -113,4 +113,4 @@ Widget customBuildPasswordField({
 }
 
 final customValidatorDefault = (value) =>
-value == null || value.isEmpty ? 'This field is required' : null;
+value == null || value.isEmpty ? 'Це поле обов\'язкове' : null;

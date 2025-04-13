@@ -7,6 +7,7 @@ import 'package:tt_club_ua/api/routs/Dto/User/UserUpdateDto.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/User/UpdateCarScreen.dart';
 import '../../../../Storage/Search/UserSearchDto.dart';
 import '../../../../Storage/UserStorage.dart';
+import '../../../../api/routs/Dto/Car/CarDto.dart';
 import '../../../../api/routs/cities/city.dart';
 import '../../../../api/routs/root.dart';
 import '../../../../api/routs/user.dart';
@@ -127,7 +128,6 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
               ),
               const SizedBox(height: 8),
 
-
               // CarListWidget(
               //   cars: dto.cars,
               //   isInteractive: true, // или false
@@ -139,7 +139,8 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => UpdateCarScreen(carDto: car),
+                      builder: (context) =>
+                          UpdateCarScreen(userDto: dto, carDto: car),
                     ),
                   );
                 },
@@ -147,12 +148,12 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => UpdateCarScreen(),
+                      builder: (context) =>
+                          UpdateCarScreen(userDto: dto, carDto: CarDto.empty()),
                     ),
                   );
                 },
               ),
-
 
               // Padding(
               //   padding: const EdgeInsets.symmetric(vertical: 15),

@@ -20,4 +20,17 @@ class GeneDto {
       'name': name,
     };
   }
+  factory GeneDto.empty() {
+    return GeneDto(id: 0, name: '');
+  }
+
+  // // Переопределяем оператор сравнения
+  // @override
+  // bool operator ==(Object other) =>
+  //     identical(this, other) ||
+  //     other is GeneDto && runtimeType == other.runtimeType && id == other.id;
+  //
+  // // И хеш-код (для корректной работы в Set, Map и т.п.)
+  // @override
+  // int get hashCode => id.hashCode;
 }
