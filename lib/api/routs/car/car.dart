@@ -6,6 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tt_club_ua/api/routs.dart';
 import 'package:http/http.dart' as http;
 
+import '../Dto/Car/CarDto.dart';
+
 Future<Response> GET_MODELS(String? token) async {
   final response = await Dio().get(
     URL_MODELS,
@@ -19,6 +21,17 @@ Future<Response> GET_MODELS(String? token) async {
 Future<Response> GET_GENES(String? token) async {
   final response = await Dio().get(
     URL_GENES,
+    options: Options(
+      headers: HEADERS(token),
+    ),
+  );
+
+  return response;
+}
+
+Future<Response> GET_COLORS(String? token) async {
+  final response = await Dio().get(
+    URL_COLOR,
     options: Options(
       headers: HEADERS(token),
     ),
@@ -70,4 +83,34 @@ Future<http.Response> SEND_MENTION(
   // print('Response body: ${jsonDecode(res.body)}');
 
   return res;
+}
+
+Future<http.Response> UPLOAD_CAR_BY_ID(String? token, CarDto car) async {
+  // print('URL: ' + URL_CAR_UPDATE.replaceAll('{id}', car.id.toString()));
+  // print('User Data: ${car.toJson()}');
+
+  final response = await http.post(
+    Uri.parse(URL_CAR_UPDATE.replaceAll('{id}', car.id.toString())),
+    headers: HEADERS(token),
+    body: jsonEncode(car.toJson()),
+  );
+  print('Response status: ${response.statusCode}');
+  print('Response body: ${jsonDecode(response.body)}');
+
+  return response;
+}
+
+Future<http.Response> CREATE_CAR(String? token, CarDto car) async {
+  // print('URL: ' + URL_CAR_UPDATE.replaceAll('{id}', car.id.toString()));
+  // print('User Data: ${car.toJson()}');
+
+  final response = await http.post(
+    Uri.parse(URL_CAR_CREATE),
+    headers: HEADERS(token),
+    body: jsonEncode(car.toJson()),
+  );
+  print('Response status: ${response.statusCode}');
+  print('Response body: ${jsonDecode(response.body)}');
+
+  return response;
 }

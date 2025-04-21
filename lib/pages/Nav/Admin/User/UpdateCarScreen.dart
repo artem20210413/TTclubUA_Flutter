@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:tt_club_ua/api/routs/Dto/Car/ColorDto.dart';
 import 'package:tt_club_ua/api/routs/Dto/Car/ModelDto.dart';
 
 import '../../../../Storage/UserStorage.dart';
@@ -7,7 +8,9 @@ import '../../../../api/routs/Dto/Car/CarDto.dart';
 import '../../../../api/routs/Dto/Car/GeneDto.dart';
 import '../../../../api/routs/Dto/User/UserUpdateDto.dart';
 import '../../../../api/routs/car/car.dart';
+import '../../../../api/routs/root.dart';
 import '../../../../components/form/FormElements.dart';
+import '../../../../components/generalModule.dart';
 
 class UpdateCarScreen extends StatefulWidget {
   CarDto carDto;
@@ -24,31 +27,42 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _licensePlateController = TextEditingController();
 
-  // GeneDto? _selectedGene;
   List<GeneDto> _genes = [];
-  // ModelDto? _selectedModel;
   List<ModelDto> _models = [];
+  List<ColorDto> _colors = [];
 
   @override
   void initState() {
     super.initState();
     _fetchGenes();
     _fetchModels();
+    _fetchColors();
   }
 
   GeneDto? get selectedGene {
     try {
       return _genes.firstWhere(
-            (g) => g.id == widget.carDto.gene.id,
+        (g) => g.id == widget.carDto.gene.id,
       );
     } catch (e) {
       return null;
     }
   }
+
   ModelDto? get selectedModel {
     try {
       return _models.firstWhere(
-            (g) => g.id == widget.carDto.model.id,
+        (g) => g.id == widget.carDto.model.id,
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+
+  ColorDto? get selectedColor {
+    try {
+      return _colors.firstWhere(
+        (c) => c.id == widget.carDto.color.id,
       );
     } catch (e) {
       return null;
@@ -64,11 +78,21 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
         _genes = (resGenes.data['data'] as List)
             .map((item) => GeneDto.fromJson(item))
             .toList();
+      });
+    } catch (e) {
+      print('Ошибка загрузки genes: $e');
+    }
+  }
 
-        // widget.carDto.gene = _genes.firstWhere(
-        //       (g) => g.id == widget.carDto.gene.id,
-        //   orElse: () => _genes.first,
-        // );
+  Future<void> _fetchColors() async {
+    try {
+      final token = await UserStorage.getToken();
+      final resColors = await GET_COLORS(token);
+
+      setState(() {
+        _colors = (resColors.data['data'] as List)
+            .map((item) => ColorDto.fromJson(item ?? {}))
+            .toList();
       });
     } catch (e) {
       print('Ошибка загрузки genes: $e');
@@ -84,28 +108,30 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
         _models = (resModels.data['data'] as List)
             .map((item) => ModelDto.fromJson(item))
             .toList();
-
       });
     } catch (e) {
       print('Ошибка загрузки models: $e');
     }
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      final data = {
-        "id": widget.carDto.id ?? 0,
-        "user_id": widget.userDto.id,
-        "gene_id": widget.carDto.gene.id,
-        "model_id": widget.carDto.model.id,
-        "name": widget.carDto.nameController.text,
-        "vin_code":  widget.carDto.vinCodeController.text,
-        "license_plate":  widget.carDto.licensePlateController.text,
-        "personalized_license_plate":  widget.carDto.personalizedLicensePlateController.text
-      };
-      print("Отправка данных: $data");
+  void _submitForm() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final token = await UserStorage.getToken();
+
+    dynamic res;
+
+    widget.carDto.userId = widget.userDto.id;
+    if (widget.carDto.id == 0) {
+      res = await CREATE_CAR(token, widget.carDto);
     } else {
-      print("Заполните все поля");
+      res = await UPLOAD_CAR_BY_ID(token, widget.carDto);
+    }
+    bool isSuccess = await CHECK_API(res, context);
+
+    if (isSuccess) {
+      MessageModule(context, 'Успішно надіслано', MessageType.success);
+      Navigator.pop(context);
     }
   }
 
@@ -159,12 +185,47 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
                 validator: (value) => value == null ? "Виберіть модель" : null,
               ),
               SizedBox(height: 16),
-              customBuildTextField(
-                  'Держ. номер', widget.carDto.licensePlateController, customValidatorDefault,
+              DropdownButtonFormField<ColorDto>(
+                value: selectedColor,
+                hint: Text("Виберіть Колір"),
+                items: _colors.map((color) {
+                  return DropdownMenuItem<ColorDto>(
+                    value: color,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 16,
+                          height: 16,
+                          margin: const EdgeInsets.only(right: 8),
+                          // отступ справа от кружочка
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: color.hex != null
+                                ? Color(int.parse(color.hex!.replaceFirst('#', '0xFF')))
+                                : Colors.transparent,
+                          ),
+                        ),
+                        Text(color.name),
+                      ],
+                    ),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    if (value != null) {
+                      widget.carDto.color = value;
+                    }
+                  });
+                },
+                validator: (value) => value == null ? "Виберіть модель" : null,
+              ),
+              SizedBox(height: 16),
+              customBuildTextField('Держ. номер',
+                  widget.carDto.licensePlateController, customValidatorDefault,
                   isEditable: true),
               SizedBox(height: 16),
-              customBuildTextField(
-                  'Індивідуальний номер', widget.carDto.personalizedLicensePlateController, null,
+              customBuildTextField('Індивідуальний номер',
+                  widget.carDto.personalizedLicensePlateController, null,
                   isEditable: true),
 
               SizedBox(height: 24),

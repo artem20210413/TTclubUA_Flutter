@@ -1,3 +1,4 @@
+import 'package:tt_club_ua/api/routs/Dto/Car/ColorDto.dart';
 import 'package:tt_club_ua/config/default.dart';
 
 import '../../../../Storage/Search/ImageUrlDto.dart';
@@ -7,7 +8,8 @@ import 'ModelDto.dart';
 import 'package:flutter/material.dart';
 
 class CarDto {
-  final int id;
+  final int? id;
+  int? userId = null;
   final TextEditingController nameController;
   final TextEditingController vinCodeController;
   final TextEditingController licensePlateController;
@@ -17,6 +19,7 @@ class CarDto {
 
   GeneDto gene;
   ModelDto model;
+  ColorDto color;
   List<ImageUrlDto> imageUrls;
 
   CarDto({
@@ -29,6 +32,7 @@ class CarDto {
     required bool active,
     required this.gene,
     required this.model,
+    required this.color,
     required this.imageUrls,
   })  : nameController = TextEditingController(text: name ?? ''),
         vinCodeController = TextEditingController(text: vinCode ?? ''),
@@ -39,7 +43,7 @@ class CarDto {
 
   factory CarDto.fromJson(Map<String, dynamic> json) {
     return CarDto(
-      id: json['id'] ?? 0,
+      id: json['id'] ?? null,
       name: json['name'],
       vinCode: json['vin_code'],
       licensePlate: json['license_plate'] ?? '',
@@ -47,6 +51,7 @@ class CarDto {
       generalLicensePlate: json['general_license_plate'] ?? '',
       gene: GeneDto.fromJson(json['gene'] ?? {}),
       model: ModelDto.fromJson(json['model'] ?? {}),
+      color: ColorDto.fromJson(json['color'] ?? {}),
       imageUrls: (json['imageUrls'] as List<dynamic>?)
               ?.map((image) => ImageUrlDto.fromJson(image))
               .toList() ??
@@ -65,6 +70,7 @@ class CarDto {
       generalLicensePlate: '',
       gene: GeneDto.empty(),
       model: ModelDto.empty(),
+      color: ColorDto.empty(),
       imageUrls: [],
       active: true,
     );
@@ -73,12 +79,14 @@ class CarDto {
   Map<String, dynamic> toJson() {
     return {
       'id': id ?? 0,
+      'user_id': userId,
+      'gene_id': gene.id,
+      'model_id': model.id,
+      'color_id': color.id,
       'name': nameController.text,
       'vin_code': vinCodeController.text,
       'license_plate': licensePlateController.text,
       'personalized_license_plate': personalizedLicensePlateController.text,
-      'gene': gene.toJson(),
-      'model': model.toJson(),
       'active': activeNotifier.value ? 1 : 0,
     };
   }

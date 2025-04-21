@@ -35,6 +35,7 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
   @override
   void initState() {
     super.initState();
+    print('------------------initState------------------');
     dto = UserUpdateDto.fromJson(widget.dtoSearch.json);
   }
 
