@@ -24,6 +24,7 @@ class CarDto {
 
   CarDto({
     required this.id,
+    required this.userId,
     String? name,
     String? vinCode,
     required String licensePlate,
@@ -45,6 +46,7 @@ class CarDto {
     return CarDto(
       id: json['id'] ?? null,
       name: json['name'],
+      userId: json['user_id'],
       vinCode: json['vin_code'],
       licensePlate: json['license_plate'] ?? '',
       personalizedLicensePlate: json['personalized_license_plate'] ?? '',
@@ -64,6 +66,7 @@ class CarDto {
     return CarDto(
       id: 0,
       name: '',
+      userId: 0,
       vinCode: '',
       licensePlate: '',
       personalizedLicensePlate: '',

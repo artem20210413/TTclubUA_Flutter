@@ -12,6 +12,7 @@ Map<String, String> HEADERS([String? token = null]) {
 const URL_LOGIN = '${_HOST}/api/login';
 const URL_LOGOUT = '${_HOST}/api/logout';
 const URL_USER = '${_HOST}/api/user';
+const URL_USER_FIND = '${_HOST}/api/user/{id}';
 const URL_CHANGE_PASSWORD = '${_HOST}/api/change-password';
 const URL_SEARCH_USER = '${_HOST}/api/user/search/';
 const URL_USER_PICTURE = '${_HOST}/api/user/profile-picture';
@@ -22,6 +23,8 @@ const URL_SEARCH_CAR = '${_HOST}/api/car/search/';
 const URL_CAR_CREATE = '${_HOST}/api/car/create';
 const URL_CAR_UPDATE = '${_HOST}/api/car/{id}';
 const URL_MENTION_CAR= '${_HOST}/api/mention/car/';
+const URL_CAR_ADD_COLLECTIONS = '${_HOST}/api/car/{id}/collections';
+const URL_CAR_FIND = '${_HOST}/api/car/{id}';
 
 const URL_CITIES = '${_HOST}/api/cities';
 

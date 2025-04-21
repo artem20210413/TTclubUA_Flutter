@@ -49,6 +49,14 @@ Future<http.Response> SEARCH_CAR(String? token, String search) async {
   return response;
 }
 
+Future<http.Response> CAR_FIND(String? token, int carId) async {
+  final response = await http.get(
+      Uri.parse(URL_CAR_FIND.replaceAll('{id}', carId.toString())),
+      headers: HEADERS(token));
+
+  return response;
+}
+
 Future<http.Response> SEND_MENTION(
     String? token, XFile? pickedImage, String description, String carId) async {
   var request =
@@ -109,8 +117,24 @@ Future<http.Response> CREATE_CAR(String? token, CarDto car) async {
     headers: HEADERS(token),
     body: jsonEncode(car.toJson()),
   );
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${jsonDecode(response.body)}');
+  // print('Response status: ${response.statusCode}');
+  // print('Response body: ${jsonDecode(response.body)}');
+
+  return response;
+}
+
+Future<http.Response> CAR_ADD_COLLECTION(
+    String? token, int carId, String path) async {
+  var request = http.MultipartRequest(
+    'POST',
+    Uri.parse(URL_CAR_ADD_COLLECTIONS.replaceAll('{id}', carId.toString())),
+  );
+
+  request.files.add(await http.MultipartFile.fromPath('file', path));
+  request.headers['Authorization'] = 'Bearer $token';
+
+  var streamedResponse = await request.send();
+  var response = await http.Response.fromStream(streamedResponse);
 
   return response;
 }

@@ -27,6 +27,14 @@ Future<http.Response> SEARCH_USER(String? token, String search) async {
   return response;
 }
 
+Future<http.Response> USER_FIND(String? token, int userId) async {
+  final response = await http.get(
+      Uri.parse(URL_USER_FIND.replaceAll('{id}', userId.toString())),
+      headers: HEADERS(token));
+
+  return response;
+}
+
 Future<http.Response> UPLOAD_USER_PHOTO(String? token, String path) async {
   var request = http.MultipartRequest(
     'POST',
@@ -42,9 +50,9 @@ Future<http.Response> UPLOAD_USER_PHOTO(String? token, String path) async {
   return response;
 }
 
-
 Future<http.Response> CHANGE_ACTIVE_USER(String? token, int userId) async {
-  final response = await http.post(Uri.parse(URL_USER_CHANGE_ACTIVE.replaceAll('{id}', userId.toString())),
+  final response = await http.post(
+      Uri.parse(URL_USER_CHANGE_ACTIVE.replaceAll('{id}', userId.toString())),
       headers: HEADERS(token));
   // print('Response status: ${response.statusCode}');
   // print('Response body: ${jsonDecode(response.body)}');
@@ -52,8 +60,8 @@ Future<http.Response> CHANGE_ACTIVE_USER(String? token, int userId) async {
   return response;
 }
 
-
-Future<http.Response> UPLOAD_USER_BY_ID(String? token, UserUpdateDto user) async {
+Future<http.Response> UPLOAD_USER_BY_ID(
+    String? token, UserUpdateDto user) async {
   print('URL: ' + URL_USER_UPDATE_BY_ID.replaceAll('{id}', user.id.toString()));
   print('User Data: ${user.toJson()}');
 

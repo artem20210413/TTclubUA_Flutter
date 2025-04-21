@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tt_club_ua/Storage/UserDto.dart';
 import 'package:tt_club_ua/api/routs/Dto/City/CityDto.dart';
 import 'package:tt_club_ua/api/routs/Dto/User/UserUpdateDto.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/User/UpdateCarScreen.dart';
@@ -29,14 +31,15 @@ class UpdateUserScreen extends StatefulWidget {
 class _UpdateUserScreenState extends State<UpdateUserScreen> {
   late UserUpdateDto dto; // Переменная для хранения данных
   final _formKey = GlobalKey<FormState>();
+  final ImagePicker _picker = ImagePicker();
 
   // List<CityDto> cities = [];
 
   @override
   void initState() {
     super.initState();
-    print('------------------initState------------------');
     dto = UserUpdateDto.fromJson(widget.dtoSearch.json);
+     _fetchUser();
   }
 
   Future<void> _saveUser() async {
@@ -59,6 +62,22 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
     }
   }
 
+  Future<void> _fetchUser() async {
+    try {
+      final token = await UserStorage.getToken();
+      final resUs = await USER_FIND(token, widget.dtoSearch.json['id']);
+
+      setState(() {
+        dto = new UserUpdateDto.fromJson(jsonDecode(resUs.body)['data']);
+        // customBannerUrl = widget.carDto.imageUrls.length > 0
+        //     ? widget.carDto.imageUrls.first.url
+        //     : CAR_IMAGE_DEFAULT;
+      });
+    } catch (e) {
+      print('Ошибка загрузки _fetchCar: $e');
+    }
+  }
+
   Future<void> _changeActiveUser() async {
     final token = await UserStorage.getToken();
     final res = await CHANGE_ACTIVE_USER(token, dto.id);
@@ -71,6 +90,24 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
       });
 
       MessageModule(context, 'Профіль успішно оновлено!', MessageType.success);
+    }
+  }
+
+  Future<void> _pickAndUploadImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+
+      final token = await UserStorage.getToken();
+      final res = await UPLOAD_USER_PHOTO(token, imageFile.path);
+      bool isSuccess = await CHECK_API(res, context);
+      if (isSuccess) {
+        var newImageUrl = jsonDecode(res.body)['data']['profile_image'];
+        setState(() {
+          dto.profileImage = newImageUrl;
+        });
+      }
     }
   }
 
@@ -91,7 +128,9 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
             children: [
               Center(
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    _pickAndUploadImage();
+                  },
                   child: Stack(
                     alignment: Alignment.center,
                     children: [

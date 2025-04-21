@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tt_club_ua/api/routs/Dto/Car/ColorDto.dart';
 import 'package:tt_club_ua/api/routs/Dto/Car/ModelDto.dart';
+import 'package:tt_club_ua/config/default.dart';
 
 import '../../../../Storage/UserStorage.dart';
 import '../../../../api/routs/Dto/Car/CarDto.dart';
@@ -26,17 +30,24 @@ class UpdateCarScreen extends StatefulWidget {
 class _UpdateCarScreenState extends State<UpdateCarScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _licensePlateController = TextEditingController();
-
   List<GeneDto> _genes = [];
   List<ModelDto> _models = [];
   List<ColorDto> _colors = [];
+  String customBannerUrl = CAR_IMAGE_DEFAULT;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
+    _fetchCar();
     _fetchGenes();
     _fetchModels();
     _fetchColors();
+    // setState(() {
+    //   customBannerUrl = widget.carDto.imageUrls.length > 0
+    //       ? widget.carDto.imageUrls.first.url
+    //       : CAR_IMAGE_DEFAULT;
+    // });
   }
 
   GeneDto? get selectedGene {
@@ -69,6 +80,24 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
     }
   }
 
+  Future<void> _fetchCar() async {
+    if (widget.carDto.id == 0) return;
+
+    try {
+      final token = await UserStorage.getToken();
+      final resCar = await CAR_FIND(token, widget.carDto.id ?? 0);
+
+      setState(() {
+        widget.carDto = new CarDto.fromJson(jsonDecode(resCar.body)['data']);
+        customBannerUrl = widget.carDto.imageUrls.length > 0
+            ? widget.carDto.imageUrls.first.url
+            : CAR_IMAGE_DEFAULT;
+      });
+    } catch (e) {
+      print('Ошибка загрузки _fetchCar: $e');
+    }
+  }
+
   Future<void> _fetchGenes() async {
     try {
       final token = await UserStorage.getToken();
@@ -80,7 +109,7 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
             .toList();
       });
     } catch (e) {
-      print('Ошибка загрузки genes: $e');
+      print('Ошибка загрузки _fetchGenes: $e');
     }
   }
 
@@ -95,7 +124,7 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
             .toList();
       });
     } catch (e) {
-      print('Ошибка загрузки genes: $e');
+      print('Ошибка загрузки _fetchColors: $e');
     }
   }
 
@@ -110,7 +139,7 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
             .toList();
       });
     } catch (e) {
-      print('Ошибка загрузки models: $e');
+      print('Ошибка загрузки _fetchModels: $e');
     }
   }
 
@@ -121,8 +150,8 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
 
     dynamic res;
 
-    widget.carDto.userId = widget.userDto.id;
     if (widget.carDto.id == 0) {
+      widget.carDto.userId = widget.userDto.id;
       res = await CREATE_CAR(token, widget.carDto);
     } else {
       res = await UPLOAD_CAR_BY_ID(token, widget.carDto);
@@ -135,6 +164,51 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
     }
   }
 
+  void _submitImg() async {
+    if (widget.carDto.id == 0 || widget.carDto.id == null) {
+      MessageModule(
+          context, 'Спочатку збережіть авто', MessageType.information);
+      return;
+    }
+    // UPLOAD_CAR_PHOTO(token, widget.carDto.id
+
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+
+      final token = await UserStorage.getToken();
+      final res = await CAR_ADD_COLLECTION(
+          token, widget.carDto.id ?? 0, imageFile.path);
+      bool isSuccess = await CHECK_API(res, context);
+      if (isSuccess) {
+        var newImageUrl =
+            jsonDecode(res.body)['data']['imageUrls'].first['url'];
+        setState(() {
+          customBannerUrl = newImageUrl;
+        });
+      }
+    }
+
+    //
+    // final token = await UserStorage.getToken();
+    //
+    // dynamic res;
+    //
+    // if (widget.carDto.id == 0) {
+    //   widget.carDto.userId = widget.userDto.id;
+    //   res = await CREATE_CAR(token, widget.carDto);
+    // } else {
+    //   res = await UPLOAD_CAR_BY_ID(token, widget.carDto);
+    // }
+    // bool isSuccess = await CHECK_API(res, context);
+    //
+    // if (isSuccess) {
+    //   MessageModule(context, 'Успішно надіслано', MessageType.success);
+    //   Navigator.pop(context);
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,6 +219,23 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
           key: _formKey,
           child: Column(
             children: [
+              GestureDetector(
+                onTap: () {
+                  _submitImg();
+                  // Здесь будет логика замены баннера
+                  print("Нажали на баннер");
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image(
+                    image: NetworkImage(customBannerUrl ?? CAR_IMAGE_DEFAULT),
+                    height: 220,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(height: 24),
               // SizedBox(height: 16),
               DropdownButtonFormField<GeneDto>(
                 value: selectedGene,
@@ -201,7 +292,8 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: color.hex != null
-                                ? Color(int.parse(color.hex!.replaceFirst('#', '0xFF')))
+                                ? Color(int.parse(
+                                    color.hex!.replaceFirst('#', '0xFF')))
                                 : Colors.transparent,
                           ),
                         ),
