@@ -46,7 +46,6 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      print(dto.toJson());
       final token = await UserStorage.getToken();
       final res = await UPLOAD_USER_BY_ID(token, dto);
       final isSuccess = await CHECK_API(res, context);

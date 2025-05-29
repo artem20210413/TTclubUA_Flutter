@@ -18,6 +18,9 @@ const URL_SEARCH_USER = '${_HOST}/api/user/search/';
 const URL_USER_PICTURE = '${_HOST}/api/user/profile-picture';
 const URL_USER_CHANGE_ACTIVE = '${_HOST}/api/user/{id}/change-active';
 const URL_USER_UPDATE_BY_ID = '${_HOST}/api/user/{id}/update';
+const URL_REGISTATION_LIST = '${_HOST}/api/registration/list';
+const URL_REGISTATION_CHANHE_ACTIVE = '${_HOST}/api/registration/{id}/change-active';
+const URL_REGISTATION_APPROVE = '${_HOST}/api/registration/{id}/approve';
 
 const URL_SEARCH_CAR = '${_HOST}/api/car/search/';
 const URL_CAR_CREATE = '${_HOST}/api/car/create';
