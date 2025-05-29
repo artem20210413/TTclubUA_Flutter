@@ -164,6 +164,46 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
     }
   }
 
+  void _deleteCar() async {
+    final token = await UserStorage.getToken();
+    final res = await CAR_DELETE(token, widget.carDto.id ?? 0);
+
+    bool isSuccess = await CHECK_API(res, context);
+
+    if (isSuccess) {
+      MessageModule(context, 'Успішно видалено', MessageType.success);
+      Navigator.pop(context);
+    }
+  }
+
+  void _confirmDeleteCar() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Підтвердження'),
+          content: Text('Ви впевнені, що хочете видалити авто?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(), // Отмена
+              child: Text('Скасувати'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Закрыть диалог
+                _deleteCar(); // Продолжить удаление
+              },
+              child: Text(
+                'Видалити',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _submitImg() async {
     if (widget.carDto.id == 0 || widget.carDto.id == null) {
       MessageModule(
@@ -321,10 +361,23 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
                   isEditable: true),
 
               SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: Text("Зберегти"),
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: _confirmDeleteCar,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red.shade200,
+                    ),
+                    child: Text("Видалити"),
+                  ),
+                  SizedBox(width: 24),
+                  ElevatedButton(
+                    onPressed: _submitForm,
+                    child: Text("Зберегти"),
+                  ),
+                ],
+              )
             ],
           ),
         ),

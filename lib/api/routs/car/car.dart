@@ -56,6 +56,13 @@ Future<http.Response> CAR_FIND(String? token, int carId) async {
 
   return response;
 }
+Future<http.Response> CAR_DELETE(String? token, int carId) async {
+  final response = await http.delete(
+      Uri.parse(URL_CAR_DELETE.replaceAll('{id}', carId.toString())),
+      headers: HEADERS(token));
+
+  return response;
+}
 
 Future<http.Response> SEND_MENTION(
     String? token, XFile? pickedImage, String description, String carId) async {
