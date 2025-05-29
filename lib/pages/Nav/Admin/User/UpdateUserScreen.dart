@@ -39,7 +39,7 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
   void initState() {
     super.initState();
     dto = UserUpdateDto.fromJson(widget.dtoSearch.json);
-     _fetchUser();
+    _fetchUser();
   }
 
   Future<void> _saveUser() async {
@@ -99,7 +99,7 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
       File imageFile = File(pickedFile.path);
 
       final token = await UserStorage.getToken();
-      final res = await UPLOAD_USER_PHOTO(token, imageFile.path);
+      final res = await UPLOAD_USER_PHOTO_BY_ID(token, dto.id, imageFile.path);
       bool isSuccess = await CHECK_API(res, context);
       if (isSuccess) {
         var newImageUrl = jsonDecode(res.body)['data']['profile_image'];

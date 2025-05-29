@@ -49,6 +49,20 @@ Future<http.Response> UPLOAD_USER_PHOTO(String? token, String path) async {
 
   return response;
 }
+Future<http.Response> UPLOAD_USER_PHOTO_BY_ID(String? token, int userId, String path) async {
+  var request = http.MultipartRequest(
+    'POST',
+    Uri.parse(URL_USER_PICTURE_BY_ID.replaceAll('{id}', userId.toString())),
+  );
+
+  request.files.add(await http.MultipartFile.fromPath('profile_image', path));
+  request.headers['Authorization'] = 'Bearer $token';
+
+  var streamedResponse = await request.send();
+  var response = await http.Response.fromStream(streamedResponse);
+
+  return response;
+}
 
 Future<http.Response> CHANGE_ACTIVE_USER(String? token, int userId) async {
   final response = await http.post(
