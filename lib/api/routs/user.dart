@@ -18,11 +18,23 @@ Future<http.Response> UPLOAD_USER(String? token, UserDTO user) async {
   return response;
 }
 
-Future<http.Response> SEARCH_USER(String? token, String search) async {
-  final response = await http.get(Uri.parse(URL_SEARCH_USER + search),
+Future<http.Response> SEARCH_USER_OLD(String? token, String search) async {
+  final response = await http.get(Uri.parse(URL_SEARCH_USER_OLD + search),
       headers: HEADERS(token));
   // print('Response status: ${response.statusCode}');
   // print('Response body: ${jsonDecode(response.body)}');
+
+  return response;
+}
+
+Future<http.Response> SEARCH_USER(String? token, String search,
+    {int page = 1}) async {
+  final uri = Uri.parse(URL_SEARCH_USER).replace(queryParameters: {
+    'search': search ?? '',
+    'page': page.toString(),
+  });
+
+  final response = await http.get(uri, headers: HEADERS(token));
 
   return response;
 }
@@ -49,7 +61,9 @@ Future<http.Response> UPLOAD_USER_PHOTO(String? token, String path) async {
 
   return response;
 }
-Future<http.Response> UPLOAD_USER_PHOTO_BY_ID(String? token, int userId, String path) async {
+
+Future<http.Response> UPLOAD_USER_PHOTO_BY_ID(
+    String? token, int userId, String path) async {
   var request = http.MultipartRequest(
     'POST',
     Uri.parse(URL_USER_PICTURE_BY_ID.replaceAll('{id}', userId.toString())),

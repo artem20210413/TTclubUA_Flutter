@@ -28,15 +28,15 @@ class _AdminState extends State<Admin> {
 
   void _performSearch() {
     String searchText = _searchController.text.trim();
-    if (searchText.isNotEmpty) {
-      // Переход на страницу результатов
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SearchUserScreen(searchQuery: searchText),
-        ),
-      );
-    }
+    // if (searchText.isNotEmpty) {
+    // Переход на страницу результатов
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchUserScreen(searchQuery: searchText),
+      ),
+    );
+    // }
   }
 
   @override

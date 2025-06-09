@@ -61,86 +61,87 @@ class _SendMentionScreenState extends State<SendMentionScreen> {
       appBar: AppBar(
         title: Text("Привітання"),
       ),
-      body: Column(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-            child: Image(
-              image: widget.dto.images.isNotEmpty
-                  ? widget.dto.images.first.networkImage
-                  : NetworkImage(CAR_IMAGE_DEFAULT) as ImageProvider,
-              // image: widget.dto.images.isNotEmpty
-              //     ? widget.dto.images.first
-              //     : NetworkImage(CAR_IMAGE_DEFAULT) as ImageProvider,
-              height: 180,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.opaque,
+        // важно! чтобы сработал тап и по "пустому" месту
+        child: SingleChildScrollView(
+          // если нужно, чтобы при открытии клавиатуры всё поднималось
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                child: Image(
+                  image: widget.dto.images.isNotEmpty
+                      ? widget.dto.images.first.networkImage
+                      : NetworkImage(CAR_IMAGE_DEFAULT) as ImageProvider,
+                  height: 250,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Center(
+                      child: Text(
+                        widget.dto.user.name,
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    Text(
+                        "🚗 ${widget.dto.modelName} ${widget.dto.geneName} - ${widget.dto.getFullLicensePlate()}"),
+                    SizedBox(height: 2),
+                    Text("📍 ${widget.dto.user.citiesText ?? '-'}"),
+                  ],
+                ),
+              ),
+              SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    OutlinedButton(
+                      onPressed: () async {
+                        final ImagePicker _picker = ImagePicker();
+                        final pickedFile = await _picker.pickImage(
+                            source: ImageSource.gallery);
+                        if (pickedFile != null) {
+                          setState(() {
+                            _pickedImage = pickedFile;
+                          });
+                        }
+                      },
+                      child: Text(_pickedImage == null
+                          ? 'Завантажити фото'
+                          : 'Фото вибрано'),
+                    ),
+                    SizedBox(height: 12),
+                    TextField(
+                      controller: _descriptionController,
+                      decoration: InputDecoration(
+                        labelText: 'Опис привітання',
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: 2,
+                    ),
+                    SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _sendMention,
+                      child: Text('Надіслати'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              // чтобы имя было по центру
-              children: [
-                Center(
-                  child: Text(
-                    widget.dto.user.name,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(height: 12),
-                Text(
-                    "🚗 ${widget.dto.modelName} ${widget.dto.geneName} - ${widget.dto.getFullLicensePlate()}"),
-                SizedBox(height: 2),
-                Text("📍 ${widget.dto.user.citiesText ?? '-'}"),
-              ],
-            ),
-          ),
-          SizedBox(height: 12),
-
-// Форма загрузки фото и текста
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Кнопка для выбора изображения
-                OutlinedButton(
-                  onPressed: () async {
-                    final ImagePicker _picker = ImagePicker();
-                    final pickedFile =
-                        await _picker.pickImage(source: ImageSource.gallery);
-                    if (pickedFile != null) {
-                      setState(() {
-                        _pickedImage = pickedFile;
-                      });
-                    }
-                  },
-                  child: Text(_pickedImage == null
-                      ? 'Завантажити фото'
-                      : 'Фото вибрано'),
-                ),
-                SizedBox(height: 12),
-                // Текстовое поле
-                TextField(
-                  controller: _descriptionController,
-                  decoration: InputDecoration(
-                    labelText: 'Опис привітання',
-                    border: OutlineInputBorder(),
-                  ),
-                  maxLines: 4,
-                ),
-                SizedBox(height: 12),
-                // Кнопка отправки
-                ElevatedButton(
-                  onPressed: _sendMention,
-                  child: Text('Надіслати'),
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

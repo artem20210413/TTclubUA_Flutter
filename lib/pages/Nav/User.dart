@@ -48,6 +48,7 @@ class _UserState extends State<User> {
   }
 
   Future<void> _load() async {
+    await UserStorage.checkAndUpdate();
     final profileImage = await UserStorage.getProfileImagee();
     final dynamic json = await UserStorage.getUserInfo();
 

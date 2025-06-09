@@ -25,6 +25,24 @@ class _MentionState extends State<Mention> {
   final TextEditingController _searchController = TextEditingController();
   List<dynamic> searchResults = [];
   bool isLoading = false;
+  int _currentPage = 1;
+  bool _isLoadingMore = false;
+  bool _hasMore = true;
+  ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchSearchResults();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+              _scrollController.position.maxScrollExtent - 200 &&
+          !_isLoadingMore &&
+          _hasMore) {
+        _loadMore();
+      }
+    });
+  }
 
   void _performSearch() {
     String searchText = _searchController.text.trim();
@@ -33,23 +51,45 @@ class _MentionState extends State<Mention> {
     }
   }
 
-  Future<void> fetchSearchResults() async {
+  Future<void> fetchSearchResults({int page = 1, bool append = false}) async {
     final token = await UserStorage.getToken();
-    final res = await SEARCH_CAR(token, _searchController.text.trim());
+    final res =
+        await SEARCH_CAR(token, _searchController.text.trim(), page: page);
 
     bool isSuccess = await CHECK_API(res, context);
     if (isSuccess) {
-      print(jsonDecode(res.body)['data']);
+      List<dynamic> newData = jsonDecode(res.body)['data'];
       setState(() {
-        searchResults = jsonDecode(res.body)['data'];
-        if (searchResults.isEmpty) {
-          MessageModule(context, 'Нічого не знайдено', MessageType.success);
+        if (append) {
+          searchResults.addAll(newData);
+        } else {
+          searchResults = newData;
+          if (newData.length == 0) {
+            MessageModule(context, 'Нічого не знайдено', MessageType.success);
+          }
         }
+        _hasMore =
+            newData.length >= 15; // предположим, что на странице 10 записей
+        _isLoadingMore = false;
         isLoading = false;
+        // print(jsonDecode(res.body)['data']);
+        // setState(() {
+        //   searchResults = jsonDecode(res.body)['data'];
+        //   if (searchResults.isEmpty) {
+        //     MessageModule(context, 'Нічого не знайдено', MessageType.success);
+        //   }
+        //   isLoading = false;
+        // });
       });
     } else {
       print("Ошибка загрузки: ${res.statusCode}");
     }
+  }
+
+  Future<void> _loadMore() async {
+    _isLoadingMore = true;
+    _currentPage++;
+    await fetchSearchResults(page: _currentPage, append: true);
   }
 
   @override
@@ -60,7 +100,7 @@ class _MentionState extends State<Mention> {
         SizedBox(height: 10),
         SearchBarWidget(
           controller: _searchController,
-          onSearch: _performSearch,
+          onSearch: fetchSearchResults,
         ),
         SizedBox(height: 10),
         isLoading
@@ -69,8 +109,16 @@ class _MentionState extends State<Mention> {
                 ? Text('Тут ТТшкі...')
                 : Expanded(
                     child: ListView.builder(
-                      itemCount: searchResults.length,
+                      controller: _scrollController,
+                      itemCount: searchResults.length + (_isLoadingMore ? 1 : 0),
                       itemBuilder: (context, index) {
+
+                        if (index == searchResults.length) {
+                          return Center(child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(),
+                          ));
+                        }
                         final car = searchResults[index];
                         CarSearchDto dto = CarSearchDto.fromJson(car);
 
@@ -126,6 +174,9 @@ class _MentionState extends State<Mention> {
                                       ),
                                     ),
                                     SizedBox(height: 12),
+                                    Text(
+                                        "🚗 ${dto.modelName} ${dto.geneName} - ${dto.getFullLicensePlate()}"),
+                                    SizedBox(height: 2),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -139,9 +190,6 @@ class _MentionState extends State<Mention> {
                                             isActiveUser == false
                                                 ? Text("⚠️ ${textDisableUser} ")
                                                 : SizedBox.shrink(),
-                                            Text(
-                                                "🚗 ${dto.modelName} ${dto.geneName} - ${dto.getFullLicensePlate()}"),
-                                            SizedBox(height: 2),
                                             Text(
                                                 "📍 ${dto.user.citiesText ?? '-'}"),
                                           ],

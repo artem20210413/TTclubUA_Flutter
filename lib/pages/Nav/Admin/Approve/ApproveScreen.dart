@@ -122,7 +122,7 @@ class _ApproveScreenState extends State<ApproveScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  item.name,
+                                  "#${item.id} ${item.name}",
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,

@@ -24,41 +24,77 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
   String _token = '';
   List<dynamic> searchResults = [];
   bool isLoading = true;
+  int _page = 1;
+  bool _isLoadingMore = false;
+  bool _hasMore = true;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _searchController.text = widget.searchQuery;
+    fetchSearchResults(page: 1);
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+              _scrollController.position.maxScrollExtent - 200 &&
+          !_isLoadingMore &&
+          _hasMore) {
+        _loadMore();
+      }
     });
-    _performSearch();
+
+    // setState(() {
+    //   _searchController.text = widget.searchQuery;
+    // });
+    // _performSearch();
   }
 
   void _performSearch() {
-    print('------------- _performSearch -------------');
     String searchText = _searchController.text.trim();
     if (searchText.isNotEmpty) {
       fetchSearchResults();
-      // print("Поиск: $searchText"); // Здесь можно добавить реальный поиск
     }
   }
 
-  Future<void> fetchSearchResults() async {
+  Future<void> fetchSearchResults({int page = 1, bool append = false}) async {
     final token = await UserStorage.getToken();
-    final res = await SEARCH_USER(token, _searchController.text.trim());
+    final res =
+        await SEARCH_USER(token, _searchController.text.trim(), page: page);
 
     bool isSuccess = await CHECK_API(res, context);
     if (isSuccess) {
-      print(jsonDecode(res.body)['data']);
+      List<dynamic> data = jsonDecode(res.body)['data'];
+
       setState(() {
-        searchResults = jsonDecode(res.body)['data'];
+        if (append) {
+          searchResults.addAll(data);
+        } else {
+          searchResults = data;
+          if (data.length == 0) {
+            MessageModule(context, 'Нічого не знайдено', MessageType.success);
+          }
+        }
+
+        _hasMore = data.length >= 10;
+        _isLoadingMore = false;
         isLoading = false;
       });
+      // print(jsonDecode(res.body)['data']);
+      // setState(() {
+      //   searchResults = jsonDecode(res.body)['data'];
+      //   isLoading = false;
+      // });
     } else {
       print("Ошибка загрузки: ${res.statusCode}");
     }
   }
-
+  void _loadMore() {
+    setState(() {
+      _isLoadingMore = true;
+      _page++;
+    });
+    fetchSearchResults(page: _page, append: true);
+  }
 
 
   @override
@@ -71,19 +107,21 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
         children: [
           SearchBarWidget(
             controller: _searchController,
-            onSearch: _performSearch,
+            onSearch: fetchSearchResults,
           ),
           isLoading
               ? const Center(child: CircularProgressIndicator())
               : Expanded(
                   child: ListView.builder(
+                    controller: _scrollController, // ← добавь это
                     itemCount: searchResults.length,
                     itemBuilder: (context, index) {
                       final user = searchResults[index];
                       UserSearchDto dto = UserSearchDto.fromJson(user);
                       bool isActiveUser = dto.active == true;
                       return Card(
-                        surfaceTintColor: isActiveUser ? Colors.transparent : Colors.red,
+                        surfaceTintColor:
+                            isActiveUser ? Colors.transparent : Colors.red,
                         // shadowColor: isActiveUser ? Colors.black : Colors.red,
                         margin:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -104,7 +142,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                                   : Text("⚠️ Учасник не активний "),
                               isActiveUser
                                   ? Text("📍 ${dto.citiesText}")
-                          : SizedBox.shrink(),
+                                  : SizedBox.shrink(),
                               Text("🚗 ${dto.carsText}"),
                               isActiveUser
                                   ? Text("📅 ${dto.birthDateText}")

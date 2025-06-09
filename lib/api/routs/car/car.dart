@@ -40,14 +40,16 @@ Future<Response> GET_COLORS(String? token) async {
   return response;
 }
 
-Future<http.Response> SEARCH_CAR(String? token, String search) async {
-  final response = await http.get(Uri.parse(URL_SEARCH_CAR + search),
-      headers: HEADERS(token));
-  // print('Response status: ${response.statusCode}');
-  // print('Response body: ${jsonDecode(response.body)}');
+Future<http.Response> SEARCH_CAR(String? token, String? search, {int page = 1}) async {
+  final uri = Uri.parse(URL_SEARCH_CAR).replace(queryParameters: {
+    'search': search ?? '',
+    'page': page.toString(),
+  });
 
+  final response = await http.get(uri, headers: HEADERS(token));
   return response;
 }
+
 
 Future<http.Response> CAR_FIND(String? token, int carId) async {
   final response = await http.get(
