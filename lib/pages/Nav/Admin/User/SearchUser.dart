@@ -31,6 +31,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
 
   @override
   void initState() {
+
     super.initState();
     fetchSearchResults(page: 1);
     _scrollController = ScrollController();
@@ -43,9 +44,9 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
       }
     });
 
-    // setState(() {
-    //   _searchController.text = widget.searchQuery;
-    // });
+    setState(() {
+      _searchController.text = widget.searchQuery;
+    });
     // _performSearch();
   }
 

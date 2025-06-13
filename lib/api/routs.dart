@@ -24,6 +24,11 @@ const URL_REGISTATION_LIST = '${_HOST}/api/registration/list';
 const URL_REGISTATION_CHANHE_ACTIVE = '${_HOST}/api/registration/{id}/change-active';
 const URL_REGISTATION_APPROVE = '${_HOST}/api/registration/{id}/approve';
 
+const URL_FINANCE_LIST = '${_HOST}/api/finance/user/{userId}';
+const URL_FINANCE_STATISTICS = '${_HOST}/api/finance/user/{userId}/statistics';
+const URL_FINANCE_DELETE = '${_HOST}/api/finance/{financeId}';
+const URL_FINANCE_SET = '${_HOST}/api/finance/user/{userId}';
+
 const URL_SEARCH_CAR = '${_HOST}/api/car/search';
 const URL_CAR_CREATE = '${_HOST}/api/car/create';
 const URL_CAR_UPDATE = '${_HOST}/api/car/{id}';
