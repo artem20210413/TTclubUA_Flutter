@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/Storage/UserStorage.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../api/routs.dart';
+import '../../components/generalModule.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -17,6 +21,15 @@ class _HomeState extends State<Home> {
     _loadUser();
   }
 
+  Future<void> _launchMonobankJar() async {
+    final userID = await UserStorage.getId();
+
+    final Uri url =
+        Uri.parse(URL_REDIRECT_JAK.replaceAll('{userId}', userID.toString()));
+
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -27,6 +40,11 @@ class _HomeState extends State<Home> {
         Text('інформація про події'),
         Text('Нові учасники (за месяц)'),
         Text('донат'),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.monetization_on),
+          label: const Text('Підтримати'),
+          onPressed: _launchMonobankJar,
+        )
         // ElevatedButton(
         //   onPressed: () {
         //     // Navigator.pushReplacementNamed(context, '/user');
@@ -48,5 +66,4 @@ class _HomeState extends State<Home> {
       userName = name ?? '--';
     });
   }
-
 }

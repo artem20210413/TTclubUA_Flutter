@@ -86,8 +86,11 @@ class UserStorage {
     return prefs.getString(_keyToken);
   }
 
-  static Future<String?> getUserId() async {
-    return _userInfo?['name'];
+  // static Future<String?> getUserId() async {
+  //   return _userInfo?['name'];
+  // }
+  static Future<int?> getId() async {
+    return _userInfo?['id'];
   }
 
   static Future<String?> getTelegramNickname() async {

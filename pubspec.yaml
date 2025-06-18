@@ -37,6 +37,7 @@ dependencies:
   dio: ^5.4.0
   image_picker: ^1.0.0
   flutter_launcher_icons: ^0.13.1
+  url_launcher: ^6.2.5
 
 
 

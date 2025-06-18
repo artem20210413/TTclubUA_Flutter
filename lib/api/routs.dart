@@ -28,6 +28,8 @@ const URL_FINANCE_LIST = '${_HOST}/api/finance/user/{userId}';
 const URL_FINANCE_STATISTICS = '${_HOST}/api/finance/user/{userId}/statistics';
 const URL_FINANCE_DELETE = '${_HOST}/api/finance/{financeId}';
 const URL_FINANCE_SET = '${_HOST}/api/finance/user/{userId}';
+const URL_REDIRECT_JAK = '${_HOST}/redirect-jar-monobank?userId={userId}';
+const URL_JAK = '${_HOST}/api/finance/jar-monobank?userId={userId}';
 
 const URL_SEARCH_CAR = '${_HOST}/api/car/search';
 const URL_CAR_CREATE = '${_HOST}/api/car/create';
