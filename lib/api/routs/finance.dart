@@ -25,13 +25,30 @@ Future<http.Response> FINANCE_LIST(String? token, int userID,
   });
   final response = await http.get(uri, headers: HEADERS(token));
 
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${jsonDecode(response.body)}');
+  // print('Response status: ${response.statusCode}');
+  // print('Response body: ${jsonDecode(response.body)}');
+
+  return response;
+}
+
+Future<http.Response> FINANCE_LINK_JAK(int userID) async {
+  final uri = Uri.parse(URL_JAK.replaceAll('{userId}', userID.toString()));
+
+  final response = await http.get(uri, headers: HEADERS());
 
   return response;
 }
 
 Future<http.Response> FINANCE_STATISTICS(String? token, int userID) async {
+  final response = await http.get(
+      Uri.parse(
+          URL_FINANCE_STATISTICS.replaceAll('{userId}', userID.toString())),
+      headers: HEADERS(token));
+
+  return response;
+}
+
+Future<http.Response> FINANCE_CLOSE(String? token, int userID) async {
   final response = await http.get(
       Uri.parse(
           URL_FINANCE_STATISTICS.replaceAll('{userId}', userID.toString())),
@@ -48,4 +65,3 @@ Future<http.Response> FINANCE_DELETE(String? token, int financeId) async {
 
   return response;
 }
-

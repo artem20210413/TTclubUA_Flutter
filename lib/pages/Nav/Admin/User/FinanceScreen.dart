@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:tt_club_ua/api/routs/Dto/Finance/FinanceDto.dart';
@@ -6,6 +7,9 @@ import 'package:tt_club_ua/Storage/UserStorage.dart';
 import 'package:tt_club_ua/api/routs/Finance.dart';
 import '../../../../api/routs/Dto/User/UserUpdateDto.dart';
 import '../../../../api/routs/root.dart';
+import '../../../../components/Finance/FinanceItemCard.dart';
+import '../../../../components/Finance/StatisticsCard.dart';
+import '../../../../components/generalModule.dart';
 
 class FinanceScreen extends StatefulWidget {
   final UserUpdateDto userDto;
@@ -19,6 +23,7 @@ class FinanceScreen extends StatefulWidget {
 class _FinanceScreenState extends State<FinanceScreen> {
   List<FinanceDto> finances = [];
   int _page = 1;
+  String? _urlJak = null;
   bool _hasMore = true;
   bool _isLoading = false;
   final ScrollController _scrollController = ScrollController();
@@ -48,6 +53,35 @@ class _FinanceScreenState extends State<FinanceScreen> {
         _statistics = data;
       });
     }
+  }
+
+  Future<void> _linkJakCopy() async {
+    if(_urlJak == null){
+      final response = await FINANCE_LINK_JAK(widget.userDto.id); //FINANCE_LINK_JAK
+
+      if (await CHECK_API(response, context)) {
+        final String url = jsonDecode(response.body)['data']['url'];
+        setState(() {
+          _urlJak = url;
+        });
+      }
+    }
+
+    print(_urlJak);
+    await Clipboard.setData(ClipboardData(text: _urlJak.toString()));
+    MessageModule(context, 'Посилання на банку успішно скопійовано', MessageType.information);
+
+
+
+    // final userID = await UserStorage.getUserId();
+    // final link = 'https://send.monobank.ua/jar/YOUR_JAR_ID?t=User%20ID:%20$userID';
+    // await Clipboard.setData(ClipboardData(text: link));
+    // if (context.mounted) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(content: Text('Посилання скопійовано')),
+    //   );
+    // }
+
   }
 
   Future<void> _loadFinances() async {
@@ -120,6 +154,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
                     _hasMore = true;
                   });
                   _loadFinances();
+                  _loadStatistics();
                   Navigator.pop(context);
                 }
               },
@@ -153,83 +188,14 @@ class _FinanceScreenState extends State<FinanceScreen> {
       final token = await UserStorage.getToken();
       final res = await FINANCE_DELETE(token, finance.id);
       if (res.statusCode == 200) {
+        _loadStatistics();
+
         setState(() {
           finances.remove(finance);
         });
       }
     }
     return confirmed;
-  }
-
-  Widget _buildStatisticsCard() {
-    if (_statistics == null) return SizedBox();
-
-    String formatDouble(String? value) =>
-        value == null ? '—' : double.parse(value).toStringAsFixed(2);
-
-    String formatDate(String? value) => value == null
-        ? '—'
-        : DateFormat('dd.MM.yyyy').format(DateTime.parse(value));
-
-    return Card(
-      margin: EdgeInsets.all(12),
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('📊 Статистика',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Divider(),
-            Text('💰 Всього: ${_statistics!['all_sum']} грн'),
-            Text('📅 За рік: ${_statistics!['last_year']} грн'),
-            Text(
-                '🗓️ За місяць: ${_statistics!['last_month']} грн'),
-            SizedBox(height: 10),
-            Text(
-                '🔢 Кількість внесків: ${_statistics!['total_payments_count']}'),
-            Text(
-                '⚖️ Середній платіж: ${formatDouble(_statistics!['average_payment'])} грн'),
-            Text(
-                '⬆️ Найбільший: ${formatDouble(_statistics!['largest_payment'])} грн'),
-            Text(
-                '⬇️ Найменший: ${formatDouble(_statistics!['smallest_payment'])} грн'),
-            SizedBox(height: 10),
-            Text(
-                '🕓 Останній платіж: ${formatDate(_statistics!['last_payment_date'])}'),
-            Text(
-                '🕓 Перший платіж: ${formatDate(_statistics!['first_payment_date'])}'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatItem(finance) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      child: ListTile(
-        leading: const Icon(Icons.savings_outlined, color: Colors.pink),
-        title: Text(
-          '${finance.amount} грн',
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (finance.description.isNotEmpty)
-              Text(finance.description)
-            else
-              const Text('Без опису', style: TextStyle(color: Colors.grey)),
-            Text(
-              DateFormat('yyyy-MM-dd HH:mm').format(finance.createdAt),
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   @override
@@ -242,7 +208,14 @@ class _FinanceScreenState extends State<FinanceScreen> {
         ),
         body: Column(
           children: [
-            _buildStatisticsCard(),
+            StatisticsCard(statistics: _statistics),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.copy),
+              label: const Text('Копіювати посилання на банку'),
+              onPressed: () async {
+                _linkJakCopy();
+              },
+            ),
             Expanded(
               child: ListView.builder(
                 controller: _scrollController,
@@ -263,7 +236,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
                       padding: const EdgeInsets.only(right: 20),
                       child: const Icon(Icons.delete, color: Colors.white),
                     ),
-                    child: _buildStatItem(finance)
+                    child: FinanceItemCard(finance: finance),
                   );
                 },
               ),

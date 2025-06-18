@@ -17,6 +17,7 @@ import '../../../../components/form/CitySelector.dart';
 import '../../../../components/form/FormElements.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/interface/CarListWidget.dart';
+import '../../../../components/interface/TileButton.dart';
 import '../../../../config/default.dart';
 import 'FinanceScreen.dart';
 
@@ -167,6 +168,19 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                 ),
               ),
               const SizedBox(height: 8),
+              TileButton(
+                icon: Icons.payment_outlined,
+                title: 'Фінанси',
+                onTap: () {
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FinanceScreen(userDto: dto),
+                    ),
+                  );
+                },
+              ),
               CarListWidget(
                 cars: dto.cars,
                 onCarTap: (car) {
@@ -246,18 +260,6 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                     ),
                     child:
                         dto.active ? Text('Деактивувати') : Text('Активувати'),
-                  ),
-                  Spacer(),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FinanceScreen(userDto: dto),
-                        ),
-                      );
-                    },
-                    child: const Text('Фінанси'),
                   ),
                   Spacer(),
                   ElevatedButton(
