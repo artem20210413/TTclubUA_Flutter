@@ -14,7 +14,10 @@ import 'package:tt_club_ua/api/routs/root.dart';
 import 'package:tt_club_ua/config/default.dart';
 
 import '../../Storage/CityDto.dart';
+import '../../api/routs/Dto/User/UserUpdateDto.dart';
 import '../../api/routs/cities/CityServices.dart';
+import '../../components/interface/TileButton.dart';
+import 'Admin/User/FinanceScreen.dart';
 import 'User/ChangePasswordPage.dart';
 
 class User extends StatefulWidget {
@@ -25,6 +28,8 @@ class User extends StatefulWidget {
 }
 
 class _UserState extends State<User> {
+
+  late UserUpdateDto _dto;
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _picker = ImagePicker();
   bool _isLoading = true;
@@ -46,6 +51,7 @@ class _UserState extends State<User> {
     super.initState();
     _load();
   }
+  @override
 
   Future<void> _load() async {
     await UserStorage.checkAndUpdate();
@@ -56,6 +62,8 @@ class _UserState extends State<User> {
 
     setState(() {
       // _userDTO = UserDTO.fromJson(json);
+
+      _dto = UserUpdateDto.fromJson(json);
       _userDTO = UserDTO.fromJson(json);
       _cities = cities;
 
@@ -133,6 +141,30 @@ class _UserState extends State<User> {
     }
   }
 
+
+  Widget _buildRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('$label: ', style: const TextStyle(fontWeight: FontWeight.bold)),
+          Expanded(child: Text(value.isEmpty ? '—' : value)),
+        ],
+      ),
+    );
+  }
+
+  String _formatDate(String rawDate) {
+    if (rawDate.isEmpty) return '—';
+    try {
+      return DateFormat('dd.MM.yyyy').format(DateTime.parse(rawDate));
+    } catch (_) {
+      return rawDate;
+    }
+  }
+
+
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -192,15 +224,7 @@ class _UserState extends State<User> {
                         ],
                       ),
                     ),
-                    // Фото профиля
-                    // CircleAvatar(
-                    //   radius: 70,
-                    //   backgroundImage: NetworkImage(userProfileImage),
-                    //   backgroundColor: Colors.grey[200],
-                    // ),
                     const SizedBox(height: 16),
-
-                    // Имя пользователя
                     Text(
                       _nameController.text,
                       style: const TextStyle(
@@ -209,35 +233,66 @@ class _UserState extends State<User> {
                       ),
                     ),
                     const SizedBox(height: 8),
+                    TileButton(
+                      icon: Icons.payment_outlined,
+                      title: 'Фінанси',
+                      onTap: () {
 
-                    customBuildTextField(
-                        'Name', _nameController, customValidatorDefault, isEditable: false),
-                    customBuildTextField(
-                        'Email', _emailController, customValidatorDefault,
-                        keyboardType: TextInputType.emailAddress,  isEditable: false),
-                    customBuildPhoneField('Phone number', _phoneController,
-                        isEditable: false),
-                    customBuildTextField(
-                        'Instagram', _instagramController, null,  isEditable: false),
-                    customBuildTextField('Telegram', _telegramController, null,  isEditable: false),
-                    customBuildDatePickerField(
-                        'Birth Date', _birthDateController, context, isEditable: false),
-                    customBuildDatePickerField(
-                        'Club Entry Date', _clubEntryDateController, context,
-                        isEditable: false),
-                    customBuildTextField('Occupation', _occupationController,
-                        customValidatorDefault,
-                        maxLines: 5,  isEditable: true),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FinanceScreen(userDto: _dto),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    Card(
+                      margin: const EdgeInsets.all(12),
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildRow('👤 Імʼя', _dto.nameController.text),
+                            _buildRow('📞 Телефон', _dto.phoneController.text),
+                            // _buildRow('📧 Email', _dto.emailController.text),
+                            _buildRow('🎂 Дата народження', _formatDate(_dto.birthDateController.text)),
+                            _buildRow('💼 Професія', _dto.occupationDescriptionController.text),
+                            _buildRow('Instagram', _dto.instagramNicknameController.text),
+                            _buildRow('Telegram', _dto.telegramNicknameController.text),
+                            _buildRow('Міста', _dto.cities.map((c) => c.name).join(', ')),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                const Text('Статус:'),
+                                const SizedBox(width: 8),
+                                Chip(
+                                  label: Text(_dto.active ? 'Активний' : 'Неактивний'),
+                                  backgroundColor: _dto.active ? Colors.green.shade100 : Colors.red.shade100,
+                                  labelStyle: TextStyle(
+                                    color: _dto.active ? Colors.green : Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       // Выравнивание по горизонтали
                       // crossAxisAlignment: CrossAxisAlignment.start, // Выравнивание по вертикали
                       children: [
-                        ElevatedButton(
-                          onPressed: _saveUser,
-                          child: const Text('Зберегти'),
-                        ),
+                        // ElevatedButton(
+                        //   onPressed: _saveUser,
+                        //   child: const Text('Зберегти'),
+                        // ),
                         Spacer(),
                         ElevatedButton(
                           onPressed: () {
@@ -262,6 +317,7 @@ class _UserState extends State<User> {
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
+                        Spacer(),
                       ],
                     ),
                   ],

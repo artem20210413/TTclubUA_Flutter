@@ -32,9 +32,9 @@ class UserSearchDto {
         instagramNickname = json['instagram_nickname'] ?? "Не вказано",
         // _cities =
         //     json['cities'] != null ? List<int>.from(json['cities']) : null,
-        // birthDate = json['birth_date'] != null
-        //     ? DateTime.parse(json['birthDate'])
-        //     : null,
+        birthDate = json['birth_date'] != null
+            ? DateFormat('dd-MM-yyyy').parse(json['birth_date'])
+            : null,
         birthDateText = json["birth_date"] ?? "Не вказано",
         // clubEntryDate = json['club_entry_date'] != null
         //     ? DateTime.parse(json['clubEntryDate'])

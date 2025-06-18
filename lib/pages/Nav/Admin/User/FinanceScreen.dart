@@ -14,6 +14,8 @@ import '../../../../components/generalModule.dart';
 class FinanceScreen extends StatefulWidget {
   final UserUpdateDto userDto;
 
+  // final UserUpdateDto userOwner;
+
   const FinanceScreen({super.key, required this.userDto});
 
   @override
@@ -22,6 +24,7 @@ class FinanceScreen extends StatefulWidget {
 
 class _FinanceScreenState extends State<FinanceScreen> {
   List<FinanceDto> finances = [];
+  bool _isAdmin = false; // Значение по умолчанию
   int _page = 1;
   String? _urlJak = null;
   bool _hasMore = true;
@@ -32,6 +35,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
   @override
   void initState() {
     super.initState();
+    _loadUser();
     _loadFinances();
     _loadStatistics();
     _scrollController.addListener(() {
@@ -56,8 +60,9 @@ class _FinanceScreenState extends State<FinanceScreen> {
   }
 
   Future<void> _linkJakCopy() async {
-    if(_urlJak == null){
-      final response = await FINANCE_LINK_JAK(widget.userDto.id); //FINANCE_LINK_JAK
+    if (_urlJak == null) {
+      final response =
+          await FINANCE_LINK_JAK(widget.userDto.id); //FINANCE_LINK_JAK
 
       if (await CHECK_API(response, context)) {
         final String url = jsonDecode(response.body)['data']['url'];
@@ -69,19 +74,8 @@ class _FinanceScreenState extends State<FinanceScreen> {
 
     print(_urlJak);
     await Clipboard.setData(ClipboardData(text: _urlJak.toString()));
-    MessageModule(context, 'Посилання на банку успішно скопійовано', MessageType.information);
-
-
-
-    // final userID = await UserStorage.getUserId();
-    // final link = 'https://send.monobank.ua/jar/YOUR_JAR_ID?t=User%20ID:%20$userID';
-    // await Clipboard.setData(ClipboardData(text: link));
-    // if (context.mounted) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text('Посилання скопійовано')),
-    //   );
-    // }
-
+    MessageModule(context, 'Посилання на банку успішно скопійовано',
+        MessageType.information);
   }
 
   Future<void> _loadFinances() async {
@@ -100,6 +94,14 @@ class _FinanceScreenState extends State<FinanceScreen> {
       });
     }
     setState(() => _isLoading = false);
+  }
+
+  Future<void> _loadUser() async {
+    final isAdmin = await UserStorage.whereInRole([UserRole.admin]);
+
+    setState(() {
+      _isAdmin = isAdmin ?? _isAdmin;
+    });
   }
 
   void _addFinanceDialog() {
@@ -202,20 +204,23 @@ class _FinanceScreenState extends State<FinanceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text('Фінанси')),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _addFinanceDialog,
-          child: const Icon(Icons.add),
-        ),
+        floatingActionButton: _isAdmin
+            ? FloatingActionButton(
+                onPressed: _addFinanceDialog,
+                child: const Icon(Icons.add),
+              )
+            : null,
         body: Column(
           children: [
             StatisticsCard(statistics: _statistics),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.copy),
-              label: const Text('Копіювати посилання на банку'),
-              onPressed: () async {
-                _linkJakCopy();
-              },
-            ),
+            if (_isAdmin)
+              ElevatedButton.icon(
+                icon: const Icon(Icons.copy),
+                label: const Text('Копіювати посилання на банку'),
+                onPressed: () async {
+                  _linkJakCopy();
+                },
+              ),
             Expanded(
               child: ListView.builder(
                 controller: _scrollController,
@@ -226,18 +231,21 @@ class _FinanceScreenState extends State<FinanceScreen> {
                   }
 
                   final finance = finances[index];
-                  return Dismissible(
-                    key: Key(finance.id.toString()),
-                    direction: DismissDirection.endToStart,
-                    confirmDismiss: (_) => _confirmDelete(finance),
-                    background: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 20),
-                      child: const Icon(Icons.delete, color: Colors.white),
-                    ),
-                    child: FinanceItemCard(finance: finance),
-                  );
+                  return _isAdmin
+                      ? Dismissible(
+                          key: Key(finance.id.toString()),
+                          direction: DismissDirection.endToStart,
+                          confirmDismiss: (_) => _confirmDelete(finance),
+                          background: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 20),
+                            child:
+                                const Icon(Icons.delete, color: Colors.white),
+                          ),
+                          child: FinanceItemCard(finance: finance),
+                        )
+                      : FinanceItemCard(finance: finance);
                 },
               ),
             )
