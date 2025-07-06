@@ -103,3 +103,17 @@ Future<http.Response> UPLOAD_USER_BY_ID(
 
   return response;
 }
+
+Future<http.Response> USER_CHANGE_PASSWARD(
+    String? token, int userId, String password) async {
+  final response = await http.post(
+    Uri.parse(URL_USER_CHANGE_PASSWORD.replaceAll('{id}', userId.toString())),
+    headers: HEADERS(token),
+    body: jsonEncode({
+      'new_password': password,
+      'new_password_confirmation': password,
+    }),
+  );
+
+  return response;
+}

@@ -18,7 +18,7 @@ import '../../../../components/form/FormElements.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/interface/CarListWidget.dart';
 import '../../../../components/interface/TileButton.dart';
-import '../../../../config/default.dart';
+import 'ChangePasswordScreen.dart';
 import 'FinanceScreen.dart';
 
 class UpdateUserScreen extends StatefulWidget {
@@ -168,19 +168,6 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              TileButton(
-                icon: Icons.payment_outlined,
-                title: 'Фінанси',
-                onTap: () {
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FinanceScreen(userDto: dto),
-                    ),
-                  );
-                },
-              ),
               CarListWidget(
                 cars: dto.cars,
                 onCarTap: (car) {
@@ -268,6 +255,31 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                   ),
                   Spacer(),
                 ],
+              ),
+
+              TileButton(
+                icon: Icons.payment_outlined,
+                title: 'Фінанси',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FinanceScreen(userDto: dto),
+                    ),
+                  );
+                },
+              ),
+              TileButton(
+                icon: Icons.lock_reset,
+                title: 'Зміна пароля',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChangePasswordScreen(userDto: dto),
+                    ),
+                  );
+                },
               ),
             ],
           ),

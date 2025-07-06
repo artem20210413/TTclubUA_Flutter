@@ -14,6 +14,7 @@ const URL_LOGOUT = '${_HOST}/api/logout';
 const URL_USER = '${_HOST}/api/user';
 const URL_USER_FIND = '${_HOST}/api/user/{id}';
 const URL_CHANGE_PASSWORD = '${_HOST}/api/change-password';
+const URL_USER_CHANGE_PASSWORD = '${_HOST}/api/user/{id}/change-password';
 const URL_SEARCH_USER_OLD = '${_HOST}/api/user/search/';
 const URL_SEARCH_USER = '${_HOST}/api/user/search';
 const URL_USER_PICTURE = '${_HOST}/api/user/profile-picture';
