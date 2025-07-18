@@ -255,7 +255,7 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
                 child: Crop(
                   image: _imageData!,
                   controller: _cropController,
-                  aspectRatio: 2, // можно убрать, если не нужно
+                  aspectRatio: 4/3, // можно убрать, если не нужно
                   onCropped: (croppedData) async {
                     Navigator.of(context).pop(); // Закрываем диалог
 
