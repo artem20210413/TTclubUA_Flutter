@@ -6,13 +6,15 @@ class TileButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
   final Color iconColor;
+  final int? newCount;
 
   const TileButton({
     Key? key,
     required this.title,
     required this.icon,
     required this.onTap,
-    this.iconColor = Colors.black, // дефолтный цвет, если не передан
+    this.iconColor = Colors.black,
+    this.newCount,
   }) : super(key: key);
 
   @override
@@ -45,6 +47,21 @@ class TileButton extends StatelessWidget {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                   ),
                 ),
+
+                if (newCount != null && newCount! > 0)
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '$newCount',
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                  ),
+
+                SizedBox(width: 8),
                 Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
               ],
             ),

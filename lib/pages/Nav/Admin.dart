@@ -1,11 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/Publication/PublicationsScreen.dart';
 
+import '../../Storage/UserStorage.dart';
+import '../../api/routs/registaion.dart';
+import '../../api/routs/root.dart';
 import '../../components/generalModule.dart';
 import '../../components/interface/SearchBarWidgetState.dart';
 import '../../components/interface/TileButton.dart';
 import '../../config/default.dart';
 import 'Admin/Approve/ApproveScreen.dart';
+import 'Admin/Costs/CostsListScreen.dart';
 import 'Admin/Publication/CreatePostScreen.dart';
 import 'Admin/User/SearchUser.dart';
 
@@ -18,6 +24,7 @@ class Admin extends StatefulWidget {
 
 class _AdminState extends State<Admin> {
   final TextEditingController _searchController = TextEditingController();
+  var countRegistration = 0;
 
   // void _performSearch() {
   //   String searchText = _searchController.text.trim();
@@ -25,6 +32,28 @@ class _AdminState extends State<Admin> {
   //     print("Поиск: $searchText"); // Здесь можно добавить реальный поиск
   //   }
   // }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRegistration();
+  }
+
+  void _loadRegistration() async {
+    final token = await UserStorage.getToken();
+    final res = await REGISTRATION_COUNT(token);
+
+    bool isSuccess = await CHECK_API(res, context);
+
+    if (isSuccess) {
+      setState(() {
+        countRegistration = jsonDecode(res.body)['data']['count'] ?? 0;
+      });
+    } else {
+      MessageModule(
+          context, 'Затвердженя не туспішно отримано', MessageType.error);
+    }
+  }
 
   void _performSearch() {
     String searchText = _searchController.text.trim();
@@ -72,17 +101,30 @@ class _AdminState extends State<Admin> {
         //   ],
         // ),
         TileButton(
-          icon: Icons.check_circle_outline,
-          title: 'Затвердити учасників',
+            icon: Icons.check_circle_outline,
+            title: 'Затвердити учасників',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ApproveScreen()), // Переход на экран публикаций
+              );
+            },
+            iconColor: Colors.green,
+            newCount: countRegistration),
+        TileButton(
+          icon: Icons.payment_outlined,
+          title: 'Витрати',
+          // iconColor: COLOR_FIRST_LITE,
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      ApproveScreen()), // Переход на экран публикаций
+                      CostsListScreen()), // Переход на экран публикаций
             );
           },
-          iconColor: Colors.green,
         ),
         TileButton(
           icon: Icons.article,
@@ -100,14 +142,6 @@ class _AdminState extends State<Admin> {
         TileButton(
           icon: Icons.image,
           title: 'Банер',
-          // iconColor: COLOR_FIRST_LITE,
-          onTap: () {
-            MessageModule(context, 'Скоро буде...', MessageType.information);
-          },
-        ),
-        TileButton(
-          icon: Icons.payment_outlined,
-          title: 'Оплати',
           // iconColor: COLOR_FIRST_LITE,
           onTap: () {
             MessageModule(context, 'Скоро буде...', MessageType.information);

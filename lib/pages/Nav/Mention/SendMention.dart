@@ -22,16 +22,7 @@ class _SendMentionScreenState extends State<SendMentionScreen> {
   XFile? _pickedImage;
   bool _isSending = false;
 
-  // @override
-  // void initState() {
-  // }
   void _sendMention() async {
-    // if (_pickedImage == null || _descriptionController.text.isEmpty) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('Будь ласка, додайте фото та опис')),
-    //   );
-    //   return;
-    // }
     if (_isSending) return;
     setState(() => _isSending = true);
 
@@ -40,23 +31,12 @@ class _SendMentionScreenState extends State<SendMentionScreen> {
         token, _pickedImage, _descriptionController.text.trim(), widget.dto.id);
 
     bool isSuccess = await CHECK_API(res, context);
+    setState(() => _isSending = false);
 
     if (isSuccess) {
-      setState(() => _isSending = false);
       MessageModule(context, 'Успішно надіслано', MessageType.success);
       Navigator.pop(context);
     }
-    // Формируем multipart-запрос
-    // var request =
-    //     http.MultipartRequest('POST', Uri.parse('${API_ROOT}/mention/send'));
-    // request.fields['description'] = _descriptionController.text;
-    // request.fields['car_id'] =
-    //     widget.dto.json['id'].toString(); // или другой ID машины
-    //
-    // request.files
-    //     .add(await http.MultipartFile.fromPath('photo', _pickedImage!.path));
-    //
-    // var response = await request.send();
   }
 
   @override

@@ -21,7 +21,9 @@ const URL_USER_PICTURE = '${_HOST}/api/user/profile-picture';
 const URL_USER_PICTURE_BY_ID = '${_HOST}/api/user/{id}/profile-picture';
 const URL_USER_CHANGE_ACTIVE = '${_HOST}/api/user/{id}/change-active';
 const URL_USER_UPDATE_BY_ID = '${_HOST}/api/user/{id}/update';
+
 const URL_REGISTATION_LIST = '${_HOST}/api/registration/list';
+const URL_REGISTATION_COUNT = '${_HOST}/api/registration/count';
 const URL_REGISTATION_CHANHE_ACTIVE = '${_HOST}/api/registration/{id}/change-active';
 const URL_REGISTATION_APPROVE = '${_HOST}/api/registration/{id}/approve';
 
@@ -31,6 +33,10 @@ const URL_FINANCE_DELETE = '${_HOST}/api/finance/{financeId}';
 const URL_FINANCE_SET = '${_HOST}/api/finance/user/{userId}';
 const URL_REDIRECT_JAK = '${_HOST}/redirect-jar-monobank?userId={userId}';
 const URL_JAK = '${_HOST}/api/finance/jar-monobank?userId={userId}';
+
+const URL_COSTS_LIST = '${_HOST}/api/costs';
+const URL_COSTS_DELETE = '${_HOST}/api/costs/{costsId}';
+const URL_COSTS_SET = '${_HOST}/api/costs';
 
 const URL_SEARCH_CAR = '${_HOST}/api/car/search';
 const URL_CAR_CREATE = '${_HOST}/api/car/create';
