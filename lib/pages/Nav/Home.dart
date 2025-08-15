@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/Storage/UserStorage.dart';
+import 'package:tt_club_ua/pages/Nav/MapScreen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../api/routs.dart';
@@ -44,6 +45,17 @@ class _HomeState extends State<Home> {
           icon: const Icon(Icons.monetization_on),
           label: const Text('Підтримати'),
           onPressed: _launchMonobankJar,
+        ),
+        ElevatedButton.icon(
+          label: const Text('Map'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      MapScreen()), // Переход на экран публикаций
+            );
+          },
         )
         // ElevatedButton(
         //   onPressed: () {
