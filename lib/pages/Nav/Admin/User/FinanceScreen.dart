@@ -79,9 +79,9 @@ class _FinanceScreenState extends State<FinanceScreen> {
   }
 
   Future<void> _loadFinances() async {
-    setState(() => _isLoading = true);
-    final token = await UserStorage.getToken();
-    final res = await FINANCE_LIST(token, widget.userDto.id, page: _page);
+      setState(() => _isLoading = true);
+      final token = await UserStorage.getToken();
+      final res = await FINANCE_LIST(token, widget.userDto.id, page: _page);
 
     if (res.statusCode == 200) {
       final data = jsonDecode(res.body)['data'] as List;

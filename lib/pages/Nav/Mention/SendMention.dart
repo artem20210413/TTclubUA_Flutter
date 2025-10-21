@@ -20,39 +20,23 @@ class SendMentionScreen extends StatefulWidget {
 class _SendMentionScreenState extends State<SendMentionScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   XFile? _pickedImage;
+  bool _isSending = false;
 
-  // @override
-  // void initState() {
-  // }
   void _sendMention() async {
-    // if (_pickedImage == null || _descriptionController.text.isEmpty) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('Будь ласка, додайте фото та опис')),
-    //   );
-    //   return;
-    // }
+    if (_isSending) return;
+    setState(() => _isSending = true);
 
     final token = await UserStorage.getToken();
     final res = await SEND_MENTION(
         token, _pickedImage, _descriptionController.text.trim(), widget.dto.id);
 
     bool isSuccess = await CHECK_API(res, context);
+    setState(() => _isSending = false);
 
     if (isSuccess) {
       MessageModule(context, 'Успішно надіслано', MessageType.success);
       Navigator.pop(context);
     }
-    // Формируем multipart-запрос
-    // var request =
-    //     http.MultipartRequest('POST', Uri.parse('${API_ROOT}/mention/send'));
-    // request.fields['description'] = _descriptionController.text;
-    // request.fields['car_id'] =
-    //     widget.dto.json['id'].toString(); // или другой ID машины
-    //
-    // request.files
-    //     .add(await http.MultipartFile.fromPath('photo', _pickedImage!.path));
-    //
-    // var response = await request.send();
   }
 
   @override
@@ -133,8 +117,16 @@ class _SendMentionScreenState extends State<SendMentionScreen> {
                     ),
                     SizedBox(height: 12),
                     ElevatedButton(
-                      onPressed: _sendMention,
-                      child: Text('Надіслати'),
+                      onPressed: _sendMention, child: _isSending
+                        ? SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                        : Text('ФА-ФА'),
                     ),
                   ],
                 ),

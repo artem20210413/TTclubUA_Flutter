@@ -44,7 +44,7 @@ class _HomeState extends State<Home> {
           icon: const Icon(Icons.monetization_on),
           label: const Text('Підтримати'),
           onPressed: _launchMonobankJar,
-        )
+        ),
         // ElevatedButton(
         //   onPressed: () {
         //     // Navigator.pushReplacementNamed(context, '/user');

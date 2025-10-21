@@ -5,6 +5,19 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+//def localProperties = new Properties()
+//def localPropertiesFile = rootProject.file('local.properties')
+//if (localPropertiesFile.exists()) {
+//    localPropertiesFile.withReader('UTF-8') { reader ->
+//        localProperties.load(reader)
+//    }
+//}
+//
+//// Фейлим сборку, если ключа нет (чтобы не получить пустую карту в рантайме)
+//if (!localProperties.containsKey('GOOGLE_MAPS_API_KEY_ANDROID')) {
+//    throw new GradleException("Missing GOOGLE_MAPS_API_KEY_ANDROID in android/local.properties")
+//}
+
 android {
     namespace = "com.example.tt_club_ua"
     compileSdk = flutter.compileSdkVersion
@@ -28,6 +41,10 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+//        manifestPlaceholders = [
+//                GOOGLE_MAPS_API_KEY_ANDROID: localProperties.getProperty("GOOGLE_MAPS_API_KEY_ANDROID")
+//        ]
     }
 
     buildTypes {

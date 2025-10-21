@@ -38,7 +38,9 @@ dependencies:
   image_picker: ^1.0.0
   flutter_launcher_icons: ^0.13.1
   url_launcher: ^6.2.5
-
+  crop_your_image: ^0.7.5
+  path_provider: ^2.1.2
+  flutter_dotenv: ^5.1.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -66,7 +68,6 @@ flutter_icons:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
