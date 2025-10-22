@@ -25,6 +25,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:tt_club_ua/pages/Login.dart';
 import 'package:tt_club_ua/pages/Nav.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/User/UpdateCarScreen.dart';
+import 'package:tt_club_ua/pages/Onboarding/Onboarding_1.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,8 +45,9 @@ Future<void> main() async {
       scaffoldBackgroundColor: Colors.white, // Белый фон
       primarySwatch: Colors.amber,
     ),
-    initialRoute: '/login',
+    initialRoute: '/onboarding',
     routes: {
+      '/onboarding': (context) => Onboarding_1(),
       '/login': (context) => Login(),
       '/nav': (context) => Nav(),
     },
