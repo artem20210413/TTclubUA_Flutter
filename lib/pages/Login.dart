@@ -3,7 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:tt_club_ua/Storage/UserStorage.dart';
 import 'package:tt_club_ua/components/generalModule.dart';
 import 'package:tt_club_ua/api/routs/auth.dart';
+import 'package:tt_club_ua/config/default.dart';
 import 'dart:convert';
+
+import '../components/buttons/GlowingButton.dart';
 
 // import 'package:local_auth/local_auth.dart';
 // import 'package:flutter/services.dart';
@@ -75,10 +78,13 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Вхід'),
-        centerTitle: true,
-      ),
+      // backgroundColor: TTColors.background,
+      backgroundColor: TTColors.background,
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      //   title: const Text('Вхід'),
+      //   centerTitle: true,
+      // ),
       body: Center(
         child: _isLoading
             ? LoadingModule
@@ -122,10 +128,17 @@ class _LoginState extends State<Login> {
                         },
                       ),
                       const SizedBox(height: 24),
-                      ElevatedButton(
-                        onPressed: _submitForm,
-                        child: const Text('Увійти'),
+                      GlowingButton(
+                        text: 'Увійти',
+                        colorGrowing: Colors.purple,
+                        onPressed: () {
+                          _submitForm;
+                        },
                       ),
+                      // ElevatedButton(
+                      //   onPressed: _submitForm,
+                      //   child: const Text('Увійти'),
+                      // ),
                     ],
                   ),
                 ),

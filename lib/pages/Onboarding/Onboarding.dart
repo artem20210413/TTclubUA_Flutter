@@ -1,16 +1,20 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/Storage/UserStorage.dart';
 import 'package:tt_club_ua/components/generalModule.dart';
 import 'package:tt_club_ua/config/default.dart';
 
-class Onboarding_1 extends StatefulWidget {
-  const Onboarding_1({super.key});
+import '../../components/buttons/GlowingButton.dart';
+
+class Onboarding extends StatefulWidget {
+  const Onboarding({super.key});
 
   @override
-  State<Onboarding_1> createState() => _Onboarding_1State();
+  State<Onboarding> createState() => _OnboardingState();
 }
 
-class _Onboarding_1State extends State<Onboarding_1> {
+class _OnboardingState extends State<Onboarding> {
   bool _isLoading = true;
   final PageController _pageController = PageController();
   int _currentPage = 0;
@@ -30,6 +34,15 @@ class _Onboarding_1State extends State<Onboarding_1> {
       'image': 'https://tt.tishchenko.kiev.ua/media/images/banner_3.webp',
       'title': 'TT — це більше, ніж авто',
       'subtitle': 'Атмосфера, підтримка, спільні поїздки та справжні знайомства'
+    },
+    {
+      'image': 'https://tt.tishchenko.kiev.ua/media/images/banner_3.webp',
+      'image': 'https://tt.tishchenko.kiev.ua/media/images/banner_3.webp',
+      'title': '',
+      'subtitle': ''
+      // 'image': 'https://tt.tishchenko.kiev.ua/media/images/banner_3.webp',
+      // 'title': 'TT — це більше, ніж авто',
+      // 'subtitle': 'Атмосфера, підтримка, спільні поїздки та справжні знайомства'
     },
   ];
 
@@ -56,30 +69,73 @@ class _Onboarding_1State extends State<Onboarding_1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Image.network(
-      //     LOGO_IMAGE_DEFAULT,
-      //     fit: BoxFit.contain,
-      //     height: 133,
-      //   ),
-      // ),
       backgroundColor: TTColors.background_second,
       body: Stack(
         alignment: Alignment.center,
+        // alignment: Alignment.center,
         children: [
+          const SizedBox(height: 30),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(height: 75),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  // ClipOval(
+                  //   child: ImageFiltered(
+                  //     imageFilter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+                  //     child: Container(
+                  //       width: 274,
+                  //       height: 204,
+                  //       decoration: BoxDecoration(
+                  //         gradient: LinearGradient(
+                  //           colors: [
+                  //             Colors.white.withOpacity(0.05),
+                  //             Colors.white.withOpacity(0.25),
+                  //             Colors.white.withOpacity(0.05),
+                  //           ],
+                  //           begin: Alignment.topLeft,
+                  //           end: Alignment.bottomRight,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  Image.network(
+                    LOGO_IMAGE_DEFAULT,
+                    fit: BoxFit.contain,
+                    height: 133,
+                  ),
+                ],
+              ),
+            ],
+          ),
           PageView.builder(
             controller: _pageController,
             itemCount: _banners.length,
-            onPageChanged: (index) => setState(() => _currentPage = index),
+            onPageChanged: (index) {
+              setState(() => _currentPage = index);
+
+              final isLast = index == _banners.length - 1;
+              if (isLast) {
+                // Future.delayed(const Duration(milliseconds: 500), () {
+                  Navigator.pushReplacementNamed(context, '/login');
+                // });
+              }
+            },
             itemBuilder: (context, index) {
               final banner = _banners[index];
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.network(
-                    banner['image']!,
-                    fit: BoxFit.contain,
-                    height: 280,
+                  Opacity(
+                    opacity: index == _banners.length - 1 ? 0.0 : 1, // от 0.0 до 1.0
+                    child: Image.network(
+                      banner['image']!,
+                      fit: BoxFit.contain,
+                      height: 280,
+                    ),
                   ),
                   const SizedBox(height: 40),
                   Text(banner['title']!,

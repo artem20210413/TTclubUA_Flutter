@@ -25,7 +25,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:tt_club_ua/pages/Login.dart';
 import 'package:tt_club_ua/pages/Nav.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/User/UpdateCarScreen.dart';
-import 'package:tt_club_ua/pages/Onboarding/Onboarding_1.dart';
+import 'package:tt_club_ua/pages/Onboarding/Onboarding.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +47,7 @@ Future<void> main() async {
     ),
     initialRoute: '/onboarding',
     routes: {
-      '/onboarding': (context) => Onboarding_1(),
+      '/onboarding': (context) => Onboarding(),
       '/login': (context) => Login(),
       '/nav': (context) => Nav(),
     },

@@ -16,11 +16,15 @@ const String DATE_FORMAT_DEFAULT_SEND = 'dd-MM-yyyy'; //'d-M-y'
 // const Color BACKGROUND_FIRST = Color(0xFF8B0000);
 
 class TTColors {
-  static const Color background = Color(0xFF282A2F);
+  // static const Color background = Color(0xFF282A2F);//#242528B2
+  static const Color background = Color(0xFF1F2021); //0xFF242528
+  static const Color background_gradient_1 = Color(0xFF1F2021); //0xFF242528
+  static const Color background_gradient_2 = Color(0xFF282B2F); //0xFF242528
   static const Color background_second = Color(0xFF2000000);
   static const Color card = Color(0xFF303234);
   static const Color input = Color(0xFF242528);
   static const Color input_focused = Color(0xFF444549);
+  static const Color button_background = Color(0xFF1F2021);
 
   static const Color text = Color(0xFFFFFFFF);
   static const Color text_secondary = Color(0xFF848484);
@@ -38,6 +42,7 @@ class TTTextStyle {
     letterSpacing: 0,
     color: Colors.white,
   );
+
 
   static const TextStyle subtitle = TextStyle(
     fontFamily: 'SF Pro Display',
