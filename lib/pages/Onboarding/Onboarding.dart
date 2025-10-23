@@ -120,7 +120,7 @@ class _OnboardingState extends State<Onboarding> {
               final isLast = index == _banners.length - 1;
               if (isLast) {
                 // Future.delayed(const Duration(milliseconds: 500), () {
-                  Navigator.pushReplacementNamed(context, '/login');
+                Navigator.pushReplacementNamed(context, '/login');
                 // });
               }
             },
@@ -130,7 +130,8 @@ class _OnboardingState extends State<Onboarding> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Opacity(
-                    opacity: index == _banners.length - 1 ? 0.0 : 1, // от 0.0 до 1.0
+                    opacity: index == _banners.length - 1 ? 0.0 : 1,
+                    // от 0.0 до 1.0
                     child: Image.network(
                       banner['image']!,
                       fit: BoxFit.contain,

@@ -21,10 +21,12 @@ class TTColors {
   static const Color background_gradient_1 = Color(0xFF1F2021); //0xFF242528
   static const Color background_gradient_2 = Color(0xFF282B2F); //0xFF242528
   static const Color background_second = Color(0xFF2000000);
+  static const Color button_background = Color(0xFF1F2021);
+  // static const Color logo_background = Color(0xFF242528B2);
+
   static const Color card = Color(0xFF303234);
   static const Color input = Color(0xFF242528);
   static const Color input_focused = Color(0xFF444549);
-  static const Color button_background = Color(0xFF1F2021);
 
   static const Color text = Color(0xFFFFFFFF);
   static const Color text_secondary = Color(0xFF848484);
@@ -33,24 +35,21 @@ class TTColors {
 }
 
 class TTTextStyle {
+  static const String fontFamily = "SF Pro Display";
+
   static const TextStyle title = TextStyle(
-    fontFamily: 'SF Pro Display',
+    fontFamily: fontFamily,
     fontWeight: FontWeight.w700,
     fontStyle: FontStyle.normal,
-    fontSize: 25,
-    height: 30 / 25,
-    letterSpacing: 0,
+    fontSize: 36,
     color: Colors.white,
   );
 
-
   static const TextStyle subtitle = TextStyle(
-    fontFamily: 'SF Pro Display',
+    fontFamily: fontFamily,
     fontWeight: FontWeight.w300,
     fontStyle: FontStyle.normal,
     fontSize: 16,
-    height: 20 / 16,
-    letterSpacing: 0,
     color: Colors.white,
   );
 }
