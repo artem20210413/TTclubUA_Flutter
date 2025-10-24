@@ -132,52 +132,180 @@ class _OnboardingState extends State<Onboarding> {
                   Opacity(
                     opacity: index == _banners.length - 1 ? 0.0 : 1,
                     // от 0.0 до 1.0
-                    child: Image.network(
-                      banner['image']!,
-                      fit: BoxFit.contain,
-                      height: 280,
-                    ),
+                    child: Stack(alignment: Alignment.center, children: [
+                      SizedBox(
+                        height: 280,
+                        width: double.infinity,
+                        child: ShaderMask(
+                          // вертикальное «перетекание» (сверху/снизу)
+                          shaderCallback: (rect) => const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              // мягкое исчезновение сверху
+                              Colors.white,
+                              // видимая центральная область
+                              Colors.white,
+                              // видимая центральная область
+                              Colors.transparent,
+                              // мягкое исчезновение снизу
+                            ],
+                            stops: [0.0, 0.2, 0.80, 1.0],
+                          ).createShader(rect),
+                          blendMode: BlendMode.dstIn,
+                          child: ShaderMask(
+                            // горизонтальное «перетекание» (слева/справа)
+                            shaderCallback: (rect) => const LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                Colors.transparent,
+                                // мягкое исчезновение слева
+                                Colors.white,
+                                // видимая центральная область
+                                Colors.white,
+                                // видимая центральная область
+                                Colors.transparent,
+                                // мягкое исчезновение справа
+                              ],
+                              stops: [0.0, 0, 1.0, 1.0],
+                            ).createShader(rect),
+                            blendMode: BlendMode.dstIn,
+                            child: Image.network(
+                              banner['image']!,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ]),
                   ),
                   const SizedBox(height: 40),
-                  Text(banner['title']!,
-                      textAlign: TextAlign.center, style: TTTextStyle.title),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      banner['title']!,
+                      textAlign: TextAlign.center,
+                      style: TTTextStyle.title,
+                    ),
+                  ),
                   const SizedBox(height: 16),
-                  Text(
-                    banner['subtitle']!,
-                    textAlign: TextAlign.center,
-                    style: TTTextStyle.subtitle,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      banner['subtitle']!,
+                      textAlign: TextAlign.center,
+                      style: TTTextStyle.subtitle.copyWith(color: Colors.white),
+                    ),
                   ),
                 ],
               );
             },
           ),
+          // ЗАМЕНИ весь Positioned(bottom: 60, ...) на это:
+          // Positioned(
+          //   bottom: 60,
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: List.generate(
+          //       _banners.length,
+          //       (index) {
+          //         final bool isActive = _currentPage == index;
+          //         return AnimatedContainer(
+          //           duration: const Duration(milliseconds: 250),
+          //           margin: const EdgeInsets.symmetric(horizontal: 8),
+          //           width: isActive ? 20 : 18,
+          //           height: isActive ? 20 : 18,
+          //           decoration: BoxDecoration(
+          //             border: Border.all(
+          //                 color: isActive
+          //                     ? Colors.white.withOpacity(0.2)
+          //                     : Colors.black,
+          //                 width: 1),
+          //             // borderRadius: BorderRadius.circular(300),
+          //             shape: BoxShape.circle,
+          //             gradient: RadialGradient(
+          //               colors: isActive
+          //                   ? [
+          //                       Colors.white.withOpacity(0.7),
+          //                       Colors.black.withOpacity(0.0),
+          //                     ]
+          //                   : [
+          //                       Colors.grey.withOpacity(0.3),
+          //                       Colors.black.withOpacity(0.0),
+          //                     ],
+          //               // center: Alignment.center,
+          //               center: Alignment.topLeft,
+          //               radius: 1.3,
+          //             ),
+          //             boxShadow: [
+          //               BoxShadow(
+          //                 color: Colors.white.withOpacity(0.3),
+          //                 blurRadius: 30,
+          //                 spreadRadius: 1,
+          //               ),
+          //               BoxShadow(
+          //                 color: Colors.black.withOpacity(0.6),
+          //                 offset: const Offset(0, 2),
+          //                 blurRadius: 8,
+          //               ),
+          //             ],
+          //           ),
+          //         );
+          //       },
+          //     ),
+          //   ),
+          // ),
+          // ЗАМЕНИ весь Positioned(bottom: 60, ...) на это:
           Positioned(
-            bottom: 60,
+            bottom: 80,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 _banners.length,
-                (index) => AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.symmetric(horizontal: 6),
-                  width: _currentPage == index ? 14 : 10,
-                  height: _currentPage == index ? 14 : 10,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _currentPage == index
-                        ? Colors.white.withOpacity(0.85)
-                        : Colors.white.withOpacity(0.15),
-                    boxShadow: _currentPage == index
-                        ? [
-                            BoxShadow(
-                              color: Colors.white.withOpacity(0.3),
-                              blurRadius: 6,
-                              spreadRadius: 1,
-                            )
-                          ]
-                        : [],
-                  ),
-                ),
+                (index) {
+                  final bool isActive = _currentPage == index;
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    width: isActive ? 18 : 16,
+                    height: isActive ? 18 : 16,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: isActive
+                              ? Colors.white.withOpacity(0.2)
+                              : Colors.black,
+                          width: 1),
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: isActive
+                            ? [
+                                Colors.white.withOpacity(0.95),
+                                Colors.grey.shade600.withOpacity(0.3),
+                              ]
+                            : [
+                                Colors.white.withOpacity(0.08),
+                                Colors.black.withOpacity(0.2),
+                              ],
+                        center: Alignment.topLeft,
+                        radius: 1.2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.white.withOpacity(0.3),
+                          blurRadius: 30,
+                          spreadRadius: 2,
+                        ),
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.6),
+                          offset: const Offset(0, 2),
+                          blurRadius: 8,
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           ),

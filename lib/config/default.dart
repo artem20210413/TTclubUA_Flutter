@@ -42,14 +42,14 @@ class TTTextStyle {
     fontWeight: FontWeight.w700,
     fontStyle: FontStyle.normal,
     fontSize: 36,
-    color: Colors.white,
+    color: TTColors.text,
   );
 
   static const TextStyle subtitle = TextStyle(
     fontFamily: fontFamily,
     fontWeight: FontWeight.w300,
     fontStyle: FontStyle.normal,
-    fontSize: 16,
-    color: Colors.white,
+    fontSize: 18,
+    color: TTColors.text_secondary,
   );
 }

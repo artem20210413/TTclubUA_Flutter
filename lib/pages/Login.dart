@@ -154,37 +154,6 @@ class _LoginState extends State<Login> {
                           return null;
                         },
                       ),
-                      // TextFormField(
-                      //   controller: _phoneController,
-                      //   decoration: const InputDecoration(
-                      //     labelText: 'Номер телефону',
-                      //     prefixText: '+',
-                      //   ),
-                      //   keyboardType: TextInputType.phone,
-                      //   validator: (value) {
-                      //     if (value == null || value.isEmpty) {
-                      //       return 'Введіть номер телефону';
-                      //     } else if (!RegExp(r'^\+?\d{10,15}$')
-                      //         .hasMatch(value)) {
-                      //       return 'Невірний формат номеру телефону';
-                      //     }
-                      //     return null;
-                      //   },
-                      // ),
-                      // const SizedBox(height: 16),
-                      // TextFormField(
-                      //   controller: _passwordController,
-                      //   decoration: const InputDecoration(
-                      //     labelText: 'Пароль',
-                      //   ),
-                      //   obscureText: true,
-                      //   validator: (value) {
-                      //     if (value == null || value.isEmpty) {
-                      //       return 'Введіть пароль';
-                      //     }
-                      //     return null;
-                      //   },
-                      // ),
                       const SizedBox(height: 40),
                       GlowingButton(
                         text: 'Увійти',
