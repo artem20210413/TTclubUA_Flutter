@@ -7,7 +7,7 @@ const String USER_PROFILE_IMAGE_DEFAULT =
 const String CAR_IMAGE_DEFAULT =
     'https://tt.tishchenko.kiev.ua/storage/default/car.webp';
 const String LOGO_IMAGE_DEFAULT =
-    'https://tt.tishchenko.kiev.ua/media/images/logo.webp';
+    'https://tt.tishchenko.kiev.ua/media/images/logo_2.webp';
 
 const String DATE_FORMAT_DEFAULT = 'dd-MM-yyyy';
 const String DATE_FORMAT_DEFAULT_SEND = 'dd-MM-yyyy'; //'d-M-y'
@@ -32,6 +32,7 @@ class TTColors {
   static const Color text_secondary = Color(0xFF848484);
 
   static const Color danger = Color(0xFFFF0000);
+  static const Color success = Color(0xFF00FF99);
 }
 
 class TTTextStyle {
@@ -41,7 +42,7 @@ class TTTextStyle {
     fontFamily: fontFamily,
     fontWeight: FontWeight.w700,
     fontStyle: FontStyle.normal,
-    fontSize: 36,
+    fontSize: 32,
     color: TTColors.text,
   );
 

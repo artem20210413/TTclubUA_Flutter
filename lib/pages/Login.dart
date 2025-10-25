@@ -2,12 +2,14 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:tt_club_ua/Storage/UserStorage.dart';
 import 'package:tt_club_ua/components/generalModule.dart';
 import 'package:tt_club_ua/api/routs/auth.dart';
 import 'package:tt_club_ua/config/default.dart';
 import 'dart:convert';
 
+import '../components/TTLoading.dart';
 import '../components/buttons/GlowingButton.dart';
 import '../components/inputs/CustomInputField.dart';
 
@@ -59,17 +61,17 @@ class _LoginState extends State<Login> {
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        MessageModule(context, 'Авторизация успешна', MessageType.success);
+        MessageModule(context, 'TT впізнав свого пілота. Заїжджай до гаража', MessageType.success);
 
         await UserStorage.saveToken(responseData['data']['token']);
         await UserStorage.saveUserInfo(responseData['data']['user']);
         Navigator.pushReplacementNamed(context, '/nav');
       } else if (response.statusCode == 500) {
         MessageModule(
-            context, 'Помилка сервера. Спробуйте пізніше.', MessageType.error);
+            context, 'Упсс... сервер не на зв’язку. Спробуйте трохи згодом', MessageType.error);
       } else {
         MessageModule(
-            context, 'Помилка входу. Спробуйте ще раз.', MessageType.error);
+            context, 'Невірні дані. Схоже, TT не впізнав свого пілота', MessageType.error);
         print('Ошибка авторизации ${response.statusCode}: ${response.body}');
       }
     }
@@ -78,16 +80,10 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: TTColors.background,
       backgroundColor: TTColors.background,
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   title: const Text('Вхід'),
-      //   centerTitle: true,
-      // ),
       body: Center(
         child: _isLoading
-            ? LoadingModule
+            ? const TTLoading()
             : SingleChildScrollView(
                 padding: const EdgeInsets.all(32),
                 child: Form(
@@ -136,7 +132,13 @@ class _LoginState extends State<Login> {
                         label: 'Номер телефону',
                         prefixText: '+',
                         keyboardType: TextInputType.phone,
-                        icon: Icons.phone,
+                        icon: SvgPicture.asset(
+                          'assets/svg/user.svg',
+                          width: 36,
+                          height: 36,
+                          // якщо треба перекрасити:
+                          colorFilter: ColorFilter.mode(TTColors.text_secondary, BlendMode.srcIn),
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) return 'Введіть номер телефону';
                           if (!RegExp(r'^\+?\d{10,15}$').hasMatch(value)) return 'Невірний формат номеру телефону';
@@ -148,7 +150,14 @@ class _LoginState extends State<Login> {
                         controller: _passwordController,
                         label: 'Пароль',
                         obscureText: true,
-                        icon: Icons.lock,
+                        icon: SvgPicture.asset(
+                          'assets/svg/lock.svg',
+                          width: 36,
+                          height: 36,
+                          // якщо треба перекрасити:
+                          colorFilter: ColorFilter.mode(TTColors.text_secondary, BlendMode.srcIn),
+                        ),
+                        // icon: Icons.lock,
                         validator: (value) {
                           if (value == null || value.isEmpty) return 'Введіть пароль';
                           return null;
