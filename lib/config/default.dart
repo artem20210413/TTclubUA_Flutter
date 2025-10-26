@@ -9,6 +9,9 @@ const String CAR_IMAGE_DEFAULT =
 const String LOGO_IMAGE_DEFAULT =
     'https://tt.tishchenko.kiev.ua/media/images/logo_2.webp';
 
+const String TG_FORGOT_URI = 'https://t.me/TTclubUaBot';
+const String SIGNUP_URI   = 'https://tt.tishchenko.kiev.ua';
+
 const String DATE_FORMAT_DEFAULT = 'dd-MM-yyyy';
 const String DATE_FORMAT_DEFAULT_SEND = 'dd-MM-yyyy'; //'d-M-y'
 

@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import '../config/default.dart';
 
 class TTLoading extends StatefulWidget {
-  const TTLoading({super.key});
+  final double? size;
+
+  const TTLoading({super.key, this.size = 80});
 
   @override
   State<TTLoading> createState() => _TTLoadingState();
@@ -31,10 +33,14 @@ class _TTLoadingState extends State<TTLoading>
 
   @override
   Widget build(BuildContext context) {
+    final double maxSize = 80;
+    final double available = widget.size ??
+        (MediaQuery.of(context).size.shortestSide * 0.15).clamp(30, maxSize);
+
     return Center(
       child: SizedBox(
-        width: 80,
-        height: 80,
+        width: available,
+        height: available,
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -56,17 +62,15 @@ class _TTLoadingState extends State<TTLoading>
                   angle: _controller.value * 6.3,
                   child: CustomPaint(
                     painter: _TTRingPainter(),
-                    size: const Size(70, 70),
+                    size: Size(available * 0.85, available * 0.85),
                   ),
                 );
               },
             ),
-
-            // Текст TT в центре
-            const Text(
+            Text(
               "TT",
               style: TextStyle(
-                fontSize: 22,
+                fontSize: available * 0.28,
                 fontFamily: TTTextStyle.fontFamily,
                 fontWeight: FontWeight.w700,
                 fontStyle: FontStyle.italic,
@@ -89,7 +93,7 @@ class _TTRingPainter extends CustomPainter {
 
     final paint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 3
+      ..strokeWidth = size.width * 0.04
       ..shader = SweepGradient(
         colors: [
           Colors.white.withOpacity(0.9),
@@ -99,7 +103,7 @@ class _TTRingPainter extends CustomPainter {
         stops: const [0.0, 0.3, 1.0],
       ).createShader(rect);
 
-    canvas.drawArc(rect.deflate(3), 0, 5.5, false, paint);
+    canvas.drawArc(rect.deflate(size.width * 0.05), 0, 5.5, false, paint);
   }
 
   @override

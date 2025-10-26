@@ -7,7 +7,6 @@ class CustomInputField extends StatelessWidget {
   final String prefixText;
   final bool obscureText;
 
-  // final IconData? icon;
   final Widget? icon;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;

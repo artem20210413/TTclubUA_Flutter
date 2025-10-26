@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../TTLoading.dart';
+
 class GlowingButton extends StatefulWidget {
   final String text;
   final VoidCallback onPressed;
   final Color colorGrowing;
   final Color colorBackground;
+  final bool isLoading;
 
   const GlowingButton({
     super.key,
     required this.text,
     required this.onPressed,
     this.colorGrowing = Colors.white,
+    this.isLoading = false,
     this.colorBackground = TTColors.button_background,
   });
 
@@ -29,21 +33,21 @@ class _GlowingButtonState extends State<GlowingButton> {
     final textColor = _isPressed ? Colors.black : widget.colorGrowing;
     return InkWell(
       borderRadius: BorderRadius.circular(300),
-      onTap: () {
-        widget.onPressed();
-        HapticFeedback.lightImpact();
-        // HapticFeedback.lightImpact() — лёгкий импульс (классический “тап”).
-        // HapticFeedback.mediumImpact() — средний импульс.
-        // HapticFeedback.heavyImpact() — сильный импульс.
-        // HapticFeedback.selectionClick() — клик для выбора.
-        // HapticFeedback.vibrate() — полная вибрация устройства (может быть длинной).
-
-        // Future.delayed(Duration(milliseconds: 500), () {
-        //   if (mounted) setState(() => _isPressed = false);
-        // });
-      },
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) => setState(() => _isPressed = false),
+      onTap: widget.isLoading
+          ? null
+          : () {
+              widget.onPressed();
+              HapticFeedback.lightImpact();
+              //   // HapticFeedback.lightImpact() — лёгкий импульс (классический “тап”).
+              //   // HapticFeedback.mediumImpact() — средний импульс.
+              //   // HapticFeedback.heavyImpact() — сильный импульс.
+              //   // HapticFeedback.selectionClick() — клик для выбора.
+              //   // HapticFeedback.vibrate() — полная вибрация устройства (может быть длинной).
+            },
+      onTapDown:
+          widget.isLoading ? null : (_) => setState(() => _isPressed = true),
+      onTapUp:
+          widget.isLoading ? null : (_) => setState(() => _isPressed = false),
       child: AnimatedContainer(
         duration: Duration(milliseconds: 100),
         height: 57,
@@ -67,15 +71,17 @@ class _GlowingButtonState extends State<GlowingButton> {
             ),
           ],
         ),
-        child: Text(
-          widget.text,
-          style: TextStyle(
-            color: textColor,
-            fontFamily: TTTextStyle.fontFamily,
-            fontWeight: FontWeight.w700,
-            fontSize: 24,
-          ),
-        ),
+        child: widget.isLoading
+            ? const TTLoading(size: 40,)
+            : Text(
+                widget.text,
+                style: TextStyle(
+                  color: textColor,
+                  fontFamily: TTTextStyle.fontFamily,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 24,
+                ),
+              ),
       ),
     );
   }
