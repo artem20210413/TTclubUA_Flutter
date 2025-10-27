@@ -68,6 +68,7 @@ class UserStorage {
 
   static Future<bool> checkAndUpdate() async {
     final token = await getToken();
+    if (token == null) return false;
     final res = await API_AUTH_CHECK(token);
     if (res.statusCode == 200) {
       final resBody = json.decode(res.body);
