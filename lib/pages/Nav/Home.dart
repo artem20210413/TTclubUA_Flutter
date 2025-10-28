@@ -46,8 +46,18 @@ class _HomeState extends State<Home> {
           label: const Text('Підтримати'),
           onPressed: _launchMonobankJar,
         ),
+        const SizedBox(height: 20),
         PromoCard(
           imagePath: 'assets/ui/banners/calendar_of_events.png',
+          // или 'assets/banners/calendar.jpg'
+          title: 'Календар подій',
+          onButtonTap: () {
+            // TODO: действие по нажатию
+          },
+        ),
+        const SizedBox(height: 20),
+        PromoCard(
+          imagePath: 'assets/ui/banners/ttclubua_in_world.png',
           // или 'assets/banners/calendar.jpg'
           title: 'Календар подій',
           onButtonTap: () {
