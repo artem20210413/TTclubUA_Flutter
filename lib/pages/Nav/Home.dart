@@ -3,6 +3,7 @@ import 'package:tt_club_ua/Storage/UserStorage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../api/routs.dart';
+import '../../components/card/PromoCard.dart';
 import '../../components/generalModule.dart';
 
 class Home extends StatefulWidget {
@@ -44,6 +45,16 @@ class _HomeState extends State<Home> {
           icon: const Icon(Icons.monetization_on),
           label: const Text('Підтримати'),
           onPressed: _launchMonobankJar,
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.width * 0.5,
+          child: PromoCard(
+            imagePath: 'assets/ui/banners/calendar_of_events.png', // или 'assets/banners/calendar.jpg'
+            title: 'Календар подій',
+            onButtonTap: () {
+              // TODO: действие по нажатию
+            },
+          ),
         ),
         // ElevatedButton(
         //   onPressed: () {

@@ -29,11 +29,11 @@ import 'package:tt_club_ua/pages/Onboarding/Onboarding.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await dotenv.load(fileName: ".env");
-  } catch (e) {
-    debugPrint("Не удалось загрузить .env: $e");
-  }
+  // try {
+  //   await dotenv.load(fileName: ".env");
+  // } catch (e) {
+  //   debugPrint("Не удалось загрузить .env: $e");
+  // }
 
   runApp(MaterialApp(
     theme: ThemeData(
