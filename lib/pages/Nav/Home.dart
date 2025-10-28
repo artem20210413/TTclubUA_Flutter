@@ -46,16 +46,25 @@ class _HomeState extends State<Home> {
           label: const Text('Підтримати'),
           onPressed: _launchMonobankJar,
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.width * 0.5,
-          child: PromoCard(
-            imagePath: 'assets/ui/banners/calendar_of_events.png', // или 'assets/banners/calendar.jpg'
-            title: 'Календар подій',
-            onButtonTap: () {
-              // TODO: действие по нажатию
-            },
-          ),
+        PromoCard(
+          imagePath: 'assets/ui/banners/calendar_of_events.png',
+          // или 'assets/banners/calendar.jpg'
+          title: 'Календар подій',
+          onButtonTap: () {
+            // TODO: действие по нажатию
+          },
         ),
+        // SizedBox(
+        //   height: MediaQuery.of(context).size.width * 0.5,
+        //   width: MediaQuery.of(context).size.width * 0.95,
+        //   child: PromoCard(
+        //     imagePath: 'assets/ui/banners/calendar_of_events.png', // или 'assets/banners/calendar.jpg'
+        //     title: 'Календар подій',
+        //     onButtonTap: () {
+        //       // TODO: действие по нажатию
+        //     },
+        //   ),
+        // ),
         // ElevatedButton(
         //   onPressed: () {
         //     // Navigator.pushReplacementNamed(context, '/user');
