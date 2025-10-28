@@ -189,12 +189,23 @@ class _LoginState extends State<Login> {
                         keyboardType: TextInputType.phone,
                         icon: SvgPicture.asset(
                           'assets/svg/user.svg',
+                          fit: BoxFit.none,
+                          // игнорировать внешние ограничения на масштаб
                           width: 36,
                           height: 36,
                           // якщо треба перекрасити:
                           colorFilter: ColorFilter.mode(
                               TTColors.text_secondary, BlendMode.srcIn),
                         ),
+                        // ),
+                        // SvgPicture.asset(
+                        //   'assets/svg/user_login.svg',
+                        //   width: 36,
+                        //   height: 36,
+                        //   // якщо треба перекрасити:
+                        //   colorFilter: ColorFilter.mode(
+                        //       TTColors.text_secondary, BlendMode.srcIn),
+                        // ),
                         validator: (value) {
                           if (value == null || value.isEmpty)
                             return 'Введіть номер телефону';
@@ -256,7 +267,7 @@ class _LoginState extends State<Login> {
                       Center(
                         child: GestureDetector(
                           onTap:
-                          _isLoadingSubmit ? null : () => _open(_signupUri),
+                              _isLoadingSubmit ? null : () => _open(_signupUri),
                           child: RichText(
                             text: TextSpan(
                               style: const TextStyle(
