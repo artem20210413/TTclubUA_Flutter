@@ -35,21 +35,20 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('Найближчі дні народження'),
-        Text('Кількість учасніків та авто'),
-        Text('Пошук авто та власника (функція "фа-фа")'),
-        Text('інформація про події'),
-        Text('Нові учасники (за месяц)'),
-        Text('донат'),
-        ElevatedButton.icon(
-          icon: const Icon(Icons.monetization_on),
-          label: const Text('Підтримати'),
-          onPressed: _launchMonobankJar,
-        ),
-        const SizedBox(height: 20),
+        // Text('Найближчі дні народження'),
+        // Text('Кількість учасніків та авто'),
+        // Text('Пошук авто та власника (функція "фа-фа")'),
+        // Text('інформація про події'),
+        // Text('Нові учасники (за месяц)'),
+        // Text('донат'),
+        // ElevatedButton.icon(
+        //   icon: const Icon(Icons.monetization_on),
+        //   label: const Text('Підтримати'),
+        //   onPressed: _launchMonobankJar,
+        // ),
+        // const SizedBox(height: 20),
         PromoCard(
           imagePath: 'assets/ui/banners/calendar_of_events.png',
-          // или 'assets/banners/calendar.jpg'
           title: 'Календар подій',
           onButtonTap: () {
             // TODO: действие по нажатию
@@ -58,33 +57,51 @@ class _HomeState extends State<Home> {
         const SizedBox(height: 20),
         PromoCard(
           imagePath: 'assets/ui/banners/ttclubua_in_world.png',
-          // или 'assets/banners/calendar.jpg'
-          title: 'Календар подій',
+          title: 'TTclubUA у світі',
           onButtonTap: () {
             // TODO: действие по нажатию
           },
         ),
-        // SizedBox(
-        //   height: MediaQuery.of(context).size.width * 0.5,
-        //   width: MediaQuery.of(context).size.width * 0.95,
-        //   child: PromoCard(
-        //     imagePath: 'assets/ui/banners/calendar_of_events.png', // или 'assets/banners/calendar.jpg'
-        //     title: 'Календар подій',
-        //     onButtonTap: () {
-        //       // TODO: действие по нажатию
-        //     },
-        //   ),
-        // ),
-        // ElevatedButton(
-        //   onPressed: () {
-        //     // Navigator.pushReplacementNamed(context, '/user');
-        //     // Navigator.pushNamed(context, '/user');
-        //     // Navigator.popAndPushNamed(context, '/user');
-        //     // Navigator.pushNamedAndRemoveUntil(
-        //     //     context, '/user', (route) => true);
-        //   },
-        //   child: const Text('User'),
-        // ),
+        const SizedBox(height: 20),
+        PromoCard(
+          imagePath: 'assets/ui/banners/merch.png',
+          title: 'Мерч',
+          onButtonTap: () {
+            // TODO: действие по нажатию
+          },
+        ),
+        const SizedBox(height: 20),
+        PromoCard(
+          imagePath: 'assets/ui/banners/partners.png',
+          title: 'Партнери TTclubUA',
+          onButtonTap: () {
+            // TODO: действие по нажатию
+          },
+        ),
+        const SizedBox(height: 20),
+        PromoCard(
+          imagePath: 'assets/ui/banners/promotions_from_partners .png',
+          title: 'Акції  партнерів',
+          onButtonTap: () {
+            // TODO: действие по нажатию
+          },
+        ),
+        const SizedBox(height: 20),
+        PromoCard(
+          imagePath: 'assets/ui/banners/budget.png',
+          title: 'Бюджет TTclubUA',
+          onButtonTap: () {
+            // TODO: действие по нажатию
+          },
+        ),
+        const SizedBox(height: 20),
+        PromoCard(
+          imagePath: 'assets/ui/banners/military_aid.png',
+          title: 'Допомог ЗСУ',
+          onButtonTap: () {
+            // TODO: действие по нажатию
+          },
+        ),
       ],
     );
   }

@@ -43,6 +43,7 @@ class _PromoCardState extends State<PromoCard> {
                     ? Image.network(widget.imagePath, fit: BoxFit.cover)
                     : Image.asset(widget.imagePath, fit: BoxFit.cover),
               ),
+                Positioned.fill(child: ColoredBox(color: _pressed ? Colors.black45: Colors.transparent)),
               // Positioned.fill(
               //   child: DecoratedBox(
               //     decoration: BoxDecoration(

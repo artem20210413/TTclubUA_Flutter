@@ -46,7 +46,14 @@ class _NavState extends State<Nav> {
               toolbarHeight: 20,
               backgroundColor: Colors.transparent,
             ),
-            body: _screens[_currentIndex],
+            body: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 113),
+                // 👈 73 (высота бара) + запас
+                child: _screens[_currentIndex],
+              ),
+            ),
 
             // ADD: центральная кнопка под вырез
             floatingActionButtonLocation:
@@ -105,7 +112,7 @@ class _NavState extends State<Nav> {
                           ? [
                               BoxShadow(
                                 // светящееся свечение
-                                color: Colors.white.withOpacity(0.15 ),
+                                color: Colors.white.withOpacity(0.15),
                                 blurRadius: 16,
                                 spreadRadius: 1,
                               ),
@@ -137,52 +144,8 @@ class _NavState extends State<Nav> {
                     ),
                   ),
                 ),
-                // child: SvgPicture.asset(
-                //   _navSvgs[index],
-                //   fit: BoxFit.scaleDown,
-                //   // игнорировать внешние ограничения на масштаб
-                //   colorFilter: ColorFilter.mode(
-                //     isActive ? Colors.white : Colors.white.withOpacity(0.55),
-                //     BlendMode.srcIn,
-                //   ),
-                // )
-                // child: Transform.scale(
-                //   scale: 0.8 ,
-                //   child: SvgPicture.asset(
-                //     _navSvgs[index],
-                //     width: 80,
-                //     height: 80,
-                //     colorFilter: ColorFilter.mode(
-                //       isActive ? Colors.white : Colors.white.withOpacity(0.55),
-                //       BlendMode.srcIn,
-                //     ),
-                //   ),
-                // ),
               ),
             ),
-
-            // bottomNavigationBar: Stack(
-            //         children: [
-            //           AnimatedBottomNavigationBar(
-            //             icons: _navIcons,
-            //             activeIndex: _currentIndex,
-            //             onTap: (i) => setState(() => _currentIndex = i),
-            //             height: 72,
-            //             backgroundColor: TTColors.background_second,
-            //             borderColor: TTColors.card,
-            //             borderWidth: 2,
-            //             gapLocation: GapLocation.center,
-            //             notchSmoothness: NotchSmoothness.verySmoothEdge,
-            //             leftCornerRadius: 24,
-            //             rightCornerRadius: 24,
-            //             activeColor: Colors.white,
-            //             inactiveColor: Colors.white54,
-            //             elevation: 0,
-            //           ),
-            //
-            //           // Эффект "inner glow"
-            //         ],
-            //       ),
           );
   }
 
