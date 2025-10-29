@@ -5,8 +5,8 @@ import 'package:tt_club_ua/Storage/UserStorage.dart';
 import 'package:tt_club_ua/components/generalModule.dart';
 import 'package:tt_club_ua/config/default.dart';
 
-import '../../components/TTLoading.dart';
-import '../../components/buttons/GlowingButton.dart';
+import '../components/TTLoading.dart';
+import '../components/buttons/GlowingButton.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -22,17 +22,20 @@ class _OnboardingState extends State<Onboarding> {
 
   final List<Map<String, String>> _banners = [
     {
-      'image': 'https://tt.tishchenko.kiev.ua/media/images/banner_1.webp',
+      // 'image': 'https://tt.tishchenko.kiev.ua/media/images/banner_1.webp',
+      'image': 'assets/ui/banners/banner_1.webp',
       'title': 'Cпільнота фанатів Audi TT',
       'subtitle': 'Нас об\'єднує стиль, динаміка і любов до легендарної Audi TT'
     },
     {
-      'image': 'https://tt.tishchenko.kiev.ua/media/images/banner_2.webp',
+      // 'image': 'https://tt.tishchenko.kiev.ua/media/images/banner_2.webp',
+      'image': 'assets/ui/banners/banner_2.webp',
       'title': 'Зустрічі, автопробіги, фотосесії',
       'subtitle': 'Бери участь у подіях клубу, ділись досвідом, шукай натхнення'
     },
     {
-      'image': 'https://tt.tishchenko.kiev.ua/media/images/banner_3.webp',
+      // 'image': 'https://tt.tishchenko.kiev.ua/media/images/banner_3.webp',
+      'image': 'assets/ui/banners/banner_3.webp',
       'title': 'TT — це більше, ніж авто',
       'subtitle': 'Атмосфера, підтримка, спільні поїздки та справжні знайомства'
     },
@@ -123,6 +126,8 @@ class _OnboardingState extends State<Onboarding> {
                       },
                       itemBuilder: (context, index) {
                         final banner = _banners[index];
+                        final imgPath = banner['image']!;
+                        final isNetwork = imgPath.startsWith('http');
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -172,10 +177,9 @@ class _OnboardingState extends State<Onboarding> {
                                         stops: [0.0, 0, 1.0, 1.0],
                                       ).createShader(rect),
                                       blendMode: BlendMode.dstIn,
-                                      child: Image.network(
-                                        banner['image']!,
-                                        fit: BoxFit.cover,
-                                      ),
+                                      child: isNetwork
+                                          ? Image.network(imgPath, fit: BoxFit.cover)
+                                          : Image.asset(imgPath, fit: BoxFit.cover),
                                     ),
                                   ),
                                 ),
