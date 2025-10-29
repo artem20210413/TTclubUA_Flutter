@@ -46,14 +46,15 @@ class _NavState extends State<Nav> {
               toolbarHeight: 20,
               backgroundColor: Colors.transparent,
             ),
-            body: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 113),
-                // 👈 73 (высота бара) + запас
-                child: _screens[_currentIndex],
-              ),
-            ),
+            body: _screens[_currentIndex],
+            // SingleChildScrollView(
+            //   physics: const BouncingScrollPhysics(),
+            //   child: Padding(
+            //     padding: const EdgeInsets.fromLTRB(16, 16, 16, 113),
+            //     // 👈 73 (высота бара) + запас
+            //     child: _screens[_currentIndex],
+            //   ),
+            // ),
 
             // ADD: центральная кнопка под вырез
             floatingActionButtonLocation:
