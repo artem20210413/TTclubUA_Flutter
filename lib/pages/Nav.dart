@@ -73,7 +73,7 @@ class _NavState extends State<Nav> {
               activeIndex: _currentIndex,
               onTap: (i) => setState(() => _currentIndex = i),
               height: 73,
-              backgroundColor: TTColors.background_second,
+              backgroundColor: TTColors.background_second.withOpacity(0.5),
               gapLocation: GapLocation.center,
               notchSmoothness: NotchSmoothness.verySmoothEdge,
               leftCornerRadius: 24,
@@ -86,7 +86,7 @@ class _NavState extends State<Nav> {
               //   blurRadius: 32,
               //   spreadRadius: -4,
               // ),
-              borderColor: TTColors.card,
+              borderColor: TTColors.input,
               borderWidth: 1.8,
               scaleFactor: 0.0,
               tabBuilder: (index, isActive) => Padding(
@@ -99,14 +99,29 @@ class _NavState extends State<Nav> {
                     height: 44,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.centerRight,
+                        colors: [
+                          // Colors.transparent, // правый низ
+                          TTColors.input, // левый верх
+                          TTColors.input.withOpacity(0.5), // левый верх
+                          // TTColors.card, // левый верх
+                          Colors.transparent, // правый низ
+                        ],
+                        stops: const [0.44, 0.8, 1.00],
+                      ),
                       color: isActive
                           ? TTColors.input_focused
                               .withOpacity(0.28) // активный фон кружка
-                          : TTColors.input_focused.withOpacity(0.18), // дефолт
+                          : TTColors.input,
+                      // дефолт
                       border: Border.all(
                         color: isActive
                             ? Colors.white.withOpacity(0.95) // яркое кольцо
-                            : Colors.black.withOpacity(0.20), // тонкое кольцо
+                            : TTColors.input,
+                        // тонкое кольцо
+                        // : Colors.black.withOpacity(0.20), // тонкое кольцо
                         width: isActive ? 1.8 : 1.0,
                       ),
                       boxShadow: isActive

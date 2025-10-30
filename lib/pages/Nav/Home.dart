@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/Storage/UserStorage.dart';
+import 'package:tt_club_ua/config/default.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../api/routs.dart';
+import '../../components/TTNeumorphicBox.dart';
 import '../../components/card/PromoCard.dart';
 import '../../components/card/TopActionCard.dart';
 import '../../components/generalModule.dart';
@@ -69,7 +71,6 @@ class _HomeState extends State<Home> {
                 ),
               ],
             ),
-
             const SizedBox(height: 20),
             PromoCard(
               imagePath: 'assets/ui/banners/merch.png',

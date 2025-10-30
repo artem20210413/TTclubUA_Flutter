@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../TTNeumorphicBox.dart';
+
 class PromoCard extends StatefulWidget {
   final String imagePath; // фоновая картинка (asset или http)
   final String title; // текст на карточке

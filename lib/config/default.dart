@@ -10,7 +10,7 @@ const String LOGO_IMAGE_DEFAULT =
     'https://tt.tishchenko.kiev.ua/media/images/logo_2.webp';
 
 const String TG_FORGOT_URI = 'https://t.me/TTclubUaBot';
-const String SIGNUP_URI   = 'https://tt.tishchenko.kiev.ua';
+const String SIGNUP_URI = 'https://tt.tishchenko.kiev.ua';
 
 const String DATE_FORMAT_DEFAULT = 'dd-MM-yyyy';
 const String DATE_FORMAT_DEFAULT_SEND = 'dd-MM-yyyy'; //'d-M-y'
@@ -25,13 +25,16 @@ class TTColors {
   static const Color background_gradient_2 = Color(0xFF282B2F); //0xFF242528
   static const Color background_second = Color(0xFF2000000);
   static const Color button_background = Color(0xFF1F2021);
+
   // static const Color logo_background = Color(0xFF242528B2);
 
-  static const Color card = Color(0xFF303234);
+  // static const Color card = Color(0xFF303234);
+  static const Color card = Color(0xFF202122);
   static const Color input = Color(0xFF242528);
   static const Color input_focused = Color(0xFF444549);
 
   static const Color text = Color(0xFFFFFFFF);
+
   static const Color text_secondary = Color(0xFF848484);
 
   static const Color danger = Color(0xFFFF0000);
@@ -45,7 +48,7 @@ class TTTextStyle {
     fontFamily: fontFamily,
     fontWeight: FontWeight.w700,
     fontStyle: FontStyle.normal,
-    fontSize: 32,
+    fontSize: 23,
     color: TTColors.text,
   );
 
@@ -53,7 +56,7 @@ class TTTextStyle {
     fontFamily: fontFamily,
     fontWeight: FontWeight.w300,
     fontStyle: FontStyle.normal,
-    fontSize: 18,
+    fontSize: 14,
     color: TTColors.text_secondary,
   );
 }

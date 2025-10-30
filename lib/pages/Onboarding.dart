@@ -178,8 +178,10 @@ class _OnboardingState extends State<Onboarding> {
                                       ).createShader(rect),
                                       blendMode: BlendMode.dstIn,
                                       child: isNetwork
-                                          ? Image.network(imgPath, fit: BoxFit.cover)
-                                          : Image.asset(imgPath, fit: BoxFit.cover),
+                                          ? Image.network(imgPath,
+                                              fit: BoxFit.cover)
+                                          : Image.asset(imgPath,
+                                              fit: BoxFit.cover),
                                     ),
                                   ),
                                 ),
@@ -192,7 +194,7 @@ class _OnboardingState extends State<Onboarding> {
                               child: Text(
                                 banner['title']!,
                                 textAlign: TextAlign.center,
-                                style: TTTextStyle.title,
+                                style: TTTextStyle.title.copyWith(fontSize: 32),
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -202,8 +204,8 @@ class _OnboardingState extends State<Onboarding> {
                               child: Text(
                                 banner['subtitle']!,
                                 textAlign: TextAlign.center,
-                                style: TTTextStyle.subtitle
-                                    .copyWith(color: Colors.white),
+                                style: TTTextStyle.subtitle.copyWith(
+                                    fontSize: 18, color: Colors.white),
                               ),
                             ),
                           ],

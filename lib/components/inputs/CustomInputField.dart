@@ -48,6 +48,7 @@ class CustomInputField extends StatelessWidget {
             Container(
               constraints: const BoxConstraints(minHeight: 57),
               decoration: BoxDecoration(
+                // color: TTColors.input,
                 color: TTColors.input,
                 border: state.hasError
                     ? Border.all(color: TTColors.danger, width: 1)
