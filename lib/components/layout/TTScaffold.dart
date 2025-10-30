@@ -1,0 +1,59 @@
+import 'package:flutter/material.dart';
+
+import '../../config/default.dart';
+
+class TTScaffold extends StatelessWidget {
+  final String title;
+  final Widget body;
+  final bool showBack;
+  final Color backgroundColor;
+  final PreferredSizeWidget? bottom;
+  final Widget? floatingActionButton;
+  final Widget? bottomNavigationBar;
+
+  const TTScaffold({
+    super.key,
+    required this.title,
+    required this.body,
+    this.showBack = true,
+    this.backgroundColor = const Color(0xFF2B2F35),
+    this.bottom,
+    this.floatingActionButton,
+    this.bottomNavigationBar,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: TTColors.background,
+      extendBody: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        leading: showBack
+            ? IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                onPressed: () => Navigator.pop(context),
+              )
+            : null,
+        title: Text(
+          title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        bottom: bottom,
+      ),
+      body: body,
+      floatingActionButton: floatingActionButton,
+      bottomNavigationBar: bottomNavigationBar,
+    );
+  }
+}

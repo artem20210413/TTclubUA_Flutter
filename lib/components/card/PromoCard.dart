@@ -7,11 +7,13 @@ class PromoCard extends StatefulWidget {
   final String imagePath; // фоновая картинка (asset или http)
   final String title; // текст на карточке
   final VoidCallback onButtonTap; // действие по кнопке
+  final bool enabled; // активна ли карточка
   const PromoCard({
     super.key,
     required this.imagePath,
     required this.title,
     required this.onButtonTap,
+    this.enabled = true,
   });
 
   @override
@@ -43,7 +45,10 @@ class _PromoCardState extends State<PromoCard> {
                     ? Image.network(widget.imagePath, fit: BoxFit.cover)
                     : Image.asset(widget.imagePath, fit: BoxFit.cover),
               ),
-                Positioned.fill(child: ColoredBox(color: _pressed ? Colors.black45: Colors.transparent)),
+
+              Positioned.fill(
+                  child: ColoredBox(
+                      color: _pressed ? Colors.black45 : Colors.transparent)),
               // Positioned.fill(
               //   child: DecoratedBox(
               //     decoration: BoxDecoration(
@@ -71,55 +76,34 @@ class _PromoCardState extends State<PromoCard> {
                 ),
               ),
 
+              Positioned.fill(
+                  child: ColoredBox(
+                      color: widget.enabled
+                          ? Colors.transparent
+                          : Colors.black54)),
+
               // круглая кнопка PNG (меняет картинку при нажатии)
-              Positioned(
-                top: 14,
-                right: 14,
-                child: GestureDetector(
-                  onTapDown: (_) => setState(() => _pressed = true),
-                  onTapCancel: () => setState(() => _pressed = false),
-                  onTapUp: (_) => setState(() => _pressed = false),
-                  onTap: widget.onButtonTap,
-                  child: ClipOval(
-                    child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                        child: Image.asset(
-                          _pressed ? kCardBtnPressedPng : kCardBtnIdlePng,
-                          width: 44,
-                          height: 44,
-                          filterQuality: FilterQuality.high,
-                        )
-                        // Container(
-                        //   width: 44,
-                        //   height: 44,
-                        //   decoration: BoxDecoration(
-                        //     color: Colors.black.withOpacity(0.25),
-                        //     shape: BoxShape.circle,
-                        //     border: Border.all(
-                        //       color: Colors.white.withOpacity(0.18),
-                        //       width: 1.2,
-                        //     ),
-                        //     boxShadow: [
-                        //       BoxShadow(
-                        //         color: Colors.black.withOpacity(0.35),
-                        //         blurRadius: 12,
-                        //         offset: const Offset(0, 4),
-                        //       ),
-                        //     ],
-                        //   ),
-                        //   child: Center(
-                        //     child: Image.asset(
-                        //       _pressed ? kCardBtnPressedPng : kCardBtnIdlePng,
-                        //       width: 44,
-                        //       height: 44,
-                        //       filterQuality: FilterQuality.high,
-                        //     ),
-                        //   ),
-                        // ),
-                        ),
+              if (widget.enabled)
+                Positioned(
+                  top: 14,
+                  right: 14,
+                  child: GestureDetector(
+                    onTapDown: (_) => setState(() => _pressed = true),
+                    onTapCancel: () => setState(() => _pressed = false),
+                    onTapUp: (_) => setState(() => _pressed = false),
+                    onTap: widget.onButtonTap,
+                    child: ClipOval(
+                      child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                          child: Image.asset(
+                            _pressed ? kCardBtnPressedPng : kCardBtnIdlePng,
+                            width: 44,
+                            height: 44,
+                            filterQuality: FilterQuality.high,
+                          )),
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ),
