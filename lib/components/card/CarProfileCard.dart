@@ -197,7 +197,8 @@ class _CarProfileCardState extends State<CarProfileCard> {
                         text: 'ФА-ФА',
                         width: 180,
                         colorGrowing: Colors.white,
-                        onPressed:() => widget.onButtonTap, // исправил, убери =>
+                        onPressed: () =>
+                            widget.onButtonTap, // исправил, убери =>
                       ),
                     ),
 

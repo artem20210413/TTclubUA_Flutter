@@ -63,66 +63,66 @@ class _HomeState extends State<Home> {
               ],
             ),
             const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/merch.png',
-              title: 'Мерч',
-              onButtonTap: () {
-                // TODO: действие по нажатию
-              },
-            ),
-            const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/budget.png',
-              title: 'Бюджет TTclubUA',
-              onButtonTap: () {
-                // TODO: действие по нажатию
-              },
-            ),
-            const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/calendar_of_events.png',
-              title: 'Календар подій',
-              enabled: false,
-              onButtonTap: () {
-                // TODO: действие по нажатию
-              },
-            ),
-            const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/ttclubua_in_world.png',
-              title: 'TTclubUA у світі',
-              enabled: false,
-              onButtonTap: () {
-                // TODO: действие по нажатию
-              },
-            ),
-            const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/partners.png',
-              title: 'Партнери TTclubUA',
-              enabled: false,
-              onButtonTap: () {
-                // TODO: действие по нажатию
-              },
-            ),
-            const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/promotions_from_partners .png',
-              title: 'Акції  партнерів',
-              enabled: false,
-              onButtonTap: () {
-                // TODO: действие по нажатию
-              },
-            ),
-            const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/military_aid.png',
-              title: 'Допомог ЗСУ',
-              enabled: false,
-              onButtonTap: () {
-                // TODO: действие по нажатию
-              },
-            ),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/merch.png',
+            //   title: 'Мерч',
+            //   onButtonTap: () {
+            //     // TODO: действие по нажатию
+            //   },
+            // ),
+            // const SizedBox(height: 20),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/budget.png',
+            //   title: 'Бюджет TTclubUA',
+            //   onButtonTap: () {
+            //     // TODO: действие по нажатию
+            //   },
+            // ),
+            // const SizedBox(height: 20),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/calendar_of_events.png',
+            //   title: 'Календар подій',
+            //   enabled: false,
+            //   onButtonTap: () {
+            //     // TODO: действие по нажатию
+            //   },
+            // ),
+            // const SizedBox(height: 20),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/ttclubua_in_world.png',
+            //   title: 'TTclubUA у світі',
+            //   enabled: false,
+            //   onButtonTap: () {
+            //     // TODO: действие по нажатию
+            //   },
+            // ),
+            // const SizedBox(height: 20),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/partners.png',
+            //   title: 'Партнери TTclubUA',
+            //   enabled: false,
+            //   onButtonTap: () {
+            //     // TODO: действие по нажатию
+            //   },
+            // ),
+            // const SizedBox(height: 20),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/promotions_from_partners .png',
+            //   title: 'Акції  партнерів',
+            //   enabled: false,
+            //   onButtonTap: () {
+            //     // TODO: действие по нажатию
+            //   },
+            // ),
+            // const SizedBox(height: 20),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/military_aid.png',
+            //   title: 'Допомог ЗСУ',
+            //   enabled: false,
+            //   onButtonTap: () {
+            //     // TODO: действие по нажатию
+            //   },
+            // ),
           ],
         ),
       ),

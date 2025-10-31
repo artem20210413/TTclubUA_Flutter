@@ -5,6 +5,7 @@ class TTNeumorphicBox extends StatelessWidget {
   final double? height;
   final double? width;
   final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry? margin;
   final double radius;
   final Color color;
   final Widget? child;
@@ -14,6 +15,7 @@ class TTNeumorphicBox extends StatelessWidget {
     this.height,
     this.width,
     this.padding = const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
+    this.margin,
     this.radius = 40,
     this.color = TTColors.card,
     this.child,
@@ -23,6 +25,7 @@ class TTNeumorphicBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(bottom: 8),
+      margin: margin,
       height: height,
       width: width ?? double.infinity,
       decoration: BoxDecoration(
