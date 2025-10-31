@@ -79,7 +79,7 @@ class _SendMentionScreenState extends State<SendMentionScreen> {
                     ),
                     SizedBox(height: 12),
                     Text(
-                        "🚗 ${widget.dto.modelName} ${widget.dto.geneName} - ${widget.dto.getFullLicensePlate()}"),
+                        "🚗 ${widget.dto.modelName} ${widget.dto.geneName} - ${widget.dto.licensePlate}"),
                     SizedBox(height: 2),
                     Text("📍 ${widget.dto.user.citiesText ?? '-'}"),
                   ],

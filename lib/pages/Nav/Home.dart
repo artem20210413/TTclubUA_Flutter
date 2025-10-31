@@ -26,15 +26,6 @@ class _HomeState extends State<Home> {
     _loadUser();
   }
 
-  Future<void> _launchMonobankJar() async {
-    final userID = await UserStorage.getId();
-
-    final Uri url =
-        Uri.parse(URL_REDIRECT_JAK.replaceAll('{userId}', userID.toString()));
-
-    await launchUrl(url, mode: LaunchMode.externalApplication);
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

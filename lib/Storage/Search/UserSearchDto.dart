@@ -5,6 +5,7 @@ import 'package:tt_club_ua/config/default.dart';
 class UserSearchDto {
   Map<String, dynamic> json;
   NetworkImage? profileImage;
+  String? profileImageString;
   String name;
   String email;
   String phone;
@@ -45,6 +46,7 @@ class UserSearchDto {
         profileImage = json["profile_image"] != null
             ? NetworkImage(json["profile_image"])
             : null,
+        profileImageString = json["profile_image"] ?? null,
         carsText = (json["cars"] != null && json["cars"].isNotEmpty)
             ? json["cars"].map((c) {
                 final gene = c["gene"]?["name"] ?? "Марка невідома";
