@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:tt_club_ua/Storage/UserStorage.dart';
 import 'package:tt_club_ua/components/card/UserAvatar.dart';
 import 'package:tt_club_ua/config/default.dart';
@@ -24,9 +23,9 @@ class _ProfileState extends State<Profile> {
   late UserUpdateDto _dto;
 
   // final _formKey = GlobalKey<FormState>();
-  final ImagePicker _picker = ImagePicker();
+  // final ImagePicker _picker = ImagePicker();
   bool _isLoading = true;
-  bool _isLocalProfile = false;
+  // bool _isLocalProfile = false;
 
   String userProfileImage = USER_PROFILE_IMAGE_DEFAULT;
 
