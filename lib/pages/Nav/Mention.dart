@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/Storage/Search/CarSearchDto.dart';
 import 'package:tt_club_ua/pages/Nav/Mention/SendMention.dart';
-import 'package:tt_club_ua/pages/Nav/User/Profile.dart';
+import 'package:tt_club_ua/pages/Nav/Mention/Profile.dart';
 
 import '../../Storage/Search/UserSearchDto.dart';
 import '../../Storage/UserStorage.dart';

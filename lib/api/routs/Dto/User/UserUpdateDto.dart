@@ -12,13 +12,15 @@ class UserUpdateDto {
   TextEditingController telegramNicknameController = TextEditingController();
   TextEditingController instagramNicknameController = TextEditingController();
   TextEditingController birthDateController = TextEditingController();
+  TextEditingController whyTTController = TextEditingController();
   TextEditingController occupationDescriptionController =
       TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
 
   bool active = false;
-  String profileImage ='';
+  bool isBirthdayToday = false;
+  String profileImage = '';
   List<CityDto> cities = [];
   String? citiesText;
   List<CarDto> cars = [];
@@ -42,9 +44,12 @@ class UserUpdateDto {
     occupationDescriptionController.text = json['occupation_description'] ?? '';
     emailController.text = json['email'] ?? '';
     phoneController.text = json['phone'] ?? '';
+    ;
+    whyTTController.text = json['why_tt'] ?? '';
     citiesText = (json["cities"] != null && json["cities"].isNotEmpty)
         ? json["cities"].map((c) => c["name"]).join(", ")
         : "Міста не вказані";
+    isBirthdayToday = (json['is_birthday_today'] ?? null) == true;
   }
 
   // Метод для получения JSON обратно

@@ -35,18 +35,16 @@ class _CarProfileCardState extends State<CarProfileCard> {
     return birthday.day == now.day && birthday.month == now.month;
   }
 
-  late final bool isActiveUser;
-  late final bool isBirthday;
-
   @override
   void initState() {
     super.initState();
-    isActiveUser = widget.dto.user.active ?? false;
-    isBirthday = isBirthdayToday(widget.dto.user.birthDate);
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool isBirthday = widget.dto.user.isBirthdayToday;
+    final bool isActiveUser = widget.dto.user.active ?? false;
+
     return GestureDetector(
       onTap: widget.onTap,
       child: TTNeumorphicBox(
