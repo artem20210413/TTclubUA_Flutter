@@ -20,6 +20,7 @@ class UserUpdateDto {
   bool active = false;
   String profileImage ='';
   List<CityDto> cities = [];
+  String? citiesText;
   List<CarDto> cars = [];
 
   UserUpdateDto.fromJson(this.json)
@@ -41,6 +42,9 @@ class UserUpdateDto {
     occupationDescriptionController.text = json['occupation_description'] ?? '';
     emailController.text = json['email'] ?? '';
     phoneController.text = json['phone'] ?? '';
+    citiesText = (json["cities"] != null && json["cities"].isNotEmpty)
+        ? json["cities"].map((c) => c["name"]).join(", ")
+        : "Міста не вказані";
   }
 
   // Метод для получения JSON обратно
