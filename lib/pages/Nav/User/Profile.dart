@@ -73,12 +73,12 @@ class _ProfileState extends State<Profile> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    // UserAvatar(
-                    //   radius: 90,
-                    //   name: _dto.nameController.text,
-                    //   imageUrl: userProfileImage,
-                    // ),
-
+                    UserAvatar(
+                      radius: 90,
+                      name: _dto.nameController.text,
+                      imageUrl: userProfileImage,
+                    ),
+//TODO каждую машину отрисовать с полной информацией слайдинг горизонтальный
                     // CarImageBlock(
                     //   imageUrl: _dto.cars,
                     //   isActiveUser: isActiveUser,
