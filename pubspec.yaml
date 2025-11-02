@@ -101,7 +101,16 @@ flutter:
     - assets/svg/.
     - assets/svg/money.svg
     - assets/ui/.
+    - assets/ui/btn_card.png
+    - assets/ui/btn_card_pressed.png
     - assets/ui/banners/.
+    - assets/ui/banners/military_aid.png
+    - assets/ui/banners/promotions_from_partners.png
+    - assets/ui/banners/partners.png
+    - assets/ui/banners/ttclubua_in_world.png
+    - assets/ui/banners/calendar_of_events.png
+    - assets/ui/banners/budget.png
+    - assets/ui/banners/merch.png
   #     - images/a_dot_burr.jpeg
   #     - images/a_dot_ham.jpeg
 

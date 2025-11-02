@@ -34,18 +34,6 @@ class _HomeState extends State<Home> {
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 113),
         child: Column(
           children: [
-            // Text('Найближчі дні народження'),
-            // Text('Кількість учасніків та авто'),
-            // Text('Пошук авто та власника (функція "фа-фа")'),
-            // Text('інформація про події'),
-            // Text('Нові учасники (за месяц)'),
-            // Text('донат'),
-            // ElevatedButton.icon(
-            //   icon: const Icon(Icons.monetization_on),
-            //   label: const Text('Підтримати'),
-            //   onPressed: _launchMonobankJar,
-            // ),
-            // const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -67,7 +55,8 @@ class _HomeState extends State<Home> {
               imagePath: 'assets/ui/banners/merch.png',
               title: 'Мерч',
               onButtonTap: () {
-                // TODO: действие по нажатию
+                MessageModule(
+                    context, 'Ось ось буде..', MessageType.information);
               },
             ),
             const SizedBox(height: 20),
@@ -107,7 +96,7 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 20),
             PromoCard(
-              imagePath: 'assets/ui/banners/promotions_from_partners .png',
+              imagePath: 'assets/ui/banners/promotions_from_partners.png',
               title: 'Акції  партнерів',
               enabled: false,
               onButtonTap: () {

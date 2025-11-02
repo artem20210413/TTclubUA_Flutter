@@ -47,6 +47,8 @@ class _NavState extends State<Nav> {
             appBar: AppBar(
               toolbarHeight: 20,
               backgroundColor: Colors.transparent,
+              surfaceTintColor: Colors.transparent,
+              // shadowColor: Colors.black,
             ),
             body: _screens[_currentIndex],
             // SingleChildScrollView(

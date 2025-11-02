@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/Storage/Search/CarSearchDto.dart';
 import 'package:tt_club_ua/pages/Nav/Mention/SendMention.dart';
+import 'package:tt_club_ua/pages/Nav/User/Profile.dart';
 
 import '../../Storage/Search/UserSearchDto.dart';
 import '../../Storage/UserStorage.dart';
 import '../../api/routs/car/car.dart';
 import '../../api/routs/root.dart';
 import '../../api/routs/user.dart';
+import '../../components/TTLoading.dart';
 import '../../components/card/CarProfileCard.dart';
 import '../../components/interface/SearchBarWidgetState.dart';
 import '../../components/generalModule.dart';
@@ -66,7 +68,8 @@ class _MentionState extends State<Mention> {
         } else {
           searchResults = newData;
           if (newData.length == 0) {
-            MessageModule(context, 'Нічого не знайдено', MessageType.success);
+            MessageModule(
+                context, 'Нічого не знайдено', MessageType.information);
           }
         }
         _hasMore =
@@ -96,6 +99,7 @@ class _MentionState extends State<Mention> {
   bool isBirthdayToday(DateTime? birthday) {
     if (birthday == null) return false;
     final now = DateTime.now();
+    return true;
     return birthday.day == now.day && birthday.month == now.month;
   }
 
@@ -111,9 +115,9 @@ class _MentionState extends State<Mention> {
         ),
         SizedBox(height: 10),
         isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : searchResults.length == 0
-                ? Text('Тут ТТшкі...')
+            ? const TTLoading()
+            :  searchResults.length == 0
+                ? Text('')
                 : Expanded(
                     child: ListView.builder(
                       controller: _scrollController,
@@ -130,213 +134,21 @@ class _MentionState extends State<Mention> {
                         final car = searchResults[index];
                         CarSearchDto dto = CarSearchDto.fromJson(car);
 
-                        final isActiveUser = dto.user.active;
-                        final bool isBirthday = isBirthdayToday(dto.user
-                            .birthDate); // dto.user.birthday — должен быть DateTime
-                        // final textDisableUser = 'Учасник покинув нас або не хоче будти з нами';
-                        final textDisableUser =
-                            'Учасник не бажає бути частиною клубу';
                         return CarProfileCard(
                           dto: dto,
-                          modelName: 'Audi TT',
-                          // licensePlate: 'KA5555KA',
-                          // location: 'Київ, Дніпро, Будапешт',
-                          // nickname: 'МІЛАШКА',
-                          ownerName: 'Олександр Тарасенко',
-                          ownerAvatarUrl:
-                              'https://avatars.githubusercontent.com/u/583231?v=4',
-                          onButtonTap: () => print('Pressed Fa-Fa'),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Profile(id: dto.user.id),
+                            ),
+                          ),
+                          onButtonTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SendMentionScreen(dto: dto),
+                            ),
+                          ),
                         );
-
-                        // return Card(
-                        //   margin: const EdgeInsets.symmetric(
-                        //       horizontal: 10, vertical: 5),
-                        //   shape: RoundedRectangleBorder(
-                        //       borderRadius: BorderRadius.circular(12)),
-                        //   elevation: 4,
-                        //   child: Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //       // Верхняя картинка с фильтром
-                        //       ClipRRect(
-                        //         borderRadius: const BorderRadius.vertical(
-                        //             top: Radius.circular(12)),
-                        //         child: ColorFiltered(
-                        //           colorFilter: ColorFilter.mode(
-                        //             isActiveUser == true
-                        //                 ? Colors.transparent
-                        //                 : Colors.grey,
-                        //             isActiveUser == true
-                        //                 ? BlendMode.srcOver
-                        //                 : BlendMode.saturation,
-                        //           ),
-                        //           child: Image(
-                        //             image: dto.images.isNotEmpty
-                        //                 ? dto.images.first.networkImage
-                        //                 : const NetworkImage(CAR_IMAGE_DEFAULT),
-                        //             height: 250,
-                        //             width: double.infinity,
-                        //             fit: BoxFit.cover,
-                        //           ),
-                        //         ),
-                        //       ),
-                        //       // Контент внутри карточки
-                        //       Padding(
-                        //         padding: const EdgeInsets.all(12.0),
-                        //         child: Column(
-                        //           crossAxisAlignment:
-                        //               CrossAxisAlignment.stretch,
-                        //           children: [
-                        //             Center(
-                        //               child: Column(
-                        //                 children: [
-                        //                   Text(
-                        //                     dto.user.name,
-                        //                     style: const TextStyle(
-                        //                         fontSize: 18,
-                        //                         fontWeight: FontWeight.bold),
-                        //                   ),
-                        //                   if (isBirthday)
-                        //                     Text(
-                        //                       '🎉 Сьогодні день народження! 🎉',
-                        //                     )
-                        //                 ],
-                        //               ),
-                        //             ),
-                        //             const SizedBox(height: 12),
-                        //             Text(
-                        //                 "🚗 ${dto.modelName} ${dto.geneName} - ${dto.getFullLicensePlate()}"),
-                        //             const SizedBox(height: 2),
-                        //             Row(
-                        //               mainAxisAlignment:
-                        //                   MainAxisAlignment.spaceBetween,
-                        //               children: [
-                        //                 Column(
-                        //                   crossAxisAlignment:
-                        //                       CrossAxisAlignment.start,
-                        //                   children: [
-                        //                     if (!(isActiveUser == true))
-                        //                       Text("⚠️ $textDisableUser"),
-                        //                     Text(
-                        //                         "📍 ${dto.user.citiesText ?? '-'}"),
-                        //                   ],
-                        //                 ),
-                        //                 if (isActiveUser == true)
-                        //                   ElevatedButton(
-                        //                     onPressed: () {
-                        //                       Navigator.push(
-                        //                         context,
-                        //                         MaterialPageRoute(
-                        //                           builder: (context) =>
-                        //                               SendMentionScreen(
-                        //                                   dto: dto),
-                        //                         ),
-                        //                       );
-                        //                     },
-                        //                     child: const Text('Привітання'),
-                        //                   ),
-                        //               ],
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // );
-
-                        // return Card(
-                        //   margin:
-                        //       EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        //   shape: RoundedRectangleBorder(
-                        //       borderRadius: BorderRadius.circular(12)),
-                        //   elevation: 4,
-                        //   child: Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //       ClipRRect(
-                        //         borderRadius: BorderRadius.vertical(
-                        //             top: Radius.circular(12)),
-                        //         child: ColorFiltered(
-                        //           colorFilter: isActiveUser == true
-                        //               ? ColorFilter.mode(
-                        //                   Colors.transparent, BlendMode.srcOver)
-                        //               : ColorFilter.mode(
-                        //                   Colors.grey,
-                        //                   BlendMode
-                        //                       .saturation), // Применяем серый фильтр
-                        //           child: Image(
-                        //             image: dto.images.isNotEmpty
-                        //                 ? dto.images.first.networkImage
-                        //                 : NetworkImage(CAR_IMAGE_DEFAULT)
-                        //                     as ImageProvider,
-                        //             height: 250,
-                        //             width: double.infinity,
-                        //             fit: BoxFit.cover,
-                        //           ),
-                        //         ),
-                        //       ),
-                        //       Padding(
-                        //         padding: const EdgeInsets.all(12.0),
-                        //         child: Column(
-                        //           crossAxisAlignment:
-                        //               CrossAxisAlignment.stretch,
-                        //           // чтобы имя было по центру
-                        //           children: [
-                        //             Center(
-                        //               child: Text(
-                        //                 dto.user.name,
-                        //                 style: TextStyle(
-                        //                     fontSize: 18,
-                        //                     fontWeight: FontWeight.bold),
-                        //               ),
-                        //             ),
-                        //             SizedBox(height: 12),
-                        //             Text(
-                        //                 "🚗 ${dto.modelName} ${dto.geneName} - ${dto.getFullLicensePlate()}"),
-                        //             SizedBox(height: 2),
-                        //             Row(
-                        //               mainAxisAlignment:
-                        //                   MainAxisAlignment.spaceBetween,
-                        //               crossAxisAlignment:
-                        //                   CrossAxisAlignment.center,
-                        //               children: [
-                        //                 Column(
-                        //                   crossAxisAlignment:
-                        //                       CrossAxisAlignment.start,
-                        //                   children: [
-                        //                     isActiveUser == false
-                        //                         ? Text("⚠️ ${textDisableUser} ")
-                        //                         : SizedBox.shrink(),
-                        //                     Text(
-                        //                         "📍 ${dto.user.citiesText ?? '-'}"),
-                        //                   ],
-                        //                 ),
-                        //                 isActiveUser == true
-                        //                     ? ElevatedButton(
-                        //                         // style: ElevatedButton.styleFrom(
-                        //                         //   // backgroundColor:  Colors.grey,
-                        //                         // ),
-                        //                         onPressed: () {
-                        //                           Navigator.push(
-                        //                             context,
-                        //                             MaterialPageRoute(
-                        //                               builder: (context) =>
-                        //                                   SendMentionScreen(
-                        //                                       dto: dto),
-                        //                             ),
-                        //                           );
-                        //                         },
-                        //                         child: Text('Привітання'),
-                        //                       )
-                        //                     : SizedBox.shrink(),
-                        //               ],
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       )
-                        //     ],
-                        //   ),
-                        // );
                       },
                     ),
                   ),

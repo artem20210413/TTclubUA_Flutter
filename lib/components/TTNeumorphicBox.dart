@@ -14,7 +14,7 @@ class TTNeumorphicBox extends StatelessWidget {
     super.key,
     this.height,
     this.width,
-    this.padding = const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
+    this.padding = const EdgeInsets.only(top: 40,bottom: 40, left: 16, right: 24),
     this.margin,
     this.radius = 40,
     this.color = TTColors.card,

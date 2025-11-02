@@ -30,7 +30,7 @@ void MessageModule(BuildContext context, String text, MessageType type) {
       padding: EdgeInsets.zero,
       content: Container(
         width: double.infinity,
-        padding: EdgeInsets.fromLTRB(18, 14, 18, 14 + bottom),
+        padding: EdgeInsets.fromLTRB(18, 14, 18, 14), // EdgeInsets.fromLTRB(18, 14, 18, 14 + bottom)
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             begin: Alignment.topLeft, end: Alignment.bottomRight,

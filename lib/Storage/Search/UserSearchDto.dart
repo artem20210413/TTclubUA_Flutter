@@ -6,6 +6,7 @@ class UserSearchDto {
   Map<String, dynamic> json;
   NetworkImage? profileImage;
   String? profileImageString;
+  int id;
   String name;
   String email;
   String phone;
@@ -26,6 +27,7 @@ class UserSearchDto {
 
   UserSearchDto.fromJson(Map<String, dynamic> json)
       : json = json,
+        id = json['id'],
         email = json['email'] ?? "Не вказано",
         phone = json["phone"] ?? "Не вказано",
         active = json["active"] ?? false,
