@@ -8,6 +8,7 @@ import 'package:tt_club_ua/config/default.dart';
 import '../../../api/routs/Dto/User/UserUpdateDto.dart';
 import '../../../api/routs/User.dart';
 import '../../../components/TTLoading.dart';
+import '../../../components/card/CarImageBlock.dart';
 import '../../../components/layout/TTScaffold.dart';
 
 class Profile extends StatefulWidget {
@@ -20,11 +21,12 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  late UserUpdateDto _dto;
+  late UserUpdateDto _dto = UserUpdateDto.fromJson({});
 
   // final _formKey = GlobalKey<FormState>();
   // final ImagePicker _picker = ImagePicker();
   bool _isLoading = true;
+
   // bool _isLocalProfile = false;
 
   String userProfileImage = USER_PROFILE_IMAGE_DEFAULT;
@@ -64,26 +66,32 @@ class _ProfileState extends State<Profile> {
   // }
 
   Widget build(BuildContext context) {
-    return _isLoading
-        ? const TTLoading()
-        : TTScaffold(
-            title: '',
-            body: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    UserAvatar(
-                      radius: 90,
-                      name: _dto.nameController.text,
-                      imageUrl: userProfileImage,
-                    ),
-//TODO каждую машину отрисовать с полной информацией слайдинг горизонтальный
-                    // CarImageBlock(
-                    //   imageUrl: _dto.cars,
-                    //   isActiveUser: isActiveUser,
-                    // ),
-                  ],
-                )),
-          );
+    // _isLoading
+    //     ? const TTLoading()
+    //     :
+    return TTScaffold(
+      title: '',
+      // body: const TTLoading(),
+      body: _isLoading
+          ? Text('Loading', style: TTTextStyle.title)
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  // Text('ggg', style: TTTextStyle.title),
+                  UserAvatar(
+                    radius: 90,
+                    name: _dto.nameController.text,
+                    imageUrl: userProfileImage,
+                  ),
+// TODO каждую машину отрисовать с полной информацией слайдинг горизонтальный
+//                   CarImageBlock(
+//                     imageUrl: _dto.cars,
+//                     isActiveUser: isActiveUser,
+//                   ),
+                ],
+              ),
+            ),
+    );
   }
 }

@@ -101,8 +101,6 @@ flutter:
     - assets/svg/.
     - assets/svg/money.svg
     - assets/ui/.
-    - assets/ui/btn_card.png
-    - assets/ui/btn_card_pressed.png
     - assets/ui/banners/.
     - assets/ui/banners/military_aid.png
     - assets/ui/banners/promotions_from_partners.png

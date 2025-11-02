@@ -25,8 +25,6 @@ class PromoCard extends StatefulWidget {
 
 class _PromoCardState extends State<PromoCard> {
   bool _pressed = false;
-  final String kCardBtnIdlePng = 'assets/ui/btn_card.png';
-  final String kCardBtnPressedPng = 'assets/ui/btn_card_pressed.png';
 
   @override
   Widget build(BuildContext context) {
