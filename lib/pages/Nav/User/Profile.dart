@@ -71,9 +71,8 @@ class _ProfileState extends State<Profile> {
     //     :
     return TTScaffold(
       title: '',
-      // body: const TTLoading(),
       body: _isLoading
-          ? Text('Loading', style: TTTextStyle.title)
+          ? const TTLoading()
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(

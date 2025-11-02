@@ -45,14 +45,14 @@ class _TTLoadingState extends State<TTLoading>
           alignment: Alignment.center,
           children: [
             // Размытие фона
-            ClipOval(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                child: Container(
-                  color: Colors.white.withOpacity(0.05),
-                ),
-              ),
-            ),
+            // ClipOval(
+            //   child: BackdropFilter(
+            //     filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+            //     child: Container(
+            //       color: Colors.white.withOpacity(0.05),
+            //     ),
+            //   ),
+            // ),
 
             // Кольцо
             AnimatedBuilder(
