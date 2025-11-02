@@ -5,10 +5,12 @@ import 'package:tt_club_ua/config/default.dart';
 
 class InstagramLink extends StatelessWidget {
   final String? username;
+  final Color color;
 
   const InstagramLink({
     super.key,
     this.username,
+    this.color = TTColors.text,
   });
 
   Future<void> _launchInstagram(String handle) async {
@@ -17,8 +19,7 @@ class InstagramLink extends StatelessWidget {
     //   await launchUrl(url, mode: LaunchMode.externalApplication);
     // }
 
-
-    final Uri url =Uri.parse('https://instagram.com/$handle');
+    final Uri url = Uri.parse('https://instagram.com/$handle');
 
     await launchUrl(url, mode: LaunchMode.externalApplication);
   }
@@ -39,8 +40,9 @@ class InstagramLink extends StatelessWidget {
         children: [
           SvgPicture.asset(
             'assets/svg/instagram.svg',
+            width: 18,
             colorFilter: ColorFilter.mode(
-              TTColors.text_secondary,
+              color,
               BlendMode.srcIn,
             ),
           ),
@@ -48,8 +50,8 @@ class InstagramLink extends StatelessWidget {
           Text(
             '@$username',
             style: TTTextStyle.subtitle.copyWith(
-              color: Colors.white,
-              decoration: TextDecoration.underline,
+              color: color,
+              // decoration: TextDecoration.underline,
             ),
           ),
         ],

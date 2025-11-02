@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:tt_club_ua/Storage/UserStorage.dart';
 import 'package:tt_club_ua/components/card/UserAvatar.dart';
 import 'package:tt_club_ua/config/default.dart';
@@ -113,16 +114,29 @@ class _ProfileState extends State<Profile> {
                         ),
                         SizedBox(height: 18),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Icon(Icons.location_on_outlined,
-                                size: 16, color: Colors.white38),
-                            const SizedBox(width: 4),
-                            Text(
-                              _dto.citiesText ?? '',
-                              style: TTTextStyle.subtitle,
-                              overflow: TextOverflow.ellipsis,
+                            Container(
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/svg/location.svg',
+                                    width: 15,
+                                    colorFilter: ColorFilter.mode(
+                                      TTColors.text_secondary,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    _dto.citiesText ?? '',
+                                    style: TTTextStyle.subtitle,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
                             ),
-                            const SizedBox(width: 10),
                             InstagramLink(
                               username: _dto.instagramNicknameController.text,
                             ),
