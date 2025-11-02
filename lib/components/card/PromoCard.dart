@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tt_club_ua/config/default.dart';
 
 import '../TTNeumorphicBox.dart';
+import '../buttons/CircleButton.dart';
 
 class PromoCard extends StatefulWidget {
   final String imagePath; // фоновая картинка (asset или http)
@@ -47,26 +48,10 @@ class _PromoCardState extends State<PromoCard> {
                     ? Image.network(widget.imagePath, fit: BoxFit.cover)
                     : Image.asset(widget.imagePath, fit: BoxFit.cover),
               ),
-
+              //
               Positioned.fill(
                   child: ColoredBox(
                       color: _pressed ? Colors.black45 : Colors.transparent)),
-              // Positioned.fill(
-              //   child: DecoratedBox(
-              //     decoration: BoxDecoration(
-              //       gradient: RadialGradient(
-              //         center: Alignment.center,
-              //         radius: 1.0, // радиус виньетки (1.0 = вся ширина)
-              //         colors: [
-              //           Colors.transparent,            // центр — без затемнения
-              //           Colors.black.withOpacity(0.6), // края — тёмные
-              //         ],
-              //         stops: const [0.6, 1.0], // где начинается затемнение
-              //       ),
-              //     ),
-              //   ),
-              // ),
-
               // текст
               Positioned(
                 left: 20,
@@ -77,7 +62,7 @@ class _PromoCardState extends State<PromoCard> {
                   style: TTTextStyle.title.copyWith(fontSize: 22),
                 ),
               ),
-
+              //
               Positioned.fill(
                   child: ColoredBox(
                       color: widget.enabled
@@ -87,23 +72,12 @@ class _PromoCardState extends State<PromoCard> {
               // круглая кнопка PNG (меняет картинку при нажатии)
               if (widget.enabled)
                 Positioned(
-                  top: 14,
-                  right: 14,
-                  child: GestureDetector(
-                    onTapDown: (_) => setState(() => _pressed = true),
-                    onTapCancel: () => setState(() => _pressed = false),
-                    onTapUp: (_) => setState(() => _pressed = false),
+                  top: 6,
+                  right: 6,
+                  child: CircleButton(
+                    // size: 60,
+                    iconAsset: 'assets/svg/arrow.svg',
                     onTap: widget.onButtonTap,
-                    child: ClipOval(
-                      child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                          child: Image.asset(
-                            _pressed ? kCardBtnPressedPng : kCardBtnIdlePng,
-                            width: 44,
-                            height: 44,
-                            filterQuality: FilterQuality.high,
-                          )),
-                    ),
                   ),
                 ),
             ],
