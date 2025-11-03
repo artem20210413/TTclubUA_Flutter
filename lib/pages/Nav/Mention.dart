@@ -69,7 +69,7 @@ class _MentionState extends State<Mention> {
           searchResults = newData;
           if (newData.length == 0) {
             MessageModule(
-                context, 'Нічого не знайдено', MessageType.information);
+                context, 'Жодної TT на горизонті…', MessageType.information);
           }
         }
         _hasMore =

@@ -11,6 +11,7 @@ import '../../../api/routs/User.dart';
 import '../../../components/TTLoading.dart';
 import '../../../components/TTNeumorphicBox.dart';
 import '../../../components/card/CarImageBlock.dart';
+import '../../../components/inputs/CustomInputField.dart';
 import '../../../components/layout/TTScaffold.dart';
 import '../../../components/viewers/InstagramLink.dart';
 
@@ -59,8 +60,6 @@ class _ProfileState extends State<Profile> {
 
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final blockCarWidth = screenSize.width * 0.8;
-    final blockCarHeight = screenSize.width * 0.4;
 
     return TTScaffold(
       title: '',
@@ -176,7 +175,7 @@ class _ProfileState extends State<Profile> {
                           children: [
                             SvgPicture.asset(
                               'assets/svg/user.svg',
-                              width: 15,
+                              width: 14,
                               colorFilter: ColorFilter.mode(
                                 TTColors.text,
                                 BlendMode.srcIn,

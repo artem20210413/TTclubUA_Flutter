@@ -70,10 +70,10 @@ class _PromoCardState extends State<PromoCard> {
               // круглая кнопка PNG (меняет картинку при нажатии)
               if (widget.enabled)
                 Positioned(
-                  top: 6,
+                  top: 2,
                   right: 6,
                   child: CircleButton(
-                    // size: 60,
+                    size: 45,
                     iconAsset: 'assets/svg/arrow.svg',
                     onTap: widget.onButtonTap,
                   ),
