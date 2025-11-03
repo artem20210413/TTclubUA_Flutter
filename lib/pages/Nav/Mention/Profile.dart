@@ -27,6 +27,7 @@ class _ProfileState extends State<Profile> {
   late UserUpdateDto _dto;
 
   bool _isLoading = true;
+  bool isOne = true;
 
   String userProfileImage = USER_PROFILE_IMAGE_DEFAULT;
 
@@ -51,6 +52,7 @@ class _ProfileState extends State<Profile> {
       _dto = UserUpdateDto.fromJson(json);
       userProfileImage = localProfileImage ?? userProfileImage;
       _isLoading = false;
+      isOne = _dto.cars.length == 1;
       print(_dto.isBirthdayToday);
     });
   }
@@ -202,7 +204,7 @@ class _ProfileState extends State<Profile> {
                   if (_dto.cars.isEmpty) const SizedBox.shrink(),
 
                   SizedBox(
-                    height: screenSize.width * 0.75, // высота блока с машинами
+                    height: screenSize.width * 0.72, // высота блока с машинами
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: _dto.cars.length,
@@ -220,16 +222,16 @@ class _ProfileState extends State<Profile> {
                         return TTNeumorphicBox(
                           padding: EdgeInsets.only(
                               top: 16, bottom: 24, left: 16, right: 24),
-                          width: screenSize.width * 0.8,
+                          width: screenSize.width * (isOne ? 0.9 : 0.8),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               CarImageBlock(
-                                height: screenSize.width * 0.4,
+                                height: screenSize.width * (isOne ? 0.45 : 0.4),
                                 imageUrl: imageUrl,
                               ),
-                              const SizedBox(height: 12),
                               Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -259,7 +261,6 @@ class _ProfileState extends State<Profile> {
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-
                                       Expanded(
                                         flex: 2,
                                         child: Row(
@@ -278,7 +279,8 @@ class _ProfileState extends State<Profile> {
                                                 ),
                                                 shape: BoxShape.circle,
                                                 border: Border.all(
-                                                    color: TTColors.text_secondary,
+                                                    color:
+                                                        TTColors.text_secondary,
                                                     width: 1),
                                               ),
                                             ),
@@ -301,57 +303,6 @@ class _ProfileState extends State<Profile> {
                             ],
                           ),
                         );
-
-                        // return ClipRRect(
-                        //   borderRadius: BorderRadius.circular(18),
-                        //   child: Container(
-                        //     width: 300,
-                        //     decoration: BoxDecoration(
-                        //       color: TTColors.card,
-                        //       borderRadius: BorderRadius.circular(18),
-                        //     ),
-                        //     child: Stack(
-                        //       fit: StackFit.expand,
-                        //       children: [
-                        //         Image.network(
-                        //           imageUrl,
-                        //           fit: BoxFit.cover,
-                        //         ),
-                        //         // подпись внизу
-                        //         Align(
-                        //           alignment: Alignment.bottomLeft,
-                        //           child: Container(
-                        //             width: double.infinity,
-                        //             padding: const EdgeInsets.all(8),
-                        //             decoration: BoxDecoration(
-                        //               gradient: LinearGradient(
-                        //                 begin: Alignment.bottomCenter,
-                        //                 end: Alignment.topCenter,
-                        //                 colors: [
-                        //                   Colors.black.withOpacity(0.6),
-                        //                   Colors.transparent,
-                        //                 ],
-                        //               ),
-                        //             ),
-                        //             // child: Text(
-                        //             //   '${car.modelName ?? ''} ${car.geneName ?? ''}'
-                        //             //           .trim()
-                        //             //           .isEmpty
-                        //             //       ? 'Audi TT'
-                        //             //       : '${car.modelName ?? ''} ${car.geneName ?? ''}',
-                        //             //   maxLines: 1,
-                        //             //   overflow: TextOverflow.ellipsis,
-                        //             //   style: const TextStyle(
-                        //             //     color: Colors.white,
-                        //             //     fontWeight: FontWeight.w600,
-                        //             //   ),
-                        //             // ),
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // );
                       },
                     ),
                   )

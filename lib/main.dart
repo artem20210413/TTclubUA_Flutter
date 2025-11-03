@@ -21,6 +21,7 @@
 //     ));
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:tt_club_ua/pages/Login.dart';
 import 'package:tt_club_ua/pages/Nav.dart';
@@ -34,6 +35,11 @@ Future<void> main() async {
   // } catch (e) {
   //   debugPrint("Не удалось загрузить .env: $e");
   // }
+  // Разрешаем только вертикальную ориентацию
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   runApp(MaterialApp(
     theme: ThemeData(
