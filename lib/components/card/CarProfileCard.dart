@@ -84,9 +84,15 @@ class _CarProfileCardState extends State<CarProfileCard> {
                     const SizedBox(height: 9),
                     Row(
                       children: [
-                        const Icon(Icons.location_on_outlined,
-                            size: 16, color: Colors.white38),
-                        const SizedBox(width: 4),
+                        SvgPicture.asset(
+                          'assets/svg/location.svg',
+                          width: 15,
+                          colorFilter: ColorFilter.mode(
+                            TTColors.text_secondary,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
                         Expanded(
                           child: Text(
                             widget.dto.user.citiesText ?? '',
@@ -95,17 +101,19 @@ class _CarProfileCardState extends State<CarProfileCard> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        Icon(Icons.directions_car_filled,
-                            size: 16, color: TTColors.text_secondary),
-                        const SizedBox(width: 4),
-                        if (widget.dto.personalizedLicensePlate != null)
-                          Text(
-                            '${widget.dto.personalizedLicensePlate}   | ',
-                            style: TTTextStyle.subtitle,
+                        SvgPicture.asset(
+                          'assets/svg/car.svg',
+                          width: 18,
+                          colorFilter: ColorFilter.mode(
+                            TTColors.text_secondary,
+                            BlendMode.srcIn,
                           ),
-                        const SizedBox(width: 6),
+                        ),
+                        const SizedBox(width: 8),
                         Text(
-                          widget.dto.licensePlate,
+                          widget.dto.personalizedLicensePlate != null
+                              ? '${widget.dto.personalizedLicensePlate}   |   ${widget.dto.licensePlate}'
+                              : widget.dto.licensePlate,
                           style: TTTextStyle.subtitle,
                         ),
                       ],
