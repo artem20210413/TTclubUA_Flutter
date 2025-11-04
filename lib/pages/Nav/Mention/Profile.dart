@@ -52,8 +52,8 @@ class _ProfileState extends State<Profile> {
     setState(() {
       _dto = UserUpdateDto.fromJson(json);
       userProfileImage = localProfileImage ?? userProfileImage;
-      _isLoading = false;
       isOne = _dto.cars.length == 1;
+      _isLoading = false;
       print(_dto.isBirthdayToday);
     });
   }

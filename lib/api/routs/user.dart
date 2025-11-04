@@ -5,9 +5,9 @@ import 'dart:convert';
 
 import 'package:tt_club_ua/api/routs/Dto/User/UserUpdateDto.dart';
 
-Future<http.Response> UPLOAD_USER(String? token, UserDTO user) async {
+Future<http.Response> UPLOAD_USER(String? token, UserUpdateDto user) async {
   // print('URL: $URL_USER');
-  // print('User Data: ${user.toJson()}');
+  print('User Data: ${user.toJson()}');
 
   final response = await http.post(
     Uri.parse(URL_USER),
