@@ -31,7 +31,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       setState(() => _isLoading = false);
       return;
     }
-    MessageModule(context, 'Пароль успішно змінено.', MessageType.success);
+    MessageModule(context, 'Новий пароль прийняв. Повний контроль — у твоїх руках.', MessageType.success);
     Navigator.pop(context);
 
     setState(() => _isLoading = false);

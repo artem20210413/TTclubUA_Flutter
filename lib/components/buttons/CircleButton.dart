@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../TTLoading.dart';
+
 class CircleButton extends StatefulWidget {
   final String iconAsset;
   final double? size;
@@ -9,6 +11,7 @@ class CircleButton extends StatefulWidget {
   final EdgeInsets padding;
   final VoidCallback? onTap;
   final double scale;
+  final bool isLoading;
 
   const CircleButton({
     super.key,
@@ -18,6 +21,7 @@ class CircleButton extends StatefulWidget {
     this.padding = const EdgeInsets.symmetric(vertical: 10),
     this.onTap,
     this.scale = 0.8,
+    this.isLoading = false,
   });
 
   @override
@@ -93,19 +97,25 @@ class _CircleButtonState extends State<CircleButton> {
                     ],
             ),
             child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints.tightFor(
-                  width: widget.sizeIcon,
-                  height: widget.sizeIcon,
-                ),
-                child: SvgPicture.asset(
-                  widget.iconAsset,
-                  colorFilter: ColorFilter.mode(
-                    isActive ? Colors.white : Colors.white.withOpacity(0.55),
-                    BlendMode.srcIn,
-                  ),
-                ),
-              ),
+              child: widget.isLoading
+                  ? const TTLoading(
+                      size: 50,
+                    )
+                  : ConstrainedBox(
+                      constraints: BoxConstraints.tightFor(
+                        width: widget.sizeIcon,
+                        height: widget.sizeIcon,
+                      ),
+                      child: SvgPicture.asset(
+                        widget.iconAsset,
+                        colorFilter: ColorFilter.mode(
+                          isActive
+                              ? Colors.white
+                              : Colors.white.withOpacity(0.55),
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
             ),
           ),
         ),

@@ -20,10 +20,12 @@ import '../../api/routs/cities/CityServices.dart';
 import '../../components/TTLoading.dart';
 import '../../components/TTNeumorphicBox.dart';
 import '../../components/buttons/CircleButton.dart';
+import '../../components/buttons/GlowingButton.dart';
 import '../../components/card/CarImageBlock.dart';
 import '../../components/card/UserAvatar.dart';
 import '../../components/inputs/BigTextInput.dart';
 import '../../components/interface/TileButton.dart';
+import '../../components/viewers/ChangePasswordSection.dart';
 import '../../components/viewers/InstagramLink.dart';
 import 'Admin/User/FinanceScreen.dart';
 import 'User/ChangePasswordPage.dart';
@@ -40,14 +42,22 @@ class _UserState extends State<User> {
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _picker = ImagePicker();
   bool _isLoading = true;
-  UserDTO _userDTO = UserDTO();
-  bool isOne = true;
 
   String userProfileImage = USER_PROFILE_IMAGE_DEFAULT;
 
+  late final ScrollController _carsScrollController;
+
   void initState() {
     super.initState();
+
+    _carsScrollController = ScrollController();
     _load();
+  }
+
+  @override
+  void dispose() {
+    _carsScrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -58,8 +68,6 @@ class _UserState extends State<User> {
 
     setState(() {
       _dto = UserUpdateDto.fromJson(json);
-      _userDTO = UserDTO.fromJson(json);
-      isOne = _dto.cars.length == 1;
 
       userProfileImage = profileImage ?? userProfileImage;
     });
@@ -68,6 +76,36 @@ class _UserState extends State<User> {
 
     setState(() {
       _isLoading = false;
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(const Duration(seconds: 1));
+      if (mounted) _runCarsHintScroll();
+    });
+  }
+
+  void _runCarsHintScroll() {
+    if (!mounted) return;
+    if (_dto.cars.length <= 1) return;
+    if (!_carsScrollController.hasClients) return;
+
+    final width = MediaQuery.of(context).size.width;
+    final double offset = width * 0.1;
+
+    _carsScrollController
+        .animateTo(
+      offset,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+    )
+        .then((_) async {
+      await Future.delayed(const Duration(milliseconds: 150));
+      if (!_carsScrollController.hasClients) return;
+      _carsScrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeInOut,
+      );
     });
   }
 
@@ -137,7 +175,7 @@ class _UserState extends State<User> {
 
     return TTNeumorphicBox(
       margin: EdgeInsets.only(top: 0, bottom: 16, left: 20, right: 12),
-      padding: EdgeInsets.only(top: 0, bottom: 4, left: 0, right: 8),
+      padding: EdgeInsets.only(top: 0, bottom: 74, left: 0, right: 8),
       child: _isLoading
           ? const TTLoading()
           : SingleChildScrollView(
@@ -248,16 +286,13 @@ class _UserState extends State<User> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                // Expanded(
-                                //   flex: 2,
-                                //   child: Row(
-                                //     children: [],
-                                //   ),
-                                // ),
-                                CircleButton(
-                                  size: 65,
-                                  iconAsset: 'assets/svg/check_mark.svg',
-                                  onTap: _saveUser,
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: CircleButton(
+                                    size: 65,
+                                    iconAsset: 'assets/svg/check_mark.svg',
+                                    onTap: _saveUser,
+                                  ),
                                 )
                               ],
                             ),
@@ -267,13 +302,12 @@ class _UserState extends State<User> {
                     ),
                     // Text('ggg', style: TTTextStyle.title),
                     SizedBox(height: 12),
-                    // если у юзера нет машин
                     if (_dto.cars.isEmpty) const SizedBox.shrink(),
-
                     SizedBox(
                       height:
                           screenSize.width * 0.72, // высота блока с машинами
                       child: ListView.separated(
+                        controller: _carsScrollController,
                         scrollDirection: Axis.horizontal,
                         itemCount: _dto.cars.length,
                         padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -290,13 +324,12 @@ class _UserState extends State<User> {
                           return TTNeumorphicBox(
                             padding: EdgeInsets.only(
                                 top: 16, bottom: 24, left: 16, right: 24),
-                            width: screenSize.width * (isOne ? 0.9 : 0.8),
+                            width: screenSize.width * 0.83,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 CarImageBlock(
-                                  height:
-                                      screenSize.width * (isOne ? 0.45 : 0.4),
+                                  height: screenSize.width * 0.43,
                                   imageUrl: imageUrl,
                                 ),
                                 Column(
@@ -378,192 +411,22 @@ class _UserState extends State<User> {
                         },
                       ),
                     ),
-
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChangePasswordPage()),
-                        );
-                      },
-                      child: const Text('Змінити пароль'),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      child: ChangePasswordSection(),
                     ),
-                    ElevatedButton(
+                    GlowingButton(
+                      text: 'Вихід',
+                      colorGrowing: Colors.white,
                       onPressed: () {
                         _logout();
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF8B0000),
-                      ),
-                      child: const Text(
-                        'Вихід',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      // isLoading: _isLoadingSubmit,
                     ),
                   ],
                 ),
               ),
             ),
     );
-    // return Padding(
-    //   padding: const EdgeInsets.all(16.0),
-    //   child: _isLoading
-    //       ? Column(
-    //           children: [
-    //             Row(
-    //               children: [
-    //                 ElevatedButton(
-    //                   onPressed: () {
-    //                     _logout();
-    //                   },
-    //                   style: ElevatedButton.styleFrom(
-    //                     backgroundColor: Colors.grey,
-    //                   ),
-    //                   child: const Text(
-    //                     'Вихід',
-    //                     style: TextStyle(color: Colors.white),
-    //                   ),
-    //                 ),
-    //                 Spacer(),
-    //               ],
-    //             ),
-    //             Spacer(),
-    //             CenterLoadingModule,
-    //             Spacer(),
-    //           ],
-    //         )
-    //       : Form(
-    //           key: _formKey,
-    //           child: SingleChildScrollView(
-    //             child: Column(
-    //               children: [
-    //                 GestureDetector(
-    //                   onTap: _pickAndUploadImage,
-    //                   child: Stack(
-    //                     alignment: Alignment.center,
-    //                     children: [
-    //                       CircleAvatar(
-    //                         radius: 70,
-    //                         backgroundImage: NetworkImage(userProfileImage),
-    //                         backgroundColor: Colors.grey[200],
-    //                       ),
-    //                       Positioned(
-    //                         bottom: 0,
-    //                         right: 0,
-    //                         child: CircleAvatar(
-    //                           radius: 15,
-    //                           backgroundColor: Colors.black87,
-    //                           child: const Icon(
-    //                             Icons.edit,
-    //                             color: Colors.white,
-    //                             size: 18,
-    //                           ),
-    //                         ),
-    //                       ),
-    //                     ],
-    //                   ),
-    //                 ),
-    //                 const SizedBox(height: 16),
-    //                 Text(
-    //                   _nameController.text,
-    //                   style: const TextStyle(
-    //                     fontSize: 24,
-    //                     fontWeight: FontWeight.bold,
-    //                   ),
-    //                 ),
-    //                 const SizedBox(height: 8),
-    //                 TileButton(
-    //                   icon: Icons.payment_outlined,
-    //                   title: 'Фінанси',
-    //                   onTap: () {
-    //
-    //                     Navigator.push(
-    //                       context,
-    //                       MaterialPageRoute(
-    //                         builder: (context) => FinanceScreen(userDto: _dto),
-    //                       ),
-    //                     );
-    //                   },
-    //                 ),
-    //                 const SizedBox(height: 8),
-    //                 Card(
-    //                   margin: const EdgeInsets.all(12),
-    //                   elevation: 4,
-    //                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    //                   child: Padding(
-    //                     padding: const EdgeInsets.all(16),
-    //                     child: Column(
-    //                       crossAxisAlignment: CrossAxisAlignment.start,
-    //                       children: [
-    //                         _buildRow('👤 Імʼя', _dto.nameController.text),
-    //                         _buildRow('📞 Телефон', _dto.phoneController.text),
-    //                         // _buildRow('📧 Email', _dto.emailController.text),
-    //                         _buildRow('🎂 Дата народження', _formatDate(_dto.birthDateController.text)),
-    //                         _buildRow('💼 Професія', _dto.occupationDescriptionController.text),
-    //                         _buildRow('Instagram', _dto.instagramNicknameController.text),
-    //                         _buildRow('Telegram', _dto.telegramNicknameController.text),
-    //                         _buildRow('Міста', _dto.cities.map((c) => c.name).join(', ')),
-    //                         const SizedBox(height: 10),
-    //                         Row(
-    //                           children: [
-    //                             const Text('Статус:'),
-    //                             const SizedBox(width: 8),
-    //                             Chip(
-    //                               label: Text(_dto.active ? 'Активний' : 'Неактивний'),
-    //                               backgroundColor: _dto.active ? Colors.green.shade100 : Colors.red.shade100,
-    //                               labelStyle: TextStyle(
-    //                                 color: _dto.active ? Colors.green : Colors.red,
-    //                                 fontWeight: FontWeight.bold,
-    //                               ),
-    //                             ),
-    //                           ],
-    //                         ),
-    //                       ],
-    //                     ),
-    //                   ),
-    //                 ),
-    //                 const SizedBox(height: 20),
-    //                 Row(
-    //                   mainAxisAlignment: MainAxisAlignment.center,
-    //                   // Выравнивание по горизонтали
-    //                   // crossAxisAlignment: CrossAxisAlignment.start, // Выравнивание по вертикали
-    //                   children: [
-    //                     // ElevatedButton(
-    //                     //   onPressed: _saveUser,
-    //                     //   child: const Text('Зберегти'),
-    //                     // ),
-    //                     Spacer(),
-    //                     ElevatedButton(
-    //                       onPressed: () {
-    //                         Navigator.push(
-    //                           context,
-    //                           MaterialPageRoute(
-    //                               builder: (context) => ChangePasswordPage()),
-    //                         );
-    //                       },
-    //                       child: const Text('Змінити пароль'),
-    //                     ),
-    //                     Spacer(),
-    //                     ElevatedButton(
-    //                       onPressed: () {
-    //                         _logout();
-    //                       },
-    //                       style: ElevatedButton.styleFrom(
-    //                         backgroundColor: Color(0xFF8B0000),
-    //                       ),
-    //                       child: const Text(
-    //                         'Вихід',
-    //                         style: TextStyle(color: Colors.white),
-    //                       ),
-    //                     ),
-    //                     Spacer(),
-    //                   ],
-    //                 ),
-    //               ],
-    //             ),
-    //           ),
-    //         ),
-    // );
   }
 }

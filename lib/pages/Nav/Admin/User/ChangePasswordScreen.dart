@@ -33,6 +33,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         _passwordController.text,
       );
 
+
       final isSuccess = await CHECK_API(res, context);
 
       setState(() => _isLoading = false);
@@ -68,7 +69,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               TextFormField(
                 controller: _confirmPasswordController,
                 obscureText: true,
-                decoration: const InputDecoration(labelText: 'Підтвердьте пароль'),
+                decoration:
+                    const InputDecoration(labelText: 'Підтвердьте пароль'),
                 validator: (value) {
                   if (value != _passwordController.text) {
                     return 'Паролі не співпадають';
