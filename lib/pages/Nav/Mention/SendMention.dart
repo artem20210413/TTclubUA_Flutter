@@ -1,11 +1,22 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tt_club_ua/Storage/Search/CarSearchDto.dart';
 
 import '../../../Storage/UserStorage.dart';
 import '../../../api/routs/car/car.dart';
 import '../../../api/routs/root.dart';
+import '../../../components/TTNeumorphicBox.dart';
+import '../../../components/buttons/GlowingButton.dart';
+import '../../../components/card/CarImageBlock.dart';
+import '../../../components/card/UserAvatar.dart';
 import '../../../components/generalModule.dart';
+import '../../../components/inputs/BigTextInput.dart';
+import '../../../components/inputs/CustomInputField.dart';
+import '../../../components/inputs/PhotoPickerInput.dart';
+import '../../../components/layout/TTScaffold.dart';
 import '../../../config/default.dart';
 
 class SendMentionScreen extends StatefulWidget {
@@ -34,103 +45,143 @@ class _SendMentionScreenState extends State<SendMentionScreen> {
     setState(() => _isSending = false);
 
     if (isSuccess) {
-      MessageModule(context, 'Успішно надіслано', MessageType.success);
+      MessageModule(context, 'Вітання передано', MessageType.success);
       Navigator.pop(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Привітання"),
-      ),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        behavior: HitTestBehavior.opaque,
-        // важно! чтобы сработал тап и по "пустому" месту
-        child: SingleChildScrollView(
-          // если нужно, чтобы при открытии клавиатуры всё поднималось
+    return TTScaffold(
+      title: '',
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: TTNeumorphicBox(
+          margin: EdgeInsets.only(top: 24, right: 16, bottom: 16, left: 24),
+          padding: EdgeInsets.only(top: 16, right: 24, bottom: 16, left: 18),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                child: Image(
-                  image: widget.dto.images.isNotEmpty
-                      ? widget.dto.images.first.networkImage
-                      : NetworkImage(CAR_IMAGE_DEFAULT) as ImageProvider,
-                  height: 250,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+              CarImageBlock(
+                imageUrl: widget.dto.images.isNotEmpty
+                    ? widget.dto.images.first.url
+                    : CAR_IMAGE_DEFAULT,
+                // isActiveUser: isActiveUser,
               ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Center(
-                      child: Text(
-                        widget.dto.user.name,
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+              const SizedBox(height: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 9),
+                  Row(
+                    children: [
+                      const SizedBox(width: 2),
+                      SvgPicture.asset(
+                        'assets/svg/user.svg',
+                        width: 14,
+                        colorFilter: ColorFilter.mode(
+                          TTColors.text,
+                          BlendMode.srcIn,
+                        ),
                       ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          widget.dto.user.name,
+                          style: TTTextStyle.subtitle
+                              .copyWith(color: TTColors.text),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      SvgPicture.asset(
+                        'assets/svg/location.svg',
+                        width: 15,
+                        colorFilter: ColorFilter.mode(
+                          TTColors.text_secondary,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        widget.dto.user.citiesText ?? '',
+                        style: TTTextStyle.subtitle,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/svg/car.svg',
+                        width: 18,
+                        colorFilter: ColorFilter.mode(
+                          TTColors.text_secondary,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          'Audi ${widget.dto.modelName} ${widget.dto.geneName}',
+                          maxLines: 1,
+                          style: TTTextStyle.subtitle,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        widget.dto.personalizedLicensePlate != null
+                            ? '${widget.dto.personalizedLicensePlate}   |   ${widget.dto.licensePlate}'
+                            : '${widget.dto.licensePlate}',
+                        style: TTTextStyle.subtitle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 18),
+              Container(
+                margin: EdgeInsets.only(left: 8, right: 0),
+                child: Column(
+                  children: [
+                    BigTextInput(
+                      controller: _descriptionController,
+                      hint: 'Текст привітання...',
+                      minHeight: 50,
+                      minLines: 2,
                     ),
                     SizedBox(height: 12),
-                    Text(
-                        "🚗 ${widget.dto.modelName} ${widget.dto.geneName} - ${widget.dto.getFullLicensePlate()}"),
-                    SizedBox(height: 2),
-                    Text("📍 ${widget.dto.user.citiesText ?? '-'}"),
+                    PhotoPickerInput(
+                      initialImage: _pickedImage,
+                      onImageSelected: (file) {
+                        setState(() => _pickedImage = file);
+                      },
+                    ),
                   ],
                 ),
               ),
               SizedBox(height: 12),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    OutlinedButton(
-                      onPressed: () async {
-                        final ImagePicker _picker = ImagePicker();
-                        final pickedFile = await _picker.pickImage(
-                            source: ImageSource.gallery);
-                        if (pickedFile != null) {
-                          setState(() {
-                            _pickedImage = pickedFile;
-                          });
-                        }
-                      },
-                      child: Text(_pickedImage == null
-                          ? 'Завантажити фото'
-                          : 'Фото вибрано'),
-                    ),
-                    SizedBox(height: 12),
-                    TextField(
-                      controller: _descriptionController,
-                      decoration: InputDecoration(
-                        labelText: 'Опис привітання',
-                        border: OutlineInputBorder(),
-                      ),
-                      maxLines: 2,
-                    ),
-                    SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: _sendMention, child: _isSending
-                        ? SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
-                        : Text('ФА-ФА'),
-                    ),
-                  ],
-                ),
+
+              GlowingButton(
+                text: 'ФА-ФА',
+                colorGrowing: Colors.white,
+                onPressed: _sendMention,
+                isLoading: _isSending,
               ),
+              // ElevatedButton(
+              //   onPressed: _sendMention,
+              //   child: _isSending
+              //       ? SizedBox(
+              //           height: 20,
+              //           width: 20,
+              //           child: CircularProgressIndicator(
+              //             strokeWidth: 2,
+              //             color: Colors.white,
+              //           ),
+              //         )
+              //       : Text('ФА-ФА'),
+              // ),
             ],
           ),
         ),

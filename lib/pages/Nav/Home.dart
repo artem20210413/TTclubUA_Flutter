@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/Storage/UserStorage.dart';
+import 'package:tt_club_ua/config/default.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../api/routs.dart';
+import '../../components/TTNeumorphicBox.dart';
+import '../../components/card/PromoCard.dart';
+import '../../components/card/TopActionCard.dart';
 import '../../components/generalModule.dart';
+import 'Home/AnnualFeePage.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -21,41 +26,95 @@ class _HomeState extends State<Home> {
     _loadUser();
   }
 
-  Future<void> _launchMonobankJar() async {
-    final userID = await UserStorage.getId();
-
-    final Uri url =
-        Uri.parse(URL_REDIRECT_JAK.replaceAll('{userId}', userID.toString()));
-
-    await launchUrl(url, mode: LaunchMode.externalApplication);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text('Найближчі дні народження'),
-        Text('Кількість учасніків та авто'),
-        Text('Пошук авто та власника (функція "фа-фа")'),
-        Text('інформація про події'),
-        Text('Нові учасники (за месяц)'),
-        Text('донат'),
-        ElevatedButton.icon(
-          icon: const Icon(Icons.monetization_on),
-          label: const Text('Підтримати'),
-          onPressed: _launchMonobankJar,
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 113),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TopActionCard(
+                  iconAsset: 'assets/svg/money.svg',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              AnnualFeePage()), // Переход на экран публикаций
+                    );
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            PromoCard(
+              imagePath: 'assets/ui/banners/merch.png',
+              title: 'Мерч',
+              onButtonTap: () {
+                MessageModule(
+                    context, 'Ось ось буде..', MessageType.information);
+              },
+            ),
+            const SizedBox(height: 20),
+            PromoCard(
+              imagePath: 'assets/ui/banners/budget.png',
+              title: 'Бюджет TTclubUA',
+              onButtonTap: () {
+                // TODO: действие по нажатию
+              },
+            ),
+            const SizedBox(height: 20),
+            PromoCard(
+              imagePath: 'assets/ui/banners/calendar_of_events.png',
+              title: 'Календар подій',
+              enabled: false,
+              onButtonTap: () {
+                // TODO: действие по нажатию
+              },
+            ),
+            const SizedBox(height: 20),
+            PromoCard(
+              imagePath: 'assets/ui/banners/ttclubua_in_world.png',
+              title: 'TTclubUA у світі',
+              enabled: false,
+              onButtonTap: () {
+                // TODO: действие по нажатию
+              },
+            ),
+            const SizedBox(height: 20),
+            PromoCard(
+              imagePath: 'assets/ui/banners/partners.png',
+              title: 'Партнери TTclubUA',
+              enabled: false,
+              onButtonTap: () {
+                // TODO: действие по нажатию
+              },
+            ),
+            const SizedBox(height: 20),
+            PromoCard(
+              imagePath: 'assets/ui/banners/promotions_from_partners.png',
+              title: 'Акції  партнерів',
+              enabled: false,
+              onButtonTap: () {
+                // TODO: действие по нажатию
+              },
+            ),
+            const SizedBox(height: 20),
+            PromoCard(
+              imagePath: 'assets/ui/banners/military_aid.png',
+              title: 'Допомог ЗСУ',
+              enabled: false,
+              onButtonTap: () {
+                // TODO: действие по нажатию
+              },
+            ),
+          ],
         ),
-        // ElevatedButton(
-        //   onPressed: () {
-        //     // Navigator.pushReplacementNamed(context, '/user');
-        //     // Navigator.pushNamed(context, '/user');
-        //     // Navigator.popAndPushNamed(context, '/user');
-        //     // Navigator.pushNamedAndRemoveUntil(
-        //     //     context, '/user', (route) => true);
-        //   },
-        //   child: const Text('User'),
-        // ),
-      ],
+      ),
     );
   }
 

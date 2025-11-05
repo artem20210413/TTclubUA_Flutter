@@ -1,0 +1,146 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:ui';
+
+import '../../../Storage/UserStorage.dart';
+import '../../../api/routs.dart';
+import '../../../components/TTNeumorphicBox.dart';
+import '../../../components/buttons/GlowingButton.dart';
+import '../../../components/layout/TTScaffold.dart';
+import '../../../config/default.dart';
+
+class AnnualFeePage extends StatelessWidget {
+  const AnnualFeePage({super.key});
+
+  Future<void> _launchMonobankJar() async {
+    final userID = await UserStorage.getId();
+
+    final Uri url =
+        Uri.parse(URL_REDIRECT_JAK.replaceAll('{userId}', userID.toString()));
+
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return TTScaffold(
+      title: 'Оплата річного внеску',
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TTNeumorphicBox(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                      'Підтримай спільноту TT Club UA та отримай\nдоступ до ексклюзивних привілеїв.',
+                      textAlign: TextAlign.center,
+                      style: TTTextStyle.subtitle),
+                  const SizedBox(height: 20),
+                  TTNeumorphicBox(
+                    padding: const EdgeInsets.all(12),
+                    color: TTColors.input,
+                    child: Center(
+                      child: Text('999 UAH', style: TTTextStyle.title),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  GlowingButton(
+                    text: 'Сплатити',
+                    colorGrowing: Colors.white,
+                    onPressed: _launchMonobankJar,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Сплатити внесок через Monobank',
+                    textAlign: TextAlign.center,
+                    style: TTTextStyle.subtitle
+                        .copyWith(fontSize: 10, color: TTColors.text),
+                  ),
+                  Text(
+                    'Для зарахування коштів не змінюйте поле коментаря',
+                    textAlign: TextAlign.center,
+                    style: TTTextStyle.subtitle.copyWith(fontSize: 10),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // секція "Що входить"
+            TTNeumorphicBox(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Що входить у річний внесок?',
+                      textAlign: TextAlign.center, style: TTTextStyle.title),
+                  SizedBox(height: 12),
+                  _BulletPoint('Участь у закритих заходах клубу'),
+                  _BulletPoint('Знижки у партнерських сервісах'),
+                  _BulletPoint('Цифровий клубний бейдж'),
+                  _BulletPoint('Подарунковий мерч'),
+                  SizedBox(height: 20),
+                  Text('Часті питання',
+                      textAlign: TextAlign.center, style: TTTextStyle.title),
+                  SizedBox(height: 10),
+                  Text(
+                    'Чи обовʼязковий внесок?',
+                    style: TTTextStyle.subtitle.copyWith(color: TTColors.text),
+                  ),
+                  Text('Так, він підтримує розвиток клубу.\n',
+                      style: TTTextStyle.subtitle),
+                  Text(
+                    'Як отримати мерч?',
+                    style: TTTextStyle.subtitle.copyWith(color: TTColors.text),
+                  ),
+                  Text('Після оплати вам надійде форма для заповнення адреси.',
+                      style: TTTextStyle.subtitle),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Маркер-рядок списка
+class _BulletPoint extends StatelessWidget {
+  final String text;
+
+  const _BulletPoint(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 6),
+            child: Icon(Icons.circle, size: 6, color: Colors.white54),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Colors.white70,
+                fontSize: 15,
+                height: 1.4,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

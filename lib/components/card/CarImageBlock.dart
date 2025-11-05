@@ -1,0 +1,65 @@
+import 'package:flutter/material.dart';
+import 'package:tt_club_ua/config/default.dart';
+import 'package:tt_club_ua/components/viewers/FullImageViewer.dart';
+
+class CarImageBlock extends StatelessWidget {
+  final String? imageUrl;
+  final bool isActiveUser;
+  final double height;
+  final double borderRadius;
+
+  const CarImageBlock({
+    super.key,
+    required this.imageUrl,
+    this.isActiveUser = true,
+    this.height = 200,
+    this.borderRadius = 32,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final String displayUrl =
+    (imageUrl != null && imageUrl!.isNotEmpty) ? imageUrl! : CAR_IMAGE_DEFAULT;
+
+    return GestureDetector(
+      onTap: () => FullImageViewer.show(context, displayUrl),
+      child: Hero(
+        tag: displayUrl,
+        child: ClipRRect(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(borderRadius),
+            bottom: Radius.circular(borderRadius),
+          ),
+          child: ColorFiltered(
+            colorFilter: ColorFilter.mode(
+              isActiveUser ? Colors.transparent : Colors.grey,
+              isActiveUser ? BlendMode.srcOver : BlendMode.saturation,
+            ),
+            child: Image.network(
+              displayUrl,
+              height: height,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Container(
+                  height: height,
+                  color: Colors.black12,
+                  alignment: Alignment.center,
+                  child: const CircularProgressIndicator(color: Colors.white),
+                );
+              },
+              errorBuilder: (_, __, ___) => Container(
+                height: height,
+                color: Colors.black12,
+                alignment: Alignment.center,
+                child: const Icon(Icons.image_not_supported,
+                    color: Colors.white54, size: 40),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

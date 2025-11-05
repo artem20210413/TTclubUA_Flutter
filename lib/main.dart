@@ -21,18 +21,25 @@
 //     ));
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:tt_club_ua/pages/Login.dart';
 import 'package:tt_club_ua/pages/Nav.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/User/UpdateCarScreen.dart';
+import 'package:tt_club_ua/pages/Onboarding.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await dotenv.load(fileName: ".env");
-  } catch (e) {
-    debugPrint("Не удалось загрузить .env: $e");
-  }
+  // try {
+  //   await dotenv.load(fileName: ".env");
+  // } catch (e) {
+  //   debugPrint("Не удалось загрузить .env: $e");
+  // }
+  // Разрешаем только вертикальную ориентацию
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   runApp(MaterialApp(
     theme: ThemeData(
@@ -44,8 +51,9 @@ Future<void> main() async {
       scaffoldBackgroundColor: Colors.white, // Белый фон
       primarySwatch: Colors.amber,
     ),
-    initialRoute: '/login',
+    initialRoute: '/onboarding',
     routes: {
+      '/onboarding': (context) => Onboarding(),
       '/login': (context) => Login(),
       '/nav': (context) => Nav(),
     },

@@ -12,7 +12,7 @@ class CarSearchDto {
   String name;
   String vinCode;
   String licensePlate;
-  String personalizedLicensePlate;
+  String? personalizedLicensePlate;
   String generalLicensePlate;
   String geneName;
   UserSearchDto user;
@@ -28,9 +28,9 @@ class CarSearchDto {
 
   // UserDTO(this.list);
 
-  String getFullLicensePlate() {
-    return "${licensePlate} ${personalizedLicensePlate}";
-  }
+  // String getFullLicensePlate() {
+  //   return "${licensePlate} ${personalizedLicensePlate}";
+  // }
 
   CarSearchDto.fromJson(Map<String, dynamic> json)
       : json = json,
@@ -38,7 +38,7 @@ class CarSearchDto {
         name = json['name'] ?? "Не вказано",
         vinCode = json['vin_code'] ?? "Не вказано",
         licensePlate = json['license_plate'] ?? "-",
-        personalizedLicensePlate = json['personalized_license_plate'] ?? "-",
+        personalizedLicensePlate = json['personalized_license_plate'] ?? null,
         generalLicensePlate = json['general_license_plate'] ?? "-",
         geneName = json['gene']['name'] ?? "Не вказано",
         modelName = json['model']['name'] ?? "Не вказано",
