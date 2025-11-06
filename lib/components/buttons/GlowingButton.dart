@@ -11,6 +11,7 @@ class GlowingButton extends StatefulWidget {
   final Color colorBackground;
   final bool isLoading;
   final double? width;
+  final EdgeInsets? margin;
 
   const GlowingButton({
     super.key,
@@ -19,6 +20,7 @@ class GlowingButton extends StatefulWidget {
     this.colorGrowing = Colors.white,
     this.isLoading = false,
     this.width,
+    this.margin,
     this.colorBackground = TTColors.button_background,
   });
 
@@ -51,6 +53,7 @@ class _GlowingButtonState extends State<GlowingButton> {
       onTapUp:
           widget.isLoading ? null : (_) => setState(() => _isPressed = false),
       child: AnimatedContainer(
+        margin: widget.margin,
         duration: Duration(milliseconds: 100),
         height: 57,
         width: widget.width,

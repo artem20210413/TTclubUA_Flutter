@@ -59,6 +59,7 @@ class _UserState extends State<User> {
     final profileImage = await UserStorage.getProfileImagee();
     final dynamic json = await UserStorage.getUserInfo();
     final isAdmin = await UserStorage.isAdmin();
+    // final isAdmin = await UserStorage.whereInRole([UserRole.admin]);
 
     setState(() {
       _dto = UserUpdateDto.fromJson(json);
@@ -427,26 +428,22 @@ class _UserState extends State<User> {
                         ),
                       ),
                       if (_isAdmin)
-                        Row(
-                          children: [
-                            const SizedBox(width: 15),
-                            Expanded(
-                              flex: 3,
-                              child: GlowingButton(
-                                text: 'Для адміна',
-                                colorGrowing: Colors.white,
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const Admin(),
-                                    ), // Переход на экран публикаций
-                                  );
-                                },
-                                // isLoading: _isLoadingSubmit,
-                              ),
-                            ),
-                          ],
+                        Expanded(
+                          flex: 3,
+                          child: GlowingButton(
+                            margin: EdgeInsets.only(left: 15),
+                            text: 'Для адміна',
+                            colorGrowing: Colors.white,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const Admin(),
+                                ), // Переход на экран публикаций
+                              );
+                            },
+                            // isLoading: _isLoadingSubmit,
+                          ),
                         ),
                     ],
                   ),
