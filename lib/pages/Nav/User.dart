@@ -58,7 +58,7 @@ class _UserState extends State<User> {
     await UserStorage.checkAndUpdate();
     final profileImage = await UserStorage.getProfileImagee();
     final dynamic json = await UserStorage.getUserInfo();
-    final isAdmin = await UserStorage.whereInRole([UserRole.admin]);
+    final isAdmin = await UserStorage.isAdmin();
 
     setState(() {
       _dto = UserUpdateDto.fromJson(json);
@@ -300,111 +300,115 @@ class _UserState extends State<User> {
                   // Text('ggg', style: TTTextStyle.title),
                   SizedBox(height: 12),
                   // if (_dto.cars.isEmpty) const SizedBox.shrink(),
-                  if (!_dto.cars.isEmpty) SizedBox(
-                    height: screenSize.width * 0.78, // высота блока с машинами
-                    child: ListView.separated(
-                      controller: _carsScrollController,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: _dto.cars.length,
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      separatorBuilder: (_, __) => const SizedBox(width: 12),
-                      itemBuilder: (context, index) {
-                        final car = _dto.cars[index];
-                        // пытаемся вытащить фото
-                        final String imageUrl = (car.imageUrls != null &&
-                                car.imageUrls!.isNotEmpty &&
-                                car.imageUrls!.first.url != null)
-                            ? car.imageUrls!.first.url!
-                            : CAR_IMAGE_DEFAULT;
+                  if (!_dto.cars.isEmpty)
+                    SizedBox(
+                      height:
+                          screenSize.width * 0.78, // высота блока с машинами
+                      child: ListView.separated(
+                        controller: _carsScrollController,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _dto.cars.length,
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        separatorBuilder: (_, __) => const SizedBox(width: 12),
+                        itemBuilder: (context, index) {
+                          final car = _dto.cars[index];
+                          // пытаемся вытащить фото
+                          final String imageUrl = (car.imageUrls != null &&
+                                  car.imageUrls!.isNotEmpty &&
+                                  car.imageUrls!.first.url != null)
+                              ? car.imageUrls!.first.url!
+                              : CAR_IMAGE_DEFAULT;
 
-                        return TTNeumorphicBox(
-                          padding: EdgeInsets.only(
-                              top: 16, bottom: 24, left: 16, right: 24),
-                          width: screenSize.width * 0.9,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CarImageBlock(
-                                height: screenSize.width * 0.45,
-                                imageUrl: imageUrl,
-                              ),
-                              Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        car.personalizedLicensePlateController
-                                                    .text !=
-                                                ''
-                                            ? '${car.personalizedLicensePlateController.text}   |   ${car.licensePlateController.text}'
-                                            : car.licensePlateController.text,
-                                        style: TTTextStyle.subtitle
-                                            .copyWith(color: TTColors.text),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        flex: 3,
-                                        child: Text(
-                                          'Audi ${car.model.name} ${car.gene.name}',
-                                          maxLines: 2,
-                                          style: TTTextStyle.subtitle,
-                                          overflow: TextOverflow.ellipsis,
+                          return TTNeumorphicBox(
+                            padding: EdgeInsets.only(
+                                top: 16, bottom: 24, left: 16, right: 24),
+                            width: screenSize.width * 0.9,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CarImageBlock(
+                                  height: screenSize.width * 0.45,
+                                  imageUrl: imageUrl,
+                                ),
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          car.personalizedLicensePlateController
+                                                      .text !=
+                                                  ''
+                                              ? '${car.personalizedLicensePlateController.text}   |   ${car.licensePlateController.text}'
+                                              : car.licensePlateController.text,
+                                          style: TTTextStyle.subtitle
+                                              .copyWith(color: TTColors.text),
                                         ),
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            // Кольорове коло
-                                            Container(
-                                              width: 16,
-                                              height: 16,
-                                              decoration: BoxDecoration(
-                                                color: Color(
-                                                  int.parse(car.color.hex
-                                                      .replaceFirst(
-                                                          '#', '0xff')),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            'Audi ${car.model.name} ${car.gene.name}',
+                                            maxLines: 2,
+                                            style: TTTextStyle.subtitle,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              // Кольорове коло
+                                              Container(
+                                                width: 16,
+                                                height: 16,
+                                                decoration: BoxDecoration(
+                                                  color: Color(
+                                                    int.parse(car.color.hex
+                                                        .replaceFirst(
+                                                            '#', '0xff')),
+                                                  ),
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                      color: TTColors
+                                                          .text_secondary,
+                                                      width: 1),
                                                 ),
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                    color:
-                                                        TTColors.text_secondary,
-                                                    width: 1),
                                               ),
-                                            ),
-                                            const SizedBox(width: 6),
-                                            // Назва кольору
-                                            Flexible(
-                                              child: Text(
-                                                car.color.name,
-                                                style: TTTextStyle.subtitle,
-                                                overflow: TextOverflow.ellipsis,
+                                              const SizedBox(width: 6),
+                                              // Назва кольору
+                                              Flexible(
+                                                child: Text(
+                                                  car.color.name,
+                                                  style: TTTextStyle.subtitle,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 15),
                     child: ChangePasswordSection(),
