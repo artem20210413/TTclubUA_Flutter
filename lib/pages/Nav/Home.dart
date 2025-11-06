@@ -52,7 +52,7 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 20),
             PromoCard(
-              imagePath: 'assets/ui/banners/merch.png',
+              imagePath: 'assets/ui/banners/merch.webp',
               title: 'Мерч',
               onButtonTap: () {
                 MessageModule(
@@ -61,7 +61,7 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 20),
             PromoCard(
-              imagePath: 'assets/ui/banners/budget.png',
+              imagePath: 'assets/ui/banners/budget.webp',
               title: 'Бюджет TTclubUA',
               onButtonTap: () {
                 // TODO: действие по нажатию
@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 20),
             PromoCard(
-              imagePath: 'assets/ui/banners/calendar_of_events.png',
+              imagePath: 'assets/ui/banners/calendar_of_events.webp',
               title: 'Календар подій',
               enabled: false,
               onButtonTap: () {
@@ -78,7 +78,7 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 20),
             PromoCard(
-              imagePath: 'assets/ui/banners/ttclubua_in_world.png',
+              imagePath: 'assets/ui/banners/ttclubua_in_world.webp',
               title: 'TTclubUA у світі',
               enabled: false,
               onButtonTap: () {
@@ -87,7 +87,7 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 20),
             PromoCard(
-              imagePath: 'assets/ui/banners/partners.png',
+              imagePath: 'assets/ui/banners/partners.webp',
               title: 'Партнери TTclubUA',
               enabled: false,
               onButtonTap: () {
@@ -96,7 +96,7 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 20),
             PromoCard(
-              imagePath: 'assets/ui/banners/promotions_from_partners.png',
+              imagePath: 'assets/ui/banners/promotions_from_partners.webp',
               title: 'Акції  партнерів',
               enabled: false,
               onButtonTap: () {
@@ -105,7 +105,7 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 20),
             PromoCard(
-              imagePath: 'assets/ui/banners/military_aid.png',
+              imagePath: 'assets/ui/banners/military_aid.webp',
               title: 'Допомог ЗСУ',
               enabled: false,
               onButtonTap: () {

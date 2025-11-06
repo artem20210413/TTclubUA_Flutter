@@ -13,6 +13,7 @@ class CustomInputField extends StatelessWidget {
 
   final textColor = TTColors.text;
   final textSecondaryColor = TTColors.text_secondary;
+  final ValueChanged<String>? onChanged;
 
   const CustomInputField({
     super.key,
@@ -23,6 +24,7 @@ class CustomInputField extends StatelessWidget {
     this.icon,
     this.keyboardType = TextInputType.text,
     this.validator,
+    this.onChanged,
   });
 
   @override
@@ -83,7 +85,10 @@ class CustomInputField extends StatelessWidget {
                   // скрываем стандартный текст под полем
                   suffixIcon: icon,
                 ),
-                onChanged: (value) => state.didChange(value),
+                onChanged: (value) {
+                  state.didChange(value); // ✅ для валидации FormField
+                  onChanged?.call(value); // ✅ внешний колбэк
+                },
               ),
             ),
           ],
