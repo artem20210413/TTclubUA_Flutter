@@ -27,7 +27,7 @@ class AnnualFeePage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return TTScaffold(
-      title: 'Оплата річного внеску',
+      title: 'Підтримка TT Club UA',
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Column(
@@ -38,32 +38,36 @@ class AnnualFeePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                      'Підтримай спільноту TT Club UA та отримай\nдоступ до ексклюзивних привілеїв.',
+                      'Підтримай спільноту TT Club UA.',
                       textAlign: TextAlign.center,
                       style: TTTextStyle.subtitle),
-                  const SizedBox(height: 20),
-                  TTNeumorphicBox(
-                    padding: const EdgeInsets.all(12),
-                    color: TTColors.input,
-                    child: Center(
-                      child: Text('999 UAH', style: TTTextStyle.title),
-                    ),
-                  ),
+                  // const SizedBox(height: 20),
+                  // TTNeumorphicBox(
+                  //   padding: const EdgeInsets.all(12),
+                  //   color: TTColors.input,
+                  //   child: Center(
+                  //     child: Text('- UAH', style: TTTextStyle.title),
+                  //   ),
+                  // ),
                   const SizedBox(height: 20),
                   GlowingButton(
-                    text: 'Сплатити',
+                    text: 'Підтримати клуб',
                     colorGrowing: Colors.white,
                     onPressed: _launchMonobankJar,
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 15),
                   Text(
-                    'Сплатити внесок через Monobank',
+                    'Підтримка через офіційне посилання Monobank.\n'
+                      'Для зарахування коштів не змінюйте поле коментаря',
                     textAlign: TextAlign.center,
                     style: TTTextStyle.subtitle
                         .copyWith(fontSize: 10, color: TTColors.text),
                   ),
+                  const SizedBox(height: 5),
                   Text(
-                    'Для зарахування коштів не змінюйте поле коментаря',
+                    'Це добровільна підтримка реального автомобільного клубу TT Club UA. '
+                        'Переказ не є покупкою цифрових товарів чи послуг, '
+                        'а оплата здійснюється поза межами App Store та Google Play.',
                     textAlign: TextAlign.center,
                     style: TTTextStyle.subtitle.copyWith(fontSize: 10),
                   ),
@@ -74,36 +78,36 @@ class AnnualFeePage extends StatelessWidget {
             const SizedBox(height: 24),
 
             // секція "Що входить"
-            TTNeumorphicBox(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Що входить у річний внесок?',
-                      textAlign: TextAlign.center, style: TTTextStyle.title),
-                  SizedBox(height: 12),
-                  _BulletPoint('Участь у закритих заходах клубу'),
-                  _BulletPoint('Знижки у партнерських сервісах'),
-                  _BulletPoint('Цифровий клубний бейдж'),
-                  _BulletPoint('Подарунковий мерч'),
-                  SizedBox(height: 20),
-                  Text('Часті питання',
-                      textAlign: TextAlign.center, style: TTTextStyle.title),
-                  SizedBox(height: 10),
-                  Text(
-                    'Чи обовʼязковий внесок?',
-                    style: TTTextStyle.subtitle.copyWith(color: TTColors.text),
-                  ),
-                  Text('Так, він підтримує розвиток клубу.\n',
-                      style: TTTextStyle.subtitle),
-                  Text(
-                    'Як отримати мерч?',
-                    style: TTTextStyle.subtitle.copyWith(color: TTColors.text),
-                  ),
-                  Text('Після оплати вам надійде форма для заповнення адреси.',
-                      style: TTTextStyle.subtitle),
-                ],
-              ),
-            ),
+            // TTNeumorphicBox(
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Text('Що входить у річний внесок?',
+            //           textAlign: TextAlign.center, style: TTTextStyle.title),
+            //       SizedBox(height: 12),
+            //       _BulletPoint('Участь у закритих заходах клубу'),
+            //       _BulletPoint('Знижки у партнерських сервісах'),
+            //       _BulletPoint('Цифровий клубний бейдж'),
+            //       _BulletPoint('Подарунковий мерч'),
+            //       SizedBox(height: 20),
+            //       Text('Часті питання',
+            //           textAlign: TextAlign.center, style: TTTextStyle.title),
+            //       SizedBox(height: 10),
+            //       Text(
+            //         'Чи обовʼязковий внесок?',
+            //         style: TTTextStyle.subtitle.copyWith(color: TTColors.text),
+            //       ),
+            //       Text('Так, він підтримує розвиток клубу.\n',
+            //           style: TTTextStyle.subtitle),
+            //       Text(
+            //         'Як отримати мерч?',
+            //         style: TTTextStyle.subtitle.copyWith(color: TTColors.text),
+            //       ),
+            //       Text('Після оплати вам надійде форма для заповнення адреси.',
+            //           style: TTTextStyle.subtitle),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),

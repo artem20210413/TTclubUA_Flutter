@@ -12,6 +12,7 @@ import 'package:tt_club_ua/pages/Nav/Mention.dart';
 import 'package:tt_club_ua/pages/Nav/User.dart';
 
 import '../components/buttons/NavCircleButton.dart';
+import 'Nav/Calendar.dart';
 
 class Nav extends StatefulWidget {
   const Nav({super.key});
@@ -191,7 +192,8 @@ class _NavState extends State<Nav> {
       _screens = [
         const Home(),
         const Mention(),
-        if (_isAdmin) const Admin(),
+        // if (_isAdmin) const Admin(),
+        const Calendar(),
         const User(),
       ];
 
@@ -199,7 +201,8 @@ class _NavState extends State<Nav> {
       _navSvgs = [
         'assets/svg/home.svg',
         'assets/svg/car.svg',
-        if (_isAdmin) 'assets/svg/calendar.svg',
+        // if (_isAdmin) 'assets/svg/calendar.svg',
+        'assets/svg/calendar.svg',
         'assets/svg/user.svg',
       ];
     });

@@ -45,6 +45,7 @@ class _ProfileState extends State<Profile> {
 
     String? localProfileImage = await UserStorage.getProfileImagee();
     dynamic json = await UserStorage.getUserInfo();
+
     if (widget.id != null && widget.id != json['id']) {
       final token = await UserStorage.getToken();
       final resUs = await USER_FIND(token, widget.id ?? 1);
