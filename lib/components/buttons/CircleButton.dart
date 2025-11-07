@@ -6,7 +6,7 @@ import '../TTLoading.dart';
 
 class CircleButton extends StatefulWidget {
   final String iconAsset;
-  final double? size;
+  final double size;
   final double? sizeIcon;
   final EdgeInsets padding;
   final VoidCallback? onTap;
@@ -67,10 +67,15 @@ class _CircleButtonState extends State<CircleButton> {
                 end: Alignment.centerRight,
                 colors: [
                   TTColors.input,
-                  TTColors.input.withOpacity(0.5),
-                  Colors.transparent,
+                  TTColors.card,
+                  TTColors.input,
+
+                  // TTColors.input,
+                  // TTColors.input.withOpacity(0.5),
+                  // Colors.transparent,
                 ],
-                stops: const [0.44, 0.8, 1.00],
+                // stops: const [0.44, 0.8, 1.00],
+                stops: const [0.22, 0.6, 1.00],
               ),
               color: isActive
                   ? TTColors.input_focused.withOpacity(0.28)
@@ -98,8 +103,8 @@ class _CircleButtonState extends State<CircleButton> {
             ),
             child: Center(
               child: widget.isLoading
-                  ? const TTLoading(
-                      size: 50,
+                  ? TTLoading(
+                      size: widget.size * 0.77,
                     )
                   : ConstrainedBox(
                       constraints: BoxConstraints.tightFor(

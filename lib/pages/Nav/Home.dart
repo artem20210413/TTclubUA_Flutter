@@ -35,10 +35,36 @@ class _HomeState extends State<Home> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
+              spacing: 15,
               children: [
                 TopActionCard(
                   iconAsset: 'assets/svg/money.svg',
+                  iconSize: 40,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              AnnualFeePage()), // Переход на экран публикаций
+                    );
+                  },
+                ),
+                TopActionCard(
+                  iconAsset: 'assets/svg/telegram.svg',
+                  iconSize: 30,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              AnnualFeePage()), // Переход на экран публикаций
+                    );
+                  },
+                ),
+                TopActionCard(
+                  iconAsset: 'assets/svg/instagram.svg',
+                  iconSize: 30,
                   onTap: () {
                     Navigator.push(
                       context,

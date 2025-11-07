@@ -3,31 +3,33 @@ import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tt_club_ua/config/default.dart';
 
-class InstagramLink extends StatelessWidget {
+class TelegramLink extends StatelessWidget {
   final String? username;
   final Color color;
 
-  const InstagramLink({
+  const TelegramLink({
     super.key,
     this.username,
     this.color = TTColors.text,
   });
 
-  Future<void> _launchInstagram(String handle) async {
-    final Uri url = Uri.parse('https://instagram.com/$handle');
+  Future<void> _launchTelegram(String handle) async {
+    final normalizedHandle = handle.startsWith('@')
+        ? handle.substring(1)
+        : handle; // убираем @ если есть
 
+    final Uri url = Uri.parse('https://t.me/$normalizedHandle');
     await launchUrl(url, mode: LaunchMode.externalApplication);
   }
 
   @override
   Widget build(BuildContext context) {
-    // Если нет ни профессии, ни ника — ничего не рендерим
     if (username == null || username!.isEmpty) {
       return const SizedBox.shrink();
     }
 
     return InkWell(
-      onTap: () => _launchInstagram(username!),
+      onTap: () => _launchTelegram(username!),
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       child: Row(
@@ -42,7 +44,7 @@ class InstagramLink extends StatelessWidget {
           ),
           const SizedBox(width: 4),
           SvgPicture.asset(
-            'assets/svg/instagram.svg',
+            'assets/svg/telegram.svg', // добавь иконку telegram.svg в assets/svg/
             width: 18,
             colorFilter: ColorFilter.mode(
               color,

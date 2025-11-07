@@ -19,8 +19,12 @@ import '../../components/buttons/GlowingButton.dart';
 import '../../components/card/CarImageBlock.dart';
 import '../../components/card/UserAvatar.dart';
 import '../../components/inputs/BigTextInput.dart';
+import '../../components/interface/TileButton.dart';
 import '../../components/viewers/ChangePasswordSection.dart';
 import '../../components/viewers/InstagramLink.dart';
+import '../../components/viewers/PickAndCropImage.dart';
+import '../../components/viewers/TelegramLink.dart';
+import 'Admin/User/FinanceScreen.dart';
 
 class User extends StatefulWidget {
   const User({super.key});
@@ -67,8 +71,6 @@ class _UserState extends State<User> {
       userProfileImage = profileImage ?? userProfileImage;
       _isAdmin = isAdmin;
     });
-
-    // await Future.delayed(Duration(seconds: 2));
 
     setState(() {
       _isLoading = false;
@@ -126,36 +128,44 @@ class _UserState extends State<User> {
     Navigator.pushReplacementNamed(context, '/login');
   }
 
+  // Future<void> _pickAndUploadImage() async {
+  //   final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  //
+  //   if (pickedFile != null) {
+  //     File imageFile = File(pickedFile.path);
+  //
+  //     final token = await UserStorage.getToken();
+  //     final res = await UPLOAD_USER_PHOTO(token, imageFile.path);
+  //     bool isSuccess = await CHECK_API(res, context);
+  //     if (isSuccess) {
+  //       var newImageUrl = jsonDecode(res.body)['data']['profile_image'];
+  //       setState(() {
+  //         userProfileImage = newImageUrl;
+  //       });
+  //     }
+  //   }
+  // }
   Future<void> _pickAndUploadImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final File? croppedFile = await pickAndCropImage(
+      context: context,
+      aspectRatio: 1, // 👈 квадрат для аватарки
+    );
 
-    if (pickedFile != null) {
-      File imageFile = File(pickedFile.path);
+    if (croppedFile == null) return;
 
-      final token = await UserStorage.getToken();
-      final res = await UPLOAD_USER_PHOTO(token, imageFile.path);
-      bool isSuccess = await CHECK_API(res, context);
-      if (isSuccess) {
-        var newImageUrl = jsonDecode(res.body)['data']['profile_image'];
-        setState(() {
-          userProfileImage = newImageUrl;
-        });
-      }
+    final token = await UserStorage.getToken();
+    final res = await UPLOAD_USER_PHOTO(token, croppedFile.path);
+    final isSuccess = await CHECK_API(res, context);
+
+    if (isSuccess) {
+      final newImageUrl = jsonDecode(res.body)['data']['profile_image'];
+      setState(() {
+        userProfileImage = newImageUrl;
+      });
     }
   }
 
-  Widget _buildRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('$label: ', style: const TextStyle(fontWeight: FontWeight.bold)),
-          Expanded(child: Text(value.isEmpty ? '—' : value)),
-        ],
-      ),
-    );
-  }
+
 
   // String _formatDate(String rawDate) {
   //   if (rawDate.isEmpty) return '—';
@@ -210,7 +220,7 @@ class _UserState extends State<User> {
                                       bottom: 0,
                                       child: CircleButton(
                                         iconAsset: 'assets/svg/image_add.svg',
-                                        onTap: () => {},
+                                        onTap: _pickAndUploadImage,
                                       ),
                                     )
                                   ],
@@ -258,6 +268,63 @@ class _UserState extends State<User> {
                           ),
                           InstagramLink(
                             username: _dto.instagramNicknameController.text,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/svg/phone.svg',
+                                  height: 15,
+                                  colorFilter: ColorFilter.mode(
+                                    TTColors.text_secondary,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _dto.phoneController.text ?? '',
+                                  style: TTTextStyle.subtitle,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                          TelegramLink(
+                            username: _dto.telegramNicknameController.text,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/svg/cake_outlined.svg',
+                                  height: 15,
+                                  colorFilter: ColorFilter.mode(
+                                    TTColors.text_secondary,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _dto.birthDateController.text ?? '',
+                                  style: TTTextStyle.subtitle,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -447,6 +514,20 @@ class _UserState extends State<User> {
                         ),
                     ],
                   ),
+
+                  // TileButton(
+                  //   icon: Icons.payment_outlined,
+                  //   title: 'Фінанси',
+                  //   onTap: () {
+                  //
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => FinanceScreen(userDto: _dto),
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
                 ],
               ),
             ),
