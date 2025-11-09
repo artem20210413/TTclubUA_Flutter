@@ -11,7 +11,9 @@ import 'package:tt_club_ua/api/routs/root.dart';
 import 'package:tt_club_ua/config/default.dart';
 import 'package:tt_club_ua/pages/Nav/Admin.dart';
 
+import '../../api/routs/Dto/Car/CarDto.dart';
 import '../../api/routs/Dto/User/UserUpdateDto.dart';
+import '../../api/routs/car/car.dart';
 import '../../components/TTLoading.dart';
 import '../../components/TTNeumorphicBox.dart';
 import '../../components/buttons/CircleButton.dart';
@@ -19,7 +21,6 @@ import '../../components/buttons/GlowingButton.dart';
 import '../../components/card/CarImageBlock.dart';
 import '../../components/card/UserAvatar.dart';
 import '../../components/inputs/BigTextInput.dart';
-import '../../components/interface/TileButton.dart';
 import '../../components/viewers/ChangePasswordSection.dart';
 import '../../components/viewers/InstagramLink.dart';
 import '../../components/viewers/PickAndCropImage.dart';
@@ -128,27 +129,10 @@ class _UserState extends State<User> {
     Navigator.pushReplacementNamed(context, '/login');
   }
 
-  // Future<void> _pickAndUploadImage() async {
-  //   final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-  //
-  //   if (pickedFile != null) {
-  //     File imageFile = File(pickedFile.path);
-  //
-  //     final token = await UserStorage.getToken();
-  //     final res = await UPLOAD_USER_PHOTO(token, imageFile.path);
-  //     bool isSuccess = await CHECK_API(res, context);
-  //     if (isSuccess) {
-  //       var newImageUrl = jsonDecode(res.body)['data']['profile_image'];
-  //       setState(() {
-  //         userProfileImage = newImageUrl;
-  //       });
-  //     }
-  //   }
-  // }
   Future<void> _pickAndUploadImage() async {
     final File? croppedFile = await pickAndCropImage(
       context: context,
-      aspectRatio: 1, // 👈 квадрат для аватарки
+      aspectRatio: 1,
     );
 
     if (croppedFile == null) return;
@@ -165,7 +149,23 @@ class _UserState extends State<User> {
     }
   }
 
+  Future<String?> _pickAndUploadImageCar(CarDto car) async {
+    final File? croppedFile = await pickAndCropImage(
+      context: context,
+      aspectRatio: 1,
+    );
 
+    if (croppedFile == null) return null;
+
+    final token = await UserStorage.getToken();
+    final res = await UPLOAD_CAR_BY_ID(token, car);
+    final isSuccess = await CHECK_API(res, context);
+
+    if (isSuccess) {
+      return jsonDecode(res.body)['data']['imageUrls'][0] ?? null;
+    }
+    return null;
+  }
 
   // String _formatDate(String rawDate) {
   //   if (rawDate.isEmpty) return '—';
@@ -179,10 +179,6 @@ class _UserState extends State<User> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
-    // return TTNeumorphicBox(
-    //   margin: EdgeInsets.only(top: 0, bottom: 16, left: 20, right: 12),
-    //   padding: EdgeInsets.only(top: 0, bottom: 74, left: 0, right: 8),
-    //   child:
     return _isLoading
         ? const TTLoading()
         : SingleChildScrollView(
@@ -381,7 +377,7 @@ class _UserState extends State<User> {
                         itemBuilder: (context, index) {
                           final car = _dto.cars[index];
                           // пытаемся вытащить фото
-                          final String imageUrl = (car.imageUrls != null &&
+                          String imageUrl = (car.imageUrls != null &&
                                   car.imageUrls!.isNotEmpty &&
                                   car.imageUrls!.first.url != null)
                               ? car.imageUrls!.first.url!
@@ -391,86 +387,111 @@ class _UserState extends State<User> {
                             padding: EdgeInsets.only(
                                 top: 16, bottom: 24, left: 16, right: 24),
                             width: screenSize.width * 0.9,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            child: Stack(
+                              clipBehavior: Clip.none,
                               children: [
-                                CarImageBlock(
-                                  height: screenSize.width * 0.45,
-                                  imageUrl: imageUrl,
-                                ),
                                 Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          car.personalizedLicensePlateController
-                                                      .text !=
-                                                  ''
-                                              ? '${car.personalizedLicensePlateController.text}   |   ${car.licensePlateController.text}'
-                                              : car.licensePlateController.text,
-                                          style: TTTextStyle.subtitle
-                                              .copyWith(color: TTColors.text),
-                                        ),
-                                      ],
+                                    CarImageBlock(
+                                      height: screenSize.width * 0.45,
+                                      imageUrl: imageUrl,
                                     ),
-                                    const SizedBox(height: 12),
-                                    Row(
+                                    Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Expanded(
-                                          flex: 3,
-                                          child: Text(
-                                            'Audi ${car.model.name} ${car.gene.name}',
-                                            maxLines: 2,
-                                            style: TTTextStyle.subtitle,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              car.personalizedLicensePlateController
+                                                          .text !=
+                                                      ''
+                                                  ? '${car.personalizedLicensePlateController.text}   |   ${car.licensePlateController.text}'
+                                                  : car.licensePlateController
+                                                      .text,
+                                              style: TTTextStyle.subtitle
+                                                  .copyWith(
+                                                      color: TTColors.text),
+                                            ),
+                                          ],
                                         ),
-                                        Expanded(
-                                          flex: 2,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              // Кольорове коло
-                                              Container(
-                                                width: 16,
-                                                height: 16,
-                                                decoration: BoxDecoration(
-                                                  color: Color(
-                                                    int.parse(car.color.hex
-                                                        .replaceFirst(
-                                                            '#', '0xff')),
+                                        const SizedBox(height: 12),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                'Audi ${car.model.name} ${car.gene.name}',
+                                                maxLines: 2,
+                                                style: TTTextStyle.subtitle,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 2,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  // Кольорове коло
+                                                  Container(
+                                                    width: 16,
+                                                    height: 16,
+                                                    decoration: BoxDecoration(
+                                                      color: Color(
+                                                        int.parse(car.color.hex
+                                                            .replaceFirst(
+                                                                '#', '0xff')),
+                                                      ),
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                          color: TTColors
+                                                              .text_secondary,
+                                                          width: 1),
+                                                    ),
                                                   ),
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(
-                                                      color: TTColors
-                                                          .text_secondary,
-                                                      width: 1),
-                                                ),
+                                                  const SizedBox(width: 6),
+                                                  // Назва кольору
+                                                  Flexible(
+                                                    child: Text(
+                                                      car.color.name,
+                                                      style:
+                                                          TTTextStyle.subtitle,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              const SizedBox(width: 6),
-                                              // Назва кольору
-                                              Flexible(
-                                                child: Text(
-                                                  car.color.name,
-                                                  style: TTTextStyle.subtitle,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
                                   ],
                                 ),
+                                Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  child: CircleButton(
+                                    iconAsset: 'assets/svg/image_add.svg',
+                                    onTap: () async {
+                                      final newImageUrl =
+                                          await _pickAndUploadImageCar(car);
+                                      if (newImageUrl != null) {
+                                        setState(() {
+                                          imageUrl = newImageUrl;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                )
                               ],
                             ),
                           );
@@ -531,7 +552,6 @@ class _UserState extends State<User> {
                 ],
               ),
             ),
-            // ),
           );
   }
 }
