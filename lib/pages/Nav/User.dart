@@ -482,13 +482,13 @@ class _UserState extends State<User> {
                                   child: CircleButton(
                                     iconAsset: 'assets/svg/image_add.svg',
                                     onTap: () async {
-                                      final newImageUrl =
-                                          await _pickAndUploadImageCar(car);
-                                      if (newImageUrl != null) {
-                                        setState(() {
-                                          imageUrl = newImageUrl;
-                                        });
-                                      }
+                                      // final newImageUrl =
+                                      //     await _pickAndUploadImageCar(car);
+                                      // if (newImageUrl != null) {
+                                      //   setState(() {
+                                      //     imageUrl = newImageUrl;
+                                      //   });
+                                      // }
                                     },
                                   ),
                                 )
