@@ -2,15 +2,17 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+// const String USER_PROFILE_IMAGE_DEFAULT =
+//     'https://tt.tishchenko.kiev.ua/storage/default/profile_picture.webp';
 const String USER_PROFILE_IMAGE_DEFAULT =
-    'https://tt.tishchenko.kiev.ua/storage/default/profile_picture.webp';
+    'https://ttclub.com.ua/storage/default/profile_picture.webp';
 const String CAR_IMAGE_DEFAULT =
-    'https://tt.tishchenko.kiev.ua/storage/default/car.webp';
+    'https://ttclub.com.ua/storage/default/car.webp';
 const String LOGO_IMAGE_DEFAULT =
-    'https://tt.tishchenko.kiev.ua/media/images/logo_2.webp';
+    'https://ttclub.com.ua/media/images/logo_2.webp';
 
 const String TG_FORGOT_URI = 'https://t.me/TTclubUaBot';
-const String SIGNUP_URI = 'https://tt.tishchenko.kiev.ua';
+const String SIGNUP_URI = 'https://ttclub.com.ua';
 
 const String DATE_FORMAT_DEFAULT = 'dd-MM-yyyy';
 const String DATE_FORMAT_DEFAULT_SEND = 'dd-MM-yyyy'; //'d-M-y'

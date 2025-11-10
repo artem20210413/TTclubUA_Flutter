@@ -1,5 +1,6 @@
 
-const _HOST = 'https://tt.tishchenko.kiev.ua';
+// const _HOST = 'https://tt.tishchenko.kiev.ua';
+const _HOST = 'https://ttclub.com.ua';
 
 Map<String, String> HEADERS([String? token = null]) {
   return {
