@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/config/default.dart';
 
-class TileButton extends StatelessWidget {
+import '../TTLoading.dart';
+
+class TileButton extends StatefulWidget {
   final String title;
   final IconData icon;
   final VoidCallback onTap;
   final Color iconColor;
   final int? newCount;
+  final bool isLoading;
 
   const TileButton({
     Key? key,
@@ -15,19 +18,25 @@ class TileButton extends StatelessWidget {
     required this.onTap,
     this.iconColor = Colors.black,
     this.newCount,
+    this.isLoading = false,
   }) : super(key: key);
 
+  @override
+  State<TileButton> createState() => _TileButtonState();
+}
+
+class _TileButtonState extends State<TileButton> {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         InkWell(
-          onTap: onTap,
+          onTap: widget.isLoading ? null : widget.onTap,
           borderRadius: BorderRadius.circular(16),
           child: Container(
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: TTColors.input,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
@@ -39,16 +48,15 @@ class TileButton extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(icon, size: 32, color: iconColor),
+                Icon(widget.icon, size: 32, color: widget.iconColor),
                 SizedBox(width: 16),
                 Expanded(
                   child: Text(
-                    title,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                    widget.title,
+                    style: TTTextStyle.title.copyWith(fontSize: 15),
                   ),
                 ),
-
-                if (newCount != null && newCount! > 0)
+                if (widget.newCount != null && widget.newCount! > 0)
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
@@ -56,13 +64,15 @@ class TileButton extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      '$newCount',
+                      '${widget.newCount}',
                       style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ),
-
                 SizedBox(width: 8),
-                Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
+                widget.isLoading
+                    ? const TTLoading(size: 30)
+                    : Icon(Icons.arrow_forward_ios,
+                        size: 18, color: Colors.grey),
               ],
             ),
           ),

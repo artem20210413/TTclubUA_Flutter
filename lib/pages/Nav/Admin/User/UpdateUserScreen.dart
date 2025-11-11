@@ -18,6 +18,7 @@ import '../../../../components/form/FormElements.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/interface/CarListWidget.dart';
 import '../../../../components/interface/TileButton.dart';
+import '../../../../components/viewers/PickAndCropImage.dart';
 import 'ChangePasswordScreen.dart';
 import 'FinanceScreen.dart';
 
@@ -95,10 +96,15 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
   }
 
   Future<void> _pickAndUploadImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final File? croppedFile = await pickAndCropImage(
+      context: context,
+      aspectRatio: 4 / 3,
+    );
 
-    if (pickedFile != null) {
-      File imageFile = File(pickedFile.path);
+    // final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (croppedFile != null) {
+      File imageFile = File(croppedFile.path);
 
       final token = await UserStorage.getToken();
       final res = await UPLOAD_USER_PHOTO_BY_ID(token, dto.id, imageFile.path);

@@ -37,8 +37,7 @@ class _HomeState extends State<Home> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              // spacing: 15,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TopActionCard(
                   iconAsset: 'assets/svg/money.svg',

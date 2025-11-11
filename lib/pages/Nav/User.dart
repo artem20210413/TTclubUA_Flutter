@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -40,6 +41,7 @@ class _UserState extends State<User> {
   final ImagePicker _picker = ImagePicker();
   bool _isLoading = true;
   bool _isAdmin = false;
+  late List<String> _carImages;
 
   String userProfileImage = USER_PROFILE_IMAGE_DEFAULT;
 
@@ -71,10 +73,17 @@ class _UserState extends State<User> {
 
       userProfileImage = profileImage ?? userProfileImage;
       _isAdmin = isAdmin;
-    });
 
-    setState(() {
       _isLoading = false;
+
+      _carImages = _dto.cars.map((car) {
+        if (car.imageUrls != null &&
+            car.imageUrls!.isNotEmpty &&
+            car.imageUrls!.first.url != null) {
+          return car.imageUrls!.first.url!;
+        }
+        return CAR_IMAGE_DEFAULT;
+      }).toList();
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -149,23 +158,34 @@ class _UserState extends State<User> {
     }
   }
 
-  Future<String?> _pickAndUploadImageCar(CarDto car) async {
-    final File? croppedFile = await pickAndCropImage(
-      context: context,
-      aspectRatio: 1,
-    );
-
-    if (croppedFile == null) return null;
-
-    final token = await UserStorage.getToken();
-    final res = await UPLOAD_CAR_BY_ID(token, car);
-    final isSuccess = await CHECK_API(res, context);
-
-    if (isSuccess) {
-      return jsonDecode(res.body)['data']['imageUrls'][0] ?? null;
-    }
-    return null;
-  }
+  // Future<String?> _pickAndUploadImageCar(CarDto car) async {
+  //   final File? croppedFile = await pickAndCropImage(
+  //     context: context,
+  //     aspectRatio: 4 / 3,
+  //   );
+  //
+  //   if (croppedFile == null) return null;
+  //
+  //   final token = await UserStorage.getToken();
+  //   final res = await UPLOAD_CAR_BY_ID(token, car);
+  //   // final isSuccess = await CHECK_API(res, context);
+  //   // final json = await jsonDecode(res.body);
+  //   //
+  //   // if (isSuccess) {
+  //   //   return await json['data']['imageUrls'][0]['url'] ?? null;
+  //   // }
+  //   // return null;
+  //
+  //
+  //   final isSuccess = await CHECK_API(res, context);
+  //   if (isSuccess) {
+  //     final newImageUrl =
+  //     jsonDecode(res.body)['data']['imageUrls'].first['url'];
+  //     setState(() {
+  //       customBannerUrl = newImageUrl;
+  //     });
+  //   }
+  // }
 
   // String _formatDate(String rawDate) {
   //   if (rawDate.isEmpty) return '—';
@@ -377,11 +397,39 @@ class _UserState extends State<User> {
                         itemBuilder: (context, index) {
                           final car = _dto.cars[index];
                           // пытаемся вытащить фото
-                          String imageUrl = (car.imageUrls != null &&
-                                  car.imageUrls!.isNotEmpty &&
-                                  car.imageUrls!.first.url != null)
-                              ? car.imageUrls!.first.url!
-                              : CAR_IMAGE_DEFAULT;
+                          final imageUrl = _carImages[index];
+
+                          Future<void> _pickAndUploadImageCar(
+                              CarDto car) async {
+                            final File? croppedFile = await pickAndCropImage(
+                              context: context,
+                              aspectRatio: 4 / 3,
+                            );
+
+                            if (croppedFile == null) return;
+
+                            final token = await UserStorage.getToken();
+                            final res = await CAR_ADD_COLLECTION(
+                              token,
+                              car.id ?? 0,
+                              croppedFile.path,
+                            );
+
+                            final isSuccess = await CHECK_API(res, context);
+                            if (isSuccess) {
+                              final body = jsonDecode(res.body);
+                              final newImageUrl =
+                                  body['data']['imageUrls'].first['url'];
+
+                              setState(() {
+                                _carImages[index] =
+                                    newImageUrl; // ← теперь действительно обновляем стейт
+                                // по желанию можно и модель обновить:
+                                // car.imageUrls?.clear();
+                                // car.imageUrls?.add(ImageUrlDto(url: newImageUrl));
+                              });
+                            }
+                          }
 
                           return TTNeumorphicBox(
                             padding: EdgeInsets.only(
@@ -481,14 +529,8 @@ class _UserState extends State<User> {
                                   top: 0,
                                   child: CircleButton(
                                     iconAsset: 'assets/svg/image_add.svg',
-                                    onTap: () async {
-                                      // final newImageUrl =
-                                      //     await _pickAndUploadImageCar(car);
-                                      // if (newImageUrl != null) {
-                                      //   setState(() {
-                                      //     imageUrl = newImageUrl;
-                                      //   });
-                                      // }
+                                    onTap: () {
+                                      _pickAndUploadImageCar(car);
                                     },
                                   ),
                                 )

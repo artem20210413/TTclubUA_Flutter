@@ -6,6 +6,7 @@ import 'package:tt_club_ua/pages/Nav/Admin/Publication/PublicationsScreen.dart';
 import '../../Storage/UserStorage.dart';
 import '../../api/routs/registaion.dart';
 import '../../api/routs/root.dart';
+import '../../api/routs/user.dart';
 import '../../components/generalModule.dart';
 import '../../components/interface/SearchBarWidgetState.dart';
 import '../../components/interface/TileButton.dart';
@@ -26,6 +27,7 @@ class Admin extends StatefulWidget {
 class _AdminState extends State<Admin> {
   final TextEditingController _searchController = TextEditingController();
   var countRegistration = 0;
+  var isLoadingExcel = false;
 
   // void _performSearch() {
   //   String searchText = _searchController.text.trim();
@@ -69,107 +71,101 @@ class _AdminState extends State<Admin> {
     // }
   }
 
+  void _export_users() async {
+    setState(() {
+      isLoadingExcel = true;
+    });
+    final token = await UserStorage.getToken();
+    final res = await USER_EXPORT(token);
+
+    bool isSuccess = await CHECK_API(res, context);
+
+    if (isSuccess) {
+      MessageModule(
+          context, 'запит надіслано до телеграму', MessageType.success);
+    } else {
+      MessageModule(context, 'Щось не то..', MessageType.error);
+    }
+    setState(() {
+      isLoadingExcel = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return TTScaffold(
       title: '',
-      body: Column(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(height: 10),
-          SearchBarWidget(
-            controller: _searchController,
-            onSearch: _performSearch,
-          ),
-          SizedBox(height: 10),
-          // Row(
-          //   children: [
-          //     Spacer(),
-          //     ElevatedButton(
-          //       onPressed: () {
-          //         Navigator.push(
-          //           context,
-          //           MaterialPageRoute(builder: (context) => CreateUserScreen()),
-          //         );
-          //       },
-          //       style: ElevatedButton.styleFrom(
-          //           // backgroundColor: Colors.purple,
-          //           ),
-          //       child: const Text(
-          //         'Створити коричтувача',
-          //         style: TextStyle(color: Colors.black),
-          //       ),
-          //     ),
-          //     Spacer(),
-          //   ],
-          // ),
-          TileButton(
-              icon: Icons.check_circle_outline,
-              title: 'Затвердити учасників',
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal:  10),
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(height: 10),
+            SearchBarWidget(
+              controller: _searchController,
+              onSearch: _performSearch,
+            ),
+            SizedBox(height: 10),
+            TileButton(
+                icon: Icons.check_circle_outline,
+                title: 'Затвердити учасників',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ApproveScreen()), // Переход на экран публикаций
+                  );
+                },
+                iconColor: Colors.green,
+                newCount: countRegistration),
+            TileButton(
+              icon: Icons.payment_outlined,
+              iconColor: Colors.white,
+              title: 'Витрати',
+              // iconColor: COLOR_FIRST_LITE,
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ApproveScreen()), // Переход на экран публикаций
+                          CostsListScreen()), // Переход на экран публикаций
                 );
               },
-              iconColor: Colors.green,
-              newCount: countRegistration),
-          TileButton(
-            icon: Icons.payment_outlined,
-            title: 'Витрати',
-            // iconColor: COLOR_FIRST_LITE,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        CostsListScreen()), // Переход на экран публикаций
-              );
-            },
-          ),
-          TileButton(
-            icon: Icons.article,
-            title: 'Публікації',
-            // iconColor: COLOR_FIRST_LITE,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        PublicationsScreen()), // Переход на экран публикаций
-              );
-            },
-          ),
-          TileButton(
-            icon: Icons.image,
-            title: 'Банер',
-            // iconColor: COLOR_FIRST_LITE,
-            onTap: () {
-              MessageModule(context, 'Скоро буде...', MessageType.information);
-            },
-          ),
-          TileButton(
-            icon: Icons.download_sharp,
-            title: 'Завантажте всіх учасників в Excel',
-            // iconColor: COLOR_FIRST_LITE,
-            onTap: () {
-              MessageModule(context, 'Скоро буде...', MessageType.information);
-            },
-          ),
+            ),
+            TileButton(
+              icon: Icons.article,
+              title: 'Публікації',
+              iconColor: Colors.white,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          PublicationsScreen()), // Переход на экран публикаций
+                );
+              },
+            ),
+            TileButton(
+              icon: Icons.download_sharp,
+              title: 'Завантажте всіх учасників в Excel',
+              iconColor: Colors.white,
+              isLoading: isLoadingExcel,
+              onTap: () => {_export_users()},
+            ),
 
-          // ElevatedButton(
-          //   onPressed: () {
-          //     // Navigator.pushReplacementNamed(context, '/user');
-          //     // Navigator.pushNamed(context, '/user');
-          //     // Navigator.popAndPushNamed(context, '/user');
-          //     // Navigator.pushNamedAndRemoveUntil(
-          //     //     context, '/user', (route) => true);
-          //   },
-          //   child: const Text('User'),
-          // ),
-        ],
+            // ElevatedButton(
+            //   onPressed: () {
+            //     // Navigator.pushReplacementNamed(context, '/user');
+            //     // Navigator.pushNamed(context, '/user');
+            //     // Navigator.popAndPushNamed(context, '/user');
+            //     // Navigator.pushNamedAndRemoveUntil(
+            //     //     context, '/user', (route) => true);
+            //   },
+            //   child: const Text('User'),
+            // ),
+          ],
+        ),
       ),
     );
   }
