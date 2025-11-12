@@ -154,4 +154,8 @@ class UserStorage {
     // Проверяем, есть ли пересечение между ролями пользователя и переданными ролями
     return userRoles.any((role) => roles.contains(role));
   }
+
+  static Future<bool> isAdmin() async {
+    return await whereInRole([UserRole.admin]);
+  }
 }
