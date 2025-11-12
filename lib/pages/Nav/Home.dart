@@ -8,6 +8,8 @@ import '../../components/TTNeumorphicBox.dart';
 import '../../components/card/PromoCard.dart';
 import '../../components/card/TopActionCard.dart';
 import '../../components/generalModule.dart';
+import '../Nav.dart';
+import 'Calendar.dart';
 import 'Home/AnnualFeePage.dart';
 
 class Home extends StatefulWidget {
@@ -39,6 +41,7 @@ class _HomeState extends State<Home> {
               children: [
                 TopActionCard(
                   iconAsset: 'assets/svg/money.svg',
+                  iconSize: 40,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -46,6 +49,22 @@ class _HomeState extends State<Home> {
                           builder: (context) =>
                               AnnualFeePage()), // Переход на экран публикаций
                     );
+                  },
+                ),
+                TopActionCard(
+                  iconAsset: 'assets/svg/telegram.svg',
+                  iconSize: 30,
+                  onTap: () async {
+                    final Uri url = Uri.parse('https://t.me/TTclubUaBot');
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                  },
+                ),
+                TopActionCard(
+                  iconAsset: 'assets/svg/instagram.svg',
+                  iconSize: 30,
+                  onTap: () async {
+                    final Uri url = Uri.parse('https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ==');
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
                   },
                 ),
               ],
@@ -61,21 +80,22 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 20),
             PromoCard(
-              imagePath: 'assets/ui/banners/budget.webp',
-              title: 'Бюджет TTclubUA',
-              onButtonTap: () {
-                // TODO: действие по нажатию
-              },
-            ),
-            const SizedBox(height: 20),
-            PromoCard(
               imagePath: 'assets/ui/banners/calendar_of_events.webp',
               title: 'Календар подій',
-              enabled: false,
+              // enabled: false,
               onButtonTap: () {
-                // TODO: действие по нажатию
+                final navState = context.findAncestorStateOfType<NavState>();
+                navState?.setTab(2); // 2 — индекс вкладки Calendar
               },
             ),
+            // const SizedBox(height: 20),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/budget.webp',
+            //   title: 'Бюджет TTclubUA',
+            //   onButtonTap: () {
+            //     // TODO: действие по нажатию
+            //   },
+            // ),
             const SizedBox(height: 20),
             PromoCard(
               imagePath: 'assets/ui/banners/ttclubua_in_world.webp',
@@ -103,15 +123,15 @@ class _HomeState extends State<Home> {
                 // TODO: действие по нажатию
               },
             ),
-            const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/military_aid.webp',
-              title: 'Допомог ЗСУ',
-              enabled: false,
-              onButtonTap: () {
-                // TODO: действие по нажатию
-              },
-            ),
+            // const SizedBox(height: 20),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/military_aid.webp',
+            //   title: 'Допомог ЗСУ',
+            //   enabled: false,
+            //   onButtonTap: () {
+            //     // TODO: действие по нажатию
+            //   },
+            // ),
           ],
         ),
       ),

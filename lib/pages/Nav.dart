@@ -18,11 +18,10 @@ class Nav extends StatefulWidget {
   const Nav({super.key});
 
   @override
-  State<Nav> createState() => _NavState();
+  State<Nav> createState() => NavState();
 }
 
-class _NavState extends State<Nav> {
-  String userName = 'unknowns';
+class NavState extends State<Nav> {
   int _currentIndex = 0;
   bool _isAdmin = false; // Значение по умолчанию
   bool _isLoading = true; // Loading state
@@ -36,6 +35,9 @@ class _NavState extends State<Nav> {
 
     _loadUser();
   }
+  void setTab(int index) {
+    setState(() => _currentIndex = index);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,22 +46,12 @@ class _NavState extends State<Nav> {
         : Scaffold(
             backgroundColor: TTColors.background,
             extendBody: true,
-            // appBar: CustomAppBar(userName),
             appBar: AppBar(
               toolbarHeight: 20,
               backgroundColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
-              // shadowColor: Colors.black,
             ),
             body: _screens[_currentIndex],
-            // SingleChildScrollView(
-            //   physics: const BouncingScrollPhysics(),
-            //   child: Padding(
-            //     padding: const EdgeInsets.fromLTRB(16, 16, 16, 113),
-            //     // 👈 73 (высота бара) + запас
-            //     child: _screens[_currentIndex],
-            //   ),
-            // ),
 
             // ADD: центральная кнопка под вырез
             floatingActionButtonLocation:
@@ -98,86 +90,14 @@ class _NavState extends State<Nav> {
                 iconAsset: _navSvgs[index],
                 isActive: isActive,
               ),
-
-              // tabBuilder: (index, isActive) => Padding(
-              //   padding: const EdgeInsets.symmetric(vertical: 10),
-              //   child: Transform.scale(
-              //     scale: 0.8,
-              //     child: AnimatedContainer(
-              //       duration: const Duration(milliseconds: 180),
-              //       width: 44,
-              //       height: 44,
-              //       decoration: BoxDecoration(
-              //         shape: BoxShape.circle,
-              //         gradient: LinearGradient(
-              //           begin: Alignment.topLeft,
-              //           end: Alignment.centerRight,
-              //           colors: [
-              //             TTColors.input, // левый верх
-              //             TTColors.input.withOpacity(0.5), // левый верх
-              //             Colors.transparent, // правый низ
-              //           ],
-              //           stops: const [0.44, 0.8, 1.00],
-              //         ),
-              //         color: isActive
-              //             ? TTColors.input_focused.withOpacity(0.28)
-              //             : TTColors.input,
-              //         // дефолт
-              //         border: Border.all(
-              //           color: isActive
-              //               ? Colors.white.withOpacity(0.95) // яркое кольцо
-              //               : TTColors.input,
-              //           // тонкое кольцо
-              //           // : Colors.black.withOpacity(0.20), // тонкое кольцо
-              //           width: isActive ? 1.8 : 1.0,
-              //         ),
-              //         boxShadow: isActive
-              //             ? [
-              //                 BoxShadow(
-              //                   // светящееся свечение
-              //                   color: Colors.white.withOpacity(0.15),
-              //                   blurRadius: 16,
-              //                   spreadRadius: 1,
-              //                 ),
-              //               ]
-              //             : [
-              //                 BoxShadow(
-              //                   // лёгкая тень по умолчанию
-              //                   color: Colors.black.withOpacity(0.5),
-              //                   blurRadius: 10,
-              //                   offset: const Offset(0, 3),
-              //                 ),
-              //               ],
-              //       ),
-              //       child: Center(
-              //         child: ConstrainedBox(
-              //           // размер SVG
-              //           constraints: const BoxConstraints.tightFor(
-              //               width: 30, height: 30),
-              //           child: SvgPicture.asset(
-              //             _navSvgs[index],
-              //             colorFilter: ColorFilter.mode(
-              //               isActive
-              //                   ? Colors.white
-              //                   : Colors.white.withOpacity(0.55),
-              //               BlendMode.srcIn,
-              //             ),
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ),
           );
   }
 
   Future<void> _loadUser() async {
-    final name = await UserStorage.getUserName();
     final isAdmin = await UserStorage.whereInRole([UserRole.admin]);
 
     setState(() {
-      userName = name ?? userName;
       _isAdmin = isAdmin ?? _isAdmin;
     });
     _fetchScreens();

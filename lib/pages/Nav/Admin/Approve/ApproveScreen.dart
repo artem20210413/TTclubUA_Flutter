@@ -99,7 +99,7 @@ class _ApproveScreenState extends State<ApproveScreen> {
               itemCount: list.length,
               itemBuilder: (context, index) {
                 final item = list[index];
-
+                print(item.json['json']);
                 return Card(
                   margin: EdgeInsets.all(8),
                   elevation: 4,
@@ -139,27 +139,53 @@ class _ApproveScreenState extends State<ApproveScreen> {
                                   style: TextStyle(color: Colors.grey[700]),
                                 ),
                                 SizedBox(height: 4),
-                                ...(item.json['json']['cars'] as List<dynamic>?)
-                                        ?.map<Widget>((car) {
-                                      final model =
-                                          car['model']?['name'] ?? 'Не вказано';
-                                      final gene =
-                                          car['gene']?['name'] ?? 'Не вказано';
-                                      final color =
-                                          car['color']?['name'] ?? 'Не вказано';
-                                      final licensePlate =
-                                          car['license_plate'] ?? 'Не вказано';
-                                      final personalizedLicensePlate =
-                                          car['personalized_license_plate'] ??
-                                              '';
-                                      return Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 6.0),
-                                        child: Text(
-                                            '$model $gene ($color) | $licensePlate  $personalizedLicensePlate'),
-                                      );
-                                    }).toList() ??
-                                    [Text('Машини не знайдено')],
+                                SizedBox(height: 4),
+                                if (item.json['json']['car'] != null) ...[
+                                  Builder(builder: (_) {
+                                    final car = item.json['json']['car'];
+                                    final model =
+                                        car['model']?['name'] ?? 'Не вказано';
+                                    final gene =
+                                        car['gene']?['name'] ?? 'Не вказано';
+                                    final color =
+                                        car['color']?['name'] ?? 'Не вказано';
+                                    final licensePlate =
+                                        car['license_plate'] ?? 'Не вказано';
+                                    final personalizedLicensePlate =
+                                        car['personalized_license_plate'] ?? '';
+
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 6.0),
+                                      child: Text(
+                                        '$model $gene ($color) | $licensePlate  $personalizedLicensePlate',
+                                      ),
+                                    );
+                                  }),
+                                ] else ...[
+                                  const Text('Машину не знайдено'),
+                                ],
+
+                                // ...(item.json['json']['cars'] as List<dynamic>?)
+                                //         ?.map<Widget>((car) {
+                                //       final model =
+                                //           car['model']?['name'] ?? 'Не вказано';
+                                //       final gene =
+                                //           car['gene']?['name'] ?? 'Не вказано';
+                                //       final color =
+                                //           car['color']?['name'] ?? 'Не вказано';
+                                //       final licensePlate =
+                                //           car['license_plate'] ?? 'Не вказано';
+                                //       final personalizedLicensePlate =
+                                //           car['personalized_license_plate'] ??
+                                //               '';
+                                //       return Padding(
+                                //         padding:
+                                //             const EdgeInsets.only(top: 6.0),
+                                //         child: Text(
+                                //             '$model $gene ($color) | $licensePlate  $personalizedLicensePlate'),
+                                //       );
+                                //     }).toList() ??
+                                //     [Text('Машини не знайдено')],
                               ],
                             ),
                           ],

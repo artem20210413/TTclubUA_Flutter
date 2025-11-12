@@ -1,5 +1,6 @@
 
-const _HOST = 'https://tt.tishchenko.kiev.ua';
+// const _HOST = 'https://tt.tishchenko.kiev.ua';
+const _HOST = 'https://ttclub.com.ua';
 
 Map<String, String> HEADERS([String? token = null]) {
   return {
@@ -12,6 +13,7 @@ Map<String, String> HEADERS([String? token = null]) {
 const URL_LOGIN = '${_HOST}/api/login';
 const URL_LOGOUT = '${_HOST}/api/logout';
 const URL_USER = '${_HOST}/api/user';
+const URL_USER_EXPORT = '${_HOST}/api/user/export';
 const URL_USER_FIND = '${_HOST}/api/user/{id}';
 const URL_CHANGE_PASSWORD = '${_HOST}/api/change-password';
 const URL_USER_CHANGE_PASSWORD = '${_HOST}/api/user/{id}/change-password';

@@ -20,6 +20,8 @@ import 'package:crop_your_image/crop_your_image.dart';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 
+import '../../../../components/viewers/PickAndCropImage.dart';
+
 class UpdateCarScreen extends StatefulWidget {
   CarDto carDto;
   UserUpdateDto userDto;
@@ -214,86 +216,101 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
   void _submitImg() async {
     if (widget.carDto.id == 0 || widget.carDto.id == null) {
       MessageModule(
-          context, 'Спочатку збережіть авто', MessageType.information);
+        context,
+        'Спочатку збережіть авто',
+        MessageType.information,
+      );
       return;
     }
-    // UPLOAD_CAR_PHOTO(token, widget.carDto.id
 
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    // 1. выбираем и режем
+    final File? croppedFile = await pickAndCropImage(
+      context: context,
+      aspectRatio: 4 / 3, // 👈 для фото авто
+    );
 
-    // if (pickedFile != null) {
-    //   File imageFile = File(pickedFile.path);
-    //
-    //   final token = await UserStorage.getToken();
-    //   final res = await CAR_ADD_COLLECTION(
-    //       token, widget.carDto.id ?? 0, imageFile.path);
-    //   bool isSuccess = await CHECK_API(res, context);
-    //   if (isSuccess) {
-    //     var newImageUrl =
-    //         jsonDecode(res.body)['data']['imageUrls'].first['url'];
-    //     setState(() {
-    //       customBannerUrl = newImageUrl;
-    //     });
-    //   }
-    // }
+    if (croppedFile == null) return;
 
+    // 2. отправляем на сервер
+    final token = await UserStorage.getToken();
+    final res = await CAR_ADD_COLLECTION(
+      token,
+      widget.carDto.id ?? 0,
+      croppedFile.path,
+    );
 
-
-    // crop_your_image: ^0.7.5
-    // path_provider: ^2.1.2
-    if (pickedFile != null) {
-      _imageData = await pickedFile.readAsBytes();
-      showDialog(
-        context: context,
-        builder: (_) => Dialog(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: 300,
-                height: 300,
-                child: Crop(
-                  image: _imageData!,
-                  controller: _cropController,
-                  aspectRatio: 4/3, // можно убрать, если не нужно
-                  onCropped: (croppedData) async {
-                    Navigator.of(context).pop(); // Закрываем диалог
-
-                    // Сохраняем кадрированное изображение во временный файл
-                    final tempDir = await getTemporaryDirectory();
-                    final croppedFile = File('${tempDir.path}/cropped_image.jpg');
-                    await croppedFile.writeAsBytes(croppedData);
-
-                    final token = await UserStorage.getToken();
-                    final res = await CAR_ADD_COLLECTION(
-                        token, widget.carDto.id ?? 0, croppedFile.path);
-                    bool isSuccess = await CHECK_API(res, context);
-                    if (isSuccess) {
-                      var newImageUrl =
-                      jsonDecode(res.body)['data']['imageUrls'].first['url'];
-                      setState(() {
-                        customBannerUrl = newImageUrl;
-                      });
-                    }
-                  },
-                ),
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () {
-                  _cropController.crop(); // 🔥 Запускает обрезку
-                },
-                child: const Text('Обрізати та зберегти'),
-              ),
-              const SizedBox(height: 8),
-            ],
-          ),
-        ),
-      );
+    final isSuccess = await CHECK_API(res, context);
+    if (isSuccess) {
+      final newImageUrl =
+      jsonDecode(res.body)['data']['imageUrls'].first['url'];
+      setState(() {
+        customBannerUrl = newImageUrl;
+      });
     }
-
-
   }
+
+  // void _submitImg() async {
+  //   if (widget.carDto.id == 0 || widget.carDto.id == null) {
+  //     MessageModule(
+  //         context, 'Спочатку збережіть авто', MessageType.information);
+  //     return;
+  //   }
+  //
+  //   final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  //
+  //
+  //   if (pickedFile != null) {
+  //     _imageData = await pickedFile.readAsBytes();
+  //     showDialog(
+  //       context: context,
+  //       builder: (_) => Dialog(
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             SizedBox(
+  //               width: 300,
+  //               height: 300,
+  //               child: Crop(
+  //                 image: _imageData!,
+  //                 controller: _cropController,
+  //                 aspectRatio: 4/3, // можно убрать, если не нужно
+  //                 onCropped: (croppedData) async {
+  //                   Navigator.of(context).pop(); // Закрываем диалог
+  //
+  //                   // Сохраняем кадрированное изображение во временный файл
+  //                   final tempDir = await getTemporaryDirectory();
+  //                   final croppedFile = File('${tempDir.path}/cropped_image.jpg');
+  //                   await croppedFile.writeAsBytes(croppedData);
+  //
+  //                   final token = await UserStorage.getToken();
+  //                   final res = await CAR_ADD_COLLECTION(
+  //                       token, widget.carDto.id ?? 0, croppedFile.path);
+  //                   bool isSuccess = await CHECK_API(res, context);
+  //                   if (isSuccess) {
+  //                     var newImageUrl =
+  //                     jsonDecode(res.body)['data']['imageUrls'].first['url'];
+  //                     setState(() {
+  //                       customBannerUrl = newImageUrl;
+  //                     });
+  //                   }
+  //                 },
+  //               ),
+  //             ),
+  //             const SizedBox(height: 8),
+  //             ElevatedButton(
+  //               onPressed: () {
+  //                 _cropController.crop(); // 🔥 Запускает обрезку
+  //               },
+  //               child: const Text('Обрізати та зберегти'),
+  //             ),
+  //             const SizedBox(height: 8),
+  //           ],
+  //         ),
+  //       ),
+  //     );
+  //   }
+  //
+  // }
 
 
 
@@ -310,8 +327,6 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
               GestureDetector(
                 onTap: () {
                   _submitImg();
-                  // Здесь будет логика замены баннера
-                  print("Нажали на баннер");
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
