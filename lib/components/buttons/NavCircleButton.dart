@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tt_club_ua/config/default.dart';
@@ -24,8 +26,11 @@ class NavCircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    final isIOS = Platform.isIOS;
+
+    return Container(
       padding: padding,
+      margin: isIOS ? EdgeInsets.only(bottom: 10) : null,
       child: GestureDetector(
         onTap: onTap,
         child: Transform.scale(

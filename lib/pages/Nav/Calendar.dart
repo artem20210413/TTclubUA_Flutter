@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../../Storage/Cache/DeviceInsetsCache.dart';
+
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
 
@@ -103,9 +105,7 @@ class _CalendarState extends State<Calendar> {
     final firstNext = (m.month == 12)
         ? DateTime(m.year + 1, 1, 1)
         : DateTime(m.year, m.month + 1, 1);
-    return firstNext
-        .subtract(const Duration(days: 1))
-        .day;
+    return firstNext.subtract(const Duration(days: 1)).day;
   }
 
   int _weekDay1to7(DateTime d) {
@@ -121,7 +121,11 @@ class _CalendarState extends State<Calendar> {
       backgroundColor: bg,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              bottom: 12,
+              top: DeviceInsetsCache.notchHeight),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -252,8 +256,7 @@ class _CalendarState extends State<Calendar> {
   }
 
   Widget _legend() {
-    Widget item(Color c, String label) =>
-        Row(
+    Widget item(Color c, String label) => Row(
           mainAxisAlignment: MainAxisAlignment.center,
           // crossAxisAlignment: CrossAxisAlignment.start,
           // mainAxisSize: MainAxisSize.min,
@@ -309,12 +312,11 @@ class _CalendarState extends State<Calendar> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: days
-          .map((d) =>
-          Expanded(
-            child: Center(
-              child: Text(d, style: TTTextStyle.subtitle),
-            ),
-          ))
+          .map((d) => Expanded(
+                child: Center(
+                  child: Text(d, style: TTTextStyle.subtitle),
+                ),
+              ))
           .toList(),
     );
   }
@@ -480,8 +482,7 @@ class _CalendarState extends State<Calendar> {
               children: [
                 Text(
                   e.time != null
-                      ? '${_formatDayMonth(e.date)} • ${e.time!.format(
-                      context)}'
+                      ? '${_formatDayMonth(e.date)} • ${e.time!.format(context)}'
                       : _formatDayMonth(e.date),
                   style: TextStyle(color: textSecondary, fontSize: 12),
                 ),

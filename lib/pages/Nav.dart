@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
@@ -11,6 +12,7 @@ import 'package:tt_club_ua/pages/Nav/Admin.dart';
 import 'package:tt_club_ua/pages/Nav/Mention.dart';
 import 'package:tt_club_ua/pages/Nav/User.dart';
 
+import '../Storage/Cache/DeviceInsetsCache.dart';
 import '../components/buttons/NavCircleButton.dart';
 import 'Nav/Calendar.dart';
 
@@ -26,7 +28,7 @@ class NavState extends State<Nav> {
   bool _isAdmin = false; // Значение по умолчанию
   bool _isLoading = true; // Loading state
   List<Widget> _screens = [];
-
+  final isIOS = Platform.isIOS;
   List<String> _navSvgs = [];
 
   @override
@@ -35,7 +37,11 @@ class NavState extends State<Nav> {
 
     _loadUser();
   }
-
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    DeviceInsetsCache.init(context);
+  }
   void setTab(int index) {
     setState(() => _currentIndex = index);
   }
@@ -49,8 +55,8 @@ class NavState extends State<Nav> {
             behavior: HitTestBehavior.translucent,
             child: MediaQuery.removePadding(
               context: context,
-              removeTop: true, // 👈 убирает отступ сверху (status bar)
-              removeBottom: true, // 👈 убирает отступ снизу (navigation bar)
+              removeTop: true,
+              removeBottom: isIOS ? true : false,
               child: Scaffold(
                 backgroundColor: TTColors.background,
                 extendBody: true,

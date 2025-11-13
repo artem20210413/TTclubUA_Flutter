@@ -5,6 +5,7 @@ import 'package:tt_club_ua/Storage/Search/CarSearchDto.dart';
 import 'package:tt_club_ua/pages/Nav/Mention/SendMention.dart';
 import 'package:tt_club_ua/pages/Nav/Mention/Profile.dart';
 
+import '../../Storage/Cache/DeviceInsetsCache.dart';
 import '../../Storage/Search/UserSearchDto.dart';
 import '../../Storage/UserStorage.dart';
 import '../../api/routs/car/car.dart';
@@ -108,14 +109,14 @@ class _MentionState extends State<Mention> {
     return Column(
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const SizedBox(height: 40),
+        SizedBox(height: DeviceInsetsCache.notchHeight),
         SearchBarWidget(
           controller: _searchController,
           onSearch: fetchSearchResults,
         ),
         isLoading
             ? const TTLoading()
-            :  searchResults.length == 0
+            : searchResults.length == 0
                 ? Text('')
                 : Expanded(
                     child: ListView.builder(

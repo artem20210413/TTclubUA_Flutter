@@ -12,6 +12,7 @@ import 'package:tt_club_ua/api/routs/root.dart';
 import 'package:tt_club_ua/config/default.dart';
 import 'package:tt_club_ua/pages/Nav/Admin.dart';
 
+import '../../Storage/Cache/DeviceInsetsCache.dart';
 import '../../api/routs/Dto/Car/CarDto.dart';
 import '../../api/routs/Dto/User/UserUpdateDto.dart';
 import '../../api/routs/car/car.dart';
@@ -208,7 +209,7 @@ class _UserState extends State<User> {
                   top: 20, right: 20, bottom: 110, left: 20),
               child: Column(
                 children: [
-                  SizedBox(height: MediaQuery.of(context).padding.top),
+                  SizedBox(height: DeviceInsetsCache.notchHeight),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
