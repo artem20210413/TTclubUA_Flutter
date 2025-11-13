@@ -36,6 +36,7 @@ class _HomeState extends State<Home> {
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 113),
         child: Column(
           children: [
+            // const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

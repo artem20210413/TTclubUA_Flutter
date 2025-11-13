@@ -47,52 +47,57 @@ class NavState extends State<Nav> {
         : GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
             behavior: HitTestBehavior.translucent,
-            child: Scaffold(
-              backgroundColor: TTColors.background,
-              extendBody: true,
-              appBar: AppBar(
-                toolbarHeight: 20,
-                backgroundColor: Colors.transparent,
-                surfaceTintColor: Colors.transparent,
-              ),
-              body: _screens[_currentIndex],
-
-              // ADD: центральная кнопка под вырез
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
-              floatingActionButton: SizedBox(
-                width: 64, height: 64,
-                // child: FloatingActionButton(
-                //   elevation: 0,
-                //   onPressed: () {},
-                //   child: const Icon(Icons.add, size: 28),
+            child: MediaQuery.removePadding(
+              context: context,
+              removeTop: true, // 👈 убирает отступ сверху (status bar)
+              // removeBottom: true, // 👈 убирает отступ снизу (navigation bar)
+              child: Scaffold(
+                backgroundColor: TTColors.background,
+                extendBody: true,
+                // appBar: AppBar(
+                //   toolbarHeight: 20,
+                //   backgroundColor: Colors.transparent,
+                //   surfaceTintColor: Colors.transparent,
                 // ),
-              ),
+                body: _screens[_currentIndex],
 
-              bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-                itemCount: _navSvgs.length,
-                activeIndex: _currentIndex,
-                onTap: (i) => setState(() => _currentIndex = i),
-                height: 73,
-                backgroundColor: TTColors.background_second.withOpacity(0.5),
-                gapLocation: GapLocation.center,
-                notchSmoothness: NotchSmoothness.verySmoothEdge,
-                leftCornerRadius: 24,
-                rightCornerRadius: 24,
-                splashColor: Colors.transparent,
-                splashRadius: 0,
-                elevation: 0,
-                // shadow: BoxShadow(
-                //   color: Colors.white.withOpacity(0.12),
-                //   blurRadius: 32,
-                //   spreadRadius: -4,
-                // ),
-                borderColor: TTColors.input,
-                borderWidth: 1.8,
-                scaleFactor: 0.0,
-                tabBuilder: (index, isActive) => NavCircleButton(
-                  iconAsset: _navSvgs[index],
-                  isActive: isActive,
+                // ADD: центральная кнопка под вырез
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerDocked,
+                floatingActionButton: SizedBox(
+                  width: 64, height: 64,
+                  // child: FloatingActionButton(
+                  //   elevation: 0,
+                  //   onPressed: () {},
+                  //   child: const Icon(Icons.add, size: 28),
+                  // ),
+                ),
+
+                bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+                  itemCount: _navSvgs.length,
+                  activeIndex: _currentIndex,
+                  onTap: (i) => setState(() => _currentIndex = i),
+                  height: 73,
+                  backgroundColor: TTColors.background_second.withOpacity(0.5),
+                  gapLocation: GapLocation.center,
+                  notchSmoothness: NotchSmoothness.verySmoothEdge,
+                  leftCornerRadius: 24,
+                  rightCornerRadius: 24,
+                  splashColor: Colors.transparent,
+                  splashRadius: 0,
+                  elevation: 0,
+                  // shadow: BoxShadow(
+                  //   color: Colors.white.withOpacity(0.12),
+                  //   blurRadius: 32,
+                  //   spreadRadius: -4,
+                  // ),
+                  borderColor: TTColors.input,
+                  borderWidth: 1.8,
+                  scaleFactor: 0.0,
+                  tabBuilder: (index, isActive) => NavCircleButton(
+                    iconAsset: _navSvgs[index],
+                    isActive: isActive,
+                  ),
                 ),
               ),
             ),
