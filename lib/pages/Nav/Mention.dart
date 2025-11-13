@@ -108,12 +108,11 @@ class _MentionState extends State<Mention> {
     return Column(
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SizedBox(height: 10),
+        const SizedBox(height: 40),
         SearchBarWidget(
           controller: _searchController,
           onSearch: fetchSearchResults,
         ),
-        SizedBox(height: 10),
         isLoading
             ? const TTLoading()
             :  searchResults.length == 0

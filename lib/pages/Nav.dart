@@ -50,7 +50,7 @@ class NavState extends State<Nav> {
             child: MediaQuery.removePadding(
               context: context,
               removeTop: true, // 👈 убирает отступ сверху (status bar)
-              // removeBottom: true, // 👈 убирает отступ снизу (navigation bar)
+              removeBottom: true, // 👈 убирает отступ снизу (navigation bar)
               child: Scaffold(
                 backgroundColor: TTColors.background,
                 extendBody: true,
