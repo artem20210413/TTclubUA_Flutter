@@ -227,7 +227,11 @@ class _ProfileState extends State<Profile> {
                                 SizedBox(width: 6),
                                 Expanded(
                                   child: Text(
-                                    _dto.occupationDescriptionController.text,
+                                    _dto.occupationDescriptionController.text ==
+                                            ''
+                                        ? 'Не вказано'
+                                        : _dto.occupationDescriptionController
+                                            .text,
                                     style: TTTextStyle.subtitle
                                         .copyWith(color: TTColors.text),
                                     softWrap: true, // ✅ разрешаем перенос

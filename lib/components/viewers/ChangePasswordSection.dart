@@ -45,9 +45,12 @@ class _ChangePasswordSectionState extends State<ChangePasswordSection> {
         'Схоже, введений поточний пароль не збігається. Перевір уважно.',
         MessageType.error,
       );
-      setState(() => _isLoading = false);
+      setState(() {
+        _isLoading = false;
+      });
       return;
     }
+    _changePasswordDto.newPasswordController.text = '';
     final isSuccess = await CHECK_API(res, context);
 
     if (!isSuccess) {
@@ -55,6 +58,7 @@ class _ChangePasswordSectionState extends State<ChangePasswordSection> {
       return;
     }
 
+    _changePasswordDto.oldPasswordController.text = '';
     MessageModule(
       context,
       'Новий пароль прийняв. Повний контроль — у твоїх руках.',
