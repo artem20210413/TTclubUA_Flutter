@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 113),
         child: Column(
           children: [
-            SizedBox(height: DeviceInsetsCache.notchHeight),
+            SizedBox(height: DeviceInsetsCache.viewPaddingTop + 6),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

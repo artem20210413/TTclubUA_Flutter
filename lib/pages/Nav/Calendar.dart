@@ -125,7 +125,7 @@ class _CalendarState extends State<Calendar> {
               left: 16,
               right: 16,
               bottom: 12,
-              top: DeviceInsetsCache.notchHeight),
+              top: DeviceInsetsCache.viewPaddingTop),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

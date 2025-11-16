@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../../Storage/Cache/DeviceInsetsCache.dart';
+
 class NavCircleButton extends StatelessWidget {
   final String iconAsset;
   final bool isActive;
@@ -26,11 +28,11 @@ class NavCircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isIOS = Platform.isIOS;
+    // final isIOS = Platform.isIOS;
 
     return Container(
       padding: padding,
-      margin: isIOS ? EdgeInsets.only(bottom: 10) : null,
+      margin: !DeviceInsetsCache.isNavigationButtonsAndroid ? EdgeInsets.only(bottom: 5) : null,
       child: GestureDetector(
         onTap: onTap,
         child: Transform.scale(

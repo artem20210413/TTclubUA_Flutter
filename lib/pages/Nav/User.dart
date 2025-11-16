@@ -211,7 +211,7 @@ class _UserState extends State<User> {
                   top: 20, right: 20, bottom: 110, left: 20),
               child: Column(
                 children: [
-                  SizedBox(height: DeviceInsetsCache.notchHeight),
+                  SizedBox(height: DeviceInsetsCache.viewPaddingTop),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

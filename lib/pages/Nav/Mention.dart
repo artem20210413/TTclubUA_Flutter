@@ -109,7 +109,7 @@ class _MentionState extends State<Mention> {
     return Column(
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SizedBox(height: DeviceInsetsCache.notchHeight),
+        SizedBox(height: DeviceInsetsCache.viewPaddingTop),
         SearchBarWidget(
           controller: _searchController,
           onSearch: fetchSearchResults,

@@ -28,20 +28,21 @@ class NavState extends State<Nav> {
   bool _isAdmin = false; // Значение по умолчанию
   bool _isLoading = true; // Loading state
   List<Widget> _screens = [];
-  final isIOS = Platform.isIOS;
+  bool isNavigationButtonsAndroid = false;
   List<String> _navSvgs = [];
 
   @override
   void initState() {
     super.initState();
-
     _loadUser();
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     DeviceInsetsCache.init(context);
   }
+
   void setTab(int index) {
     setState(() => _currentIndex = index);
   }
@@ -56,7 +57,7 @@ class NavState extends State<Nav> {
             child: MediaQuery.removePadding(
               context: context,
               removeTop: true,
-              removeBottom: isIOS ? true : false,
+              removeBottom: !DeviceInsetsCache.isNavigationButtonsAndroid,
               child: Scaffold(
                 backgroundColor: TTColors.background,
                 extendBody: true,
