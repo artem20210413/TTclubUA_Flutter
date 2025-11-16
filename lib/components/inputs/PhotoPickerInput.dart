@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tt_club_ua/config/default.dart';
 import '../TTNeumorphicBox.dart';
+import '../buttons/CircleButton.dart';
 
 class PhotoPickerInput extends StatefulWidget {
   final Function(XFile) onImageSelected;
@@ -53,21 +54,9 @@ class _PhotoPickerInputState extends State<PhotoPickerInput> {
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      width: 52,
-                      height: 52,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: TTColors.input,
-                      ),
-                      child: SvgPicture.asset(
-                        'assets/svg/image_add.svg',
-                        fit: BoxFit.scaleDown,
-                        colorFilter: ColorFilter.mode(
-                          TTColors.text_secondary,
-                          BlendMode.srcIn,
-                        ),
-                      ),
+                    CircleButton(
+                      iconAsset: 'assets/svg/image_add.svg',
+                      onTap: _pickImage,
                     ),
                     const SizedBox(height: 12),
                     Text(
