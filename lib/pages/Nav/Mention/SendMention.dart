@@ -165,7 +165,6 @@ class _SendMentionScreenState extends State<SendMentionScreen> {
 
               GlowingButton(
                 text: 'ФА-ФА',
-                colorGrowing: Colors.white,
                 onPressed: _sendMention,
                 isLoading: _isSending,
               ),

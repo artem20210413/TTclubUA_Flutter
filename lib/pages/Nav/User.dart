@@ -24,6 +24,7 @@ import '../../components/card/CarImageBlock.dart';
 import '../../components/card/UserAvatar.dart';
 import '../../components/inputs/BigTextInput.dart';
 import '../../components/viewers/ChangePasswordSection.dart';
+import '../../components/viewers/ColorAccentPicker.dart';
 import '../../components/viewers/InstagramLink.dart';
 import '../../components/viewers/PickAndCropImage.dart';
 import '../../components/viewers/TelegramLink.dart';
@@ -42,6 +43,7 @@ class _UserState extends State<User> {
   final ImagePicker _picker = ImagePicker();
   bool _isLoading = true;
   bool _isAdmin = false;
+  Color accentColorButton = Colors.white;
   late List<String> _carImages;
 
   String userProfileImage = USER_PROFILE_IMAGE_DEFAULT;
@@ -542,42 +544,55 @@ class _UserState extends State<User> {
                         },
                       ),
                     ),
+
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 15),
+                    padding: EdgeInsets.only(top: 15),
+                    child: ColorAccentPicker(
+                      onChanged: (color) {
+                        setState(() => accentColorButton = color);
+                      },
+                    ),
+                  ),
+
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
                     child: ChangePasswordSection(),
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: GlowingButton(
-                          text: 'Вихід',
-                          colorGrowing: Colors.white,
-                          onPressed: () {
-                            _logout();
-                          },
-                          // isLoading: _isLoadingSubmit,
-                        ),
-                      ),
-                      if (_isAdmin)
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Row(
+                      children: [
                         Expanded(
-                          flex: 3,
+                          flex: 2,
                           child: GlowingButton(
-                            margin: EdgeInsets.only(left: 15),
-                            text: 'Для адміна',
-                            colorGrowing: Colors.white,
+                            text: 'Вихід',
+                            colorGrowing: accentColorButton,
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Admin(),
-                                ), // Переход на экран публикаций
-                              );
+                              _logout();
                             },
                             // isLoading: _isLoadingSubmit,
                           ),
                         ),
-                    ],
+                        if (_isAdmin)
+                          Expanded(
+                            flex: 3,
+                            child: GlowingButton(
+                              margin: EdgeInsets.only(left: 30),
+                              text: 'Для адміна',
+                              colorGrowing: accentColorButton,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const Admin(),
+                                  ), // Переход на экран публикаций
+                                );
+                              },
+                              // isLoading: _isLoadingSubmit,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
 
                   // TileButton(

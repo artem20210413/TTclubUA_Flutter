@@ -83,7 +83,7 @@ class NavState extends State<Nav> {
                   itemCount: _navSvgs.length,
                   activeIndex: _currentIndex,
                   onTap: (i) => setState(() => _currentIndex = i),
-                  height: 73,
+                  height: 80,
                   backgroundColor: TTColors.background_second.withOpacity(0.5),
                   gapLocation: GapLocation.center,
                   notchSmoothness: NotchSmoothness.verySmoothEdge,

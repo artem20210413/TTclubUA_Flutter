@@ -52,7 +52,6 @@ class AnnualFeePage extends StatelessWidget {
                   const SizedBox(height: 20),
                   GlowingButton(
                     text: 'Підтримати клуб',
-                    colorGrowing: Colors.white,
                     onPressed: _launchMonobankJar,
                   ),
                   const SizedBox(height: 15),
