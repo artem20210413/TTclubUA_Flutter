@@ -499,7 +499,7 @@ class _CalendarState extends State<Calendar> {
                   const SizedBox(height: 4),
                   Text(
                     e.place!,
-                    style: TextStyle(color: textSecondary),
+                    style: TTTextStyle.subtitle,
                   ),
                 ],
               ],
