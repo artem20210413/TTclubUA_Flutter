@@ -547,42 +547,42 @@ class _CalendarState extends State<Calendar> {
     DateTime d(int day) => DateTime(y, m, day);
 
     return [
-      CalendarEvent(
-        date: d(2),
-        title: 'TT Season Opening Drive',
-        category: EventCategory.club,
-        time: const TimeOfDay(hour: 11, minute: 0),
-        place: 'Паркінг Ocean Plaza → Обухівська траса',
-        imageUrl: 'https://picsum.photos/seed/tt1/300/200',
-      ),
-      CalendarEvent(
-        date: d(16),
-        title: 'Кава з TT Club',
-        category: EventCategory.club,
-        time: const TimeOfDay(hour: 10, minute: 30),
-        place: 'UNIT.City',
-        imageUrl: 'https://picsum.photos/seed/tt2/300/200',
-      ),
-      CalendarEvent(
-        date: d(17),
-        title: 'День народження Оксани',
-        category: EventCategory.birthday,
-        imageUrl: 'https://picsum.photos/seed/bd1/300/200',
-      ),
-      CalendarEvent(
-        date: d(20),
-        title: 'Нічний виїзд на дамбу',
-        category: EventCategory.club,
-        time: const TimeOfDay(hour: 21, minute: 0),
-        place: 'Гаванський міст',
-        imageUrl: 'https://picsum.photos/seed/tt3/300/200',
-      ),
-      CalendarEvent(
-        date: d(24),
-        title: 'День народження Ігора',
-        category: EventCategory.birthday,
-        imageUrl: 'https://picsum.photos/seed/bd2/300/200',
-      ),
+      // CalendarEvent(
+      //   date: d(2),
+      //   title: 'TT Season Opening Drive',
+      //   category: EventCategory.club,
+      //   time: const TimeOfDay(hour: 11, minute: 0),
+      //   place: 'Паркінг Ocean Plaza → Обухівська траса',
+      //   imageUrl: 'https://picsum.photos/seed/tt1/300/200',
+      // ),
+      // CalendarEvent(
+      //   date: d(16),
+      //   title: 'Кава з TT Club',
+      //   category: EventCategory.club,
+      //   time: const TimeOfDay(hour: 10, minute: 30),
+      //   place: 'UNIT.City',
+      //   imageUrl: 'https://picsum.photos/seed/tt2/300/200',
+      // ),
+      // CalendarEvent(
+      //   date: d(17),
+      //   title: 'День народження Оксани',
+      //   category: EventCategory.birthday,
+      //   imageUrl: 'https://picsum.photos/seed/bd1/300/200',
+      // ),
+      // CalendarEvent(
+      //   date: d(20),
+      //   title: 'Нічний виїзд на дамбу',
+      //   category: EventCategory.club,
+      //   time: const TimeOfDay(hour: 21, minute: 0),
+      //   place: 'Гаванський міст',
+      //   imageUrl: 'https://picsum.photos/seed/tt3/300/200',
+      // ),
+      // CalendarEvent(
+      //   date: d(24),
+      //   title: 'День народження Ігора',
+      //   category: EventCategory.birthday,
+      //   imageUrl: 'https://picsum.photos/seed/bd2/300/200',
+      // ),
     ];
   }
 }
