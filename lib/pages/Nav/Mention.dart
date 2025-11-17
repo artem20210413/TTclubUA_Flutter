@@ -5,18 +5,15 @@ import 'package:tt_club_ua/Storage/Search/CarSearchDto.dart';
 import 'package:tt_club_ua/pages/Nav/Mention/SendMention.dart';
 import 'package:tt_club_ua/pages/Nav/Mention/Profile.dart';
 
+import '../../Storage/Cache/AccentColorCache.dart';
 import '../../Storage/Cache/DeviceInsetsCache.dart';
-import '../../Storage/Search/UserSearchDto.dart';
 import '../../Storage/UserStorage.dart';
 import '../../api/routs/car/car.dart';
 import '../../api/routs/root.dart';
-import '../../api/routs/user.dart';
 import '../../components/TTLoading.dart';
 import '../../components/card/CarProfileCard.dart';
 import '../../components/interface/SearchBarWidgetState.dart';
 import '../../components/generalModule.dart';
-import '../../config/default.dart';
-import 'Admin/User/SearchUser.dart';
 
 class Mention extends StatefulWidget {
   const Mention({super.key});
@@ -33,6 +30,7 @@ class _MentionState extends State<Mention> {
   bool _isLoadingMore = false;
   bool _hasMore = true;
   ScrollController _scrollController = ScrollController();
+  Color accentColor = AccentColorCache.accentColor;
 
   @override
   void initState() {
@@ -46,13 +44,6 @@ class _MentionState extends State<Mention> {
         _loadMore();
       }
     });
-  }
-
-  void _performSearch() {
-    String searchText = _searchController.text.trim();
-    if (searchText.isNotEmpty) {
-      fetchSearchResults();
-    }
   }
 
   Future<void> fetchSearchResults({int page = 1, bool append = false}) async {
@@ -112,6 +103,7 @@ class _MentionState extends State<Mention> {
         SizedBox(height: DeviceInsetsCache.viewPaddingTop),
         SearchBarWidget(
           controller: _searchController,
+          accentColor: accentColor,
           onSearch: fetchSearchResults,
         ),
         isLoading

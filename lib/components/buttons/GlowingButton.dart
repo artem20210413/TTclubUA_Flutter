@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../../Storage/Cache/AccentColorCache.dart';
 import '../TTLoading.dart';
 
 class GlowingButton extends StatefulWidget {
@@ -25,9 +26,6 @@ class GlowingButton extends StatefulWidget {
     this.colorBackground = TTColors.button_background,
   });
 
-
-
-
   @override
   _GlowingButtonState createState() => _GlowingButtonState();
 }
@@ -37,21 +35,22 @@ class _GlowingButtonState extends State<GlowingButton> {
   Color _default = Colors.white;
   Color colorGrowing = Colors.white;
 
-
   @override
   void initState() {
     super.initState();
-    _loadSelected();
+    _loadAccentColor();
   }
 
-  Future<void> _loadSelected() async {
-    final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getInt('accent_color');
-    print(raw);
+  Future<void> _loadAccentColor() async {
+    // final prefs = await SharedPreferences.getInstance();
+    // final raw = prefs.getInt('accent_color');
+    // print(raw);
     setState(() {
-      widget.colorGrowing = raw != null ? Color(raw) : _default;
+      // widget.colorGrowing = raw != null ? Color(raw) : _default;
+      widget.colorGrowing = AccentColorCache.accentColor;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final gradientColorBackgroundWithOpacity = _isPressed ? 0.0 : 0.85;
@@ -89,7 +88,7 @@ class _GlowingButtonState extends State<GlowingButton> {
             ],
           ),
           borderRadius: BorderRadius.circular(300),
-          border: Border.all(color: widget.colorGrowing??_default, width: 2),
+          border: Border.all(color: widget.colorGrowing ?? _default, width: 2),
           boxShadow: [
             BoxShadow(
               color: widget.colorGrowing?.withOpacity(0.7) ?? _default,

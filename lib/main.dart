@@ -28,8 +28,11 @@ import 'package:tt_club_ua/pages/Nav.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/User/UpdateCarScreen.dart';
 import 'package:tt_club_ua/pages/Onboarding.dart';
 
+import 'Storage/Cache/AccentColorCache.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await AccentColorCache.init();
   // try {
   //   await dotenv.load(fileName: ".env");
   // } catch (e) {

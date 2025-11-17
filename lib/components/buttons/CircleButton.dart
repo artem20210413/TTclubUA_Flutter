@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../../Storage/Cache/AccentColorCache.dart';
 import '../TTLoading.dart';
 
 class CircleButton extends StatefulWidget {
@@ -12,17 +13,18 @@ class CircleButton extends StatefulWidget {
   final VoidCallback? onTap;
   final double scale;
   final bool isLoading;
+  final Color accentColor;
 
-  const CircleButton({
-    super.key,
-    required this.iconAsset,
-    this.size = 65,
-    this.sizeIcon = 30,
-    this.padding = const EdgeInsets.symmetric(vertical: 10),
-    this.onTap,
-    this.scale = 0.8,
-    this.isLoading = false,
-  });
+  CircleButton(
+      {super.key,
+      required this.iconAsset,
+      this.size = 65,
+      this.sizeIcon = 30,
+      this.padding = const EdgeInsets.symmetric(vertical: 10),
+      this.onTap,
+      this.scale = 0.8,
+      this.isLoading = false,
+      this.accentColor = Colors.white});
 
   @override
   State<CircleButton> createState() => _CircleButtonState();
@@ -30,6 +32,11 @@ class CircleButton extends StatefulWidget {
 
 class _CircleButtonState extends State<CircleButton> {
   bool _pressed = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void _handleTapDown(TapDownDetails _) {
     setState(() => _pressed = true);
@@ -115,8 +122,8 @@ class _CircleButtonState extends State<CircleButton> {
                         widget.iconAsset,
                         colorFilter: ColorFilter.mode(
                           isActive
-                              ? Colors.white
-                              : Colors.white.withOpacity(0.55),
+                              ? widget.accentColor
+                              : widget.accentColor.withOpacity(0.7),
                           BlendMode.srcIn,
                         ),
                       ),

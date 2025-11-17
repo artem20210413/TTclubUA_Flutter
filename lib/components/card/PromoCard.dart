@@ -2,8 +2,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../../Storage/Cache/AccentColorCache.dart';
 import '../TTNeumorphicBox.dart';
 import '../buttons/CircleButton.dart';
 
@@ -26,6 +28,19 @@ class PromoCard extends StatefulWidget {
 
 class _PromoCardState extends State<PromoCard> {
   bool _pressed = false;
+  Color accent_color = Colors.white;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAccentColor();
+  }
+
+  Future<void> _loadAccentColor() async {
+    setState(() {
+      accent_color = AccentColorCache.accentColor;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +100,7 @@ class _PromoCardState extends State<PromoCard> {
                       width: 20,
                       height: 20,
                       colorFilter: ColorFilter.mode(
-                        Colors.white,
+                        accent_color,
                         BlendMode.srcIn,
                       ),
                     ),

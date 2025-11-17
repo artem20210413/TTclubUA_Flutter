@@ -12,6 +12,7 @@ import 'package:tt_club_ua/api/routs/root.dart';
 import 'package:tt_club_ua/config/default.dart';
 import 'package:tt_club_ua/pages/Nav/Admin.dart';
 
+import '../../Storage/Cache/AccentColorCache.dart';
 import '../../Storage/Cache/DeviceInsetsCache.dart';
 import '../../api/routs/Dto/Car/CarDto.dart';
 import '../../api/routs/Dto/User/UserUpdateDto.dart';
@@ -73,7 +74,7 @@ class _UserState extends State<User> {
 
     setState(() {
       _dto = UserUpdateDto.fromJson(json);
-
+      accentColorButton = AccentColorCache.accentColor;
       userProfileImage = profileImage ?? userProfileImage;
       _isAdmin = isAdmin;
 
@@ -239,6 +240,7 @@ class _UserState extends State<User> {
                                       left: 0,
                                       bottom: 0,
                                       child: CircleButton(
+                                        accentColor: accentColorButton,
                                         iconAsset: 'assets/svg/image_add.svg',
                                         onTap: _pickAndUploadImage,
                                       ),
@@ -375,6 +377,7 @@ class _UserState extends State<User> {
                                 padding: const EdgeInsets.only(bottom: 8),
                                 child: CircleButton(
                                   size: 65,
+                                  accentColor: accentColorButton,
                                   iconAsset: 'assets/svg/check_mark.svg',
                                   onTap: _saveUser,
                                 ),
@@ -532,6 +535,7 @@ class _UserState extends State<User> {
                                   right: 0,
                                   top: 0,
                                   child: CircleButton(
+                                    accentColor: accentColorButton,
                                     iconAsset: 'assets/svg/image_add.svg',
                                     onTap: () {
                                       _pickAndUploadImageCar(car);
@@ -556,7 +560,8 @@ class _UserState extends State<User> {
 
                   Padding(
                     padding: EdgeInsets.only(top: 20),
-                    child: ChangePasswordSection(),
+                    child:
+                        ChangePasswordSection(accentColor: accentColorButton),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 20),

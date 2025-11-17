@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Storage/Cache/AccentColorCache.dart';
 import '../../config/default.dart';
 
 class ColorAccentPicker extends StatefulWidget {
@@ -46,10 +47,11 @@ class _ColorAccentPickerState extends State<ColorAccentPicker> {
   }
 
   Future<void> _loadSelected() async {
-    final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getInt(widget.storageKey);
+    // final prefs = await SharedPreferences.getInstance();
+    // final raw = prefs.getInt(widget.storageKey);
     setState(() {
-      _selected = raw != null ? Color(raw) : _colors.first;
+      // _selected = raw != null ? Color(raw) : _colors.first;
+      _selected = AccentColorCache.accentColor;
     });
   }
 
@@ -59,6 +61,7 @@ class _ColorAccentPickerState extends State<ColorAccentPicker> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(widget.storageKey, c.value);
     widget.onChanged?.call(c);
+    await AccentColorCache.setColor(c);
   }
 
   @override
