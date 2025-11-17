@@ -3,6 +3,7 @@ import 'package:tt_club_ua/Storage/UserStorage.dart';
 import 'package:tt_club_ua/config/default.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../Storage/Cache/DeviceInsetsCache.dart';
 import '../../api/routs.dart';
 import '../../components/TTNeumorphicBox.dart';
 import '../../components/card/PromoCard.dart';
@@ -33,9 +34,10 @@ class _HomeState extends State<Home> {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 113),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 113),
         child: Column(
           children: [
+            SizedBox(height: DeviceInsetsCache.viewPaddingTop + 6),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -63,7 +65,8 @@ class _HomeState extends State<Home> {
                   iconAsset: 'assets/svg/instagram.svg',
                   iconSize: 30,
                   onTap: () async {
-                    final Uri url = Uri.parse('https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ==');
+                    final Uri url = Uri.parse(
+                        'https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ==');
                     await launchUrl(url, mode: LaunchMode.externalApplication);
                   },
                 ),

@@ -144,7 +144,6 @@ class _CarProfileCardState extends State<CarProfileCard> {
                             child: GlowingButton(
                               text: 'ФА-ФА',
                               width: 150,
-                              colorGrowing: Colors.white,
                               onPressed: widget.onButtonTap,
                             ),
                           ),

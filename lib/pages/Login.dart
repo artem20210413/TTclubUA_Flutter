@@ -237,7 +237,6 @@ class _LoginState extends State<Login> {
                       const SizedBox(height: 40),
                       GlowingButton(
                         text: 'Увійти',
-                        colorGrowing: Colors.white,
                         onPressed: () {
                           _submitForm();
                         },

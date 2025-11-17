@@ -83,7 +83,6 @@ Future<File?> pickAndCropImage({
                             margin: EdgeInsets.symmetric(
                                 horizontal: 25, vertical: 15),
                             text: 'Обрізати та зберегти',
-                            colorGrowing: Colors.white,
                             onPressed: () => cropController.crop(),
                             // isLoading: _isLoadingSubmit,
                           ),

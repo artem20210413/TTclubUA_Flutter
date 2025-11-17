@@ -13,8 +13,9 @@ import '../inputs/CustomInputField.dart';
 
 class ChangePasswordSection extends StatefulWidget {
   final VoidCallback? onSuccess;
+  final Color accentColor;
 
-  const ChangePasswordSection({super.key, this.onSuccess});
+  const ChangePasswordSection({super.key, this.onSuccess, this.accentColor = Colors.white});
 
   @override
   State<ChangePasswordSection> createState() => _ChangePasswordSectionState();
@@ -45,9 +46,12 @@ class _ChangePasswordSectionState extends State<ChangePasswordSection> {
         'Схоже, введений поточний пароль не збігається. Перевір уважно.',
         MessageType.error,
       );
-      setState(() => _isLoading = false);
+      setState(() {
+        _isLoading = false;
+      });
       return;
     }
+    _changePasswordDto.newPasswordController.text = '';
     final isSuccess = await CHECK_API(res, context);
 
     if (!isSuccess) {
@@ -55,6 +59,7 @@ class _ChangePasswordSectionState extends State<ChangePasswordSection> {
       return;
     }
 
+    _changePasswordDto.oldPasswordController.text = '';
     MessageModule(
       context,
       'Новий пароль прийняв. Повний контроль — у твоїх руках.',
@@ -83,6 +88,7 @@ class _ChangePasswordSectionState extends State<ChangePasswordSection> {
           Row(
             children: [
               CircleButton(
+                accentColor: widget.accentColor,
                 iconAsset: _obscureAll
                     ? 'assets/svg/eye_closed.svg'
                     : 'assets/svg/eye.svg',
@@ -119,6 +125,7 @@ class _ChangePasswordSectionState extends State<ChangePasswordSection> {
               ),
               const SizedBox(width: 12),
               CircleButton(
+                accentColor: widget.accentColor,
                 iconAsset: 'assets/svg/check_mark.svg',
                 isLoading: _isLoading,
                 onTap: _isLoading ? null : _changePassword,

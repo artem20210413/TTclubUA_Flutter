@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../../Storage/Cache/AccentColorCache.dart';
 import '../buttons/CircleButton.dart';
 import '../buttons/NavCircleButton.dart';
 import '../card/PromoCard.dart';
@@ -11,13 +12,17 @@ import '../inputs/CustomInputField.dart';
 class SearchBarWidget extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback onSearch;
+  final Color accentColor;
 
-  SearchBarWidget({required this.controller, required this.onSearch});
+  SearchBarWidget(
+      {required this.controller,
+      required this.onSearch,
+      this.accentColor = Colors.white});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
       child: Row(
         children: [
           Expanded(
@@ -29,6 +34,7 @@ class SearchBarWidget extends StatelessWidget {
           SizedBox(width: 10), // Отступ между элементами
           // Кнопка поиска
           CircleButton(
+            accentColor: accentColor,
             iconAsset: 'assets/svg/search.svg',
             onTap: onSearch,
           )
