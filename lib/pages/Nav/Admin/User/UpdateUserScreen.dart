@@ -98,7 +98,7 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
   Future<void> _pickAndUploadImage() async {
     final File? croppedFile = await pickAndCropImage(
       context: context,
-      aspectRatio: 4 / 3,
+      aspectRatio: 1,
     );
 
     // final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
