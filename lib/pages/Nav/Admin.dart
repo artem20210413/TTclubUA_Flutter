@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:tt_club_ua/pages/Nav/Admin/Merch/MerchScreen.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/Publication/PublicationsScreen.dart';
 
 import '../../Storage/UserStorage.dart';
@@ -11,6 +13,7 @@ import '../../components/generalModule.dart';
 import '../../components/interface/SearchBarWidgetState.dart';
 import '../../components/interface/TileButton.dart';
 import '../../components/layout/TTScaffold.dart';
+import '../../components/viewers/ConfirmAndRun.dart';
 import '../../config/default.dart';
 import 'Admin/Approve/ApproveScreen.dart';
 import 'Admin/Costs/CostsListScreen.dart';
@@ -71,7 +74,7 @@ class _AdminState extends State<Admin> {
     // }
   }
 
-  void _export_users() async {
+  Future<void> _export_users() async {
     setState(() {
       isLoadingExcel = true;
     });
@@ -96,7 +99,7 @@ class _AdminState extends State<Admin> {
     return TTScaffold(
       title: '',
       body: Container(
-        padding: const EdgeInsets.symmetric(horizontal:  10),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -147,11 +150,30 @@ class _AdminState extends State<Admin> {
               },
             ),
             TileButton(
+              icon: Icons.local_mall,
+              title: 'Мерч',
+              iconColor: Colors.white,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          MerchScreen()), // Переход на экран публикаций
+                );
+              },
+            ),
+            TileButton(
               icon: Icons.download_sharp,
               title: 'Завантажте всіх учасників в Excel',
               iconColor: Colors.white,
               isLoading: isLoadingExcel,
-              onTap: () => {_export_users()},
+              // onTap: () => {_export_users()},
+              onTap: () => ConfirmAndRun(
+                context: context,
+                action: _export_users,
+                dialogTitle: 'Експорт Excel',
+                dialogMessage: 'Ви дійсно хочете відправити Excel-файл до Telegram?',
+              ),
             ),
 
             // ElevatedButton(

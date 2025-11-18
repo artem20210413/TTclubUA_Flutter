@@ -40,6 +40,11 @@ const URL_COSTS_LIST = '${_HOST}/api/costs';
 const URL_COSTS_DELETE = '${_HOST}/api/costs/{costsId}';
 const URL_COSTS_SET = '${_HOST}/api/costs';
 
+const URL_GOODS_LIST = '${_HOST}/api/goods';
+const URL_GOODS_CREATE = '${_HOST}/api/goods';
+const URL_GOODS_UPDATE= '${_HOST}/api/goods/{goods}';
+const URL_GOODS_CHANGE_ACTIVE = '${_HOST}/api/goods/{goods}/active/{active}';
+
 const URL_SEARCH_CAR = '${_HOST}/api/car/search';
 const URL_CAR_CREATE = '${_HOST}/api/car/create';
 const URL_CAR_UPDATE = '${_HOST}/api/car/{id}';

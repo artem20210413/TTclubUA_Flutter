@@ -10,6 +10,7 @@ class TTScaffold extends StatelessWidget {
   final PreferredSizeWidget? bottom;
   final Widget? floatingActionButton;
   final Widget? bottomNavigationBar;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
 
   const TTScaffold({
     super.key,
@@ -20,6 +21,7 @@ class TTScaffold extends StatelessWidget {
     this.bottom,
     this.floatingActionButton,
     this.bottomNavigationBar,
+    this.floatingActionButtonLocation,
   });
 
   @override
@@ -56,6 +58,7 @@ class TTScaffold extends StatelessWidget {
         ),
         body: body,
         floatingActionButton: floatingActionButton,
+        floatingActionButtonLocation: floatingActionButtonLocation,
         bottomNavigationBar: bottomNavigationBar,
       ),
     );
