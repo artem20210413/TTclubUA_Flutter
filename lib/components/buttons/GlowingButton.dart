@@ -9,7 +9,7 @@ import '../TTLoading.dart';
 class GlowingButton extends StatefulWidget {
   final String text;
   final VoidCallback onPressed;
-  Color? colorGrowing;
+  final Color colorGrowing;
   final Color colorBackground;
   final bool isLoading;
   final double? width;
@@ -19,7 +19,7 @@ class GlowingButton extends StatefulWidget {
     super.key,
     required this.text,
     required this.onPressed,
-    this.colorGrowing,
+    this.colorGrowing = Colors.white,
     this.isLoading = false,
     this.width,
     this.margin,
@@ -32,24 +32,12 @@ class GlowingButton extends StatefulWidget {
 
 class _GlowingButtonState extends State<GlowingButton> {
   bool _isPressed = false;
-  Color _default = Colors.white;
-  Color colorGrowing = Colors.white;
 
   @override
   void initState() {
     super.initState();
-    _loadAccentColor();
   }
 
-  Future<void> _loadAccentColor() async {
-    // final prefs = await SharedPreferences.getInstance();
-    // final raw = prefs.getInt('accent_color');
-    // print(raw);
-    setState(() {
-      // widget.colorGrowing = raw != null ? Color(raw) : _default;
-      widget.colorGrowing = AccentColorCache.accentColor;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,10 +76,10 @@ class _GlowingButtonState extends State<GlowingButton> {
             ],
           ),
           borderRadius: BorderRadius.circular(300),
-          border: Border.all(color: widget.colorGrowing ?? _default, width: 2),
+          border: Border.all(color: widget.colorGrowing, width: 2),
           boxShadow: [
             BoxShadow(
-              color: widget.colorGrowing?.withOpacity(0.7) ?? _default,
+              color: widget.colorGrowing.withOpacity(0.7),
               blurRadius: 5,
               spreadRadius: 1,
             ),

@@ -403,7 +403,6 @@ class _UserState extends State<User> {
                         separatorBuilder: (_, __) => const SizedBox(width: 12),
                         itemBuilder: (context, index) {
                           final car = _dto.cars[index];
-                          // пытаемся вытащить фото
                           final imageUrl = _carImages[index];
 
                           Future<void> _pickAndUploadImageCar(

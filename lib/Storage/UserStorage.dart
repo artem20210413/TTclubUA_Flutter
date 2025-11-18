@@ -73,7 +73,7 @@ class UserStorage {
     if (res.statusCode == 200) {
       final resBody = json.decode(res.body);
       await saveUserInfo(resBody['data']['user']);
-      print('token: ' + (token ?? ''));
+      // print('token: ' + (token ?? ''));
       return true;
     }
 

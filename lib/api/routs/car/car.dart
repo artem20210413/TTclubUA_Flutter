@@ -70,7 +70,7 @@ Future<http.Response> SEND_MENTION(
     String? token, XFile? pickedImage, String description, String carId) async {
   var request =
       http.MultipartRequest('POST', Uri.parse(URL_MENTION_CAR + carId));
-  print(request.url);
+  // print(request.url);
   request.headers['Authorization'] = 'Bearer $token';
   request.headers['Accept'] = 'application/json';
   request.headers['Content-Type'] = 'multipart/form-data';
