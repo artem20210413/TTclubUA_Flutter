@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/api/routs/Dto/Goods/GoodsDto.dart';
@@ -22,6 +23,7 @@ import '../../../../components/inputs/CustomInputField.dart';
 import '../../../../components/interface/SearchBarWidgetState.dart';
 import '../../../../components/layout/TTScaffold.dart';
 import '../../../../components/viewers/GoodsImagesEditor.dart';
+import '../../../../components/viewers/PickAndCropImage.dart';
 
 class MerchUploadScreen extends StatefulWidget {
   final GoodsDto? item; // 👈 товар может быть, а может и нет
@@ -86,9 +88,33 @@ class _MerchUploadScreenState extends State<MerchUploadScreen> {
     Navigator.pop(context, true);
   }
 
-  void _addImage() {
-    print("Добавить фото");
-    // TODO: сюда придёт загрузка фото
+  void _addImage() async {
+    final File? croppedFile = await pickAndCropImage(
+      context: context,
+      aspectRatio: 4 / 3,
+    );
+
+    if (croppedFile == null) return;
+
+    final token = await UserStorage.getToken();
+    final res = await GOODS_IMAGE_ADD(
+      token,
+      item.id ?? 0,
+      croppedFile.path,
+    );
+
+    final isSuccess = await CHECK_API(res, context);
+    if (isSuccess) {
+      final body = jsonDecode(res.body);
+
+      final imgJson = body['data']['images'].last;
+
+      setState(() {
+        item.images.add(
+          ImageUrlDto.fromJson(imgJson),
+        );
+      });
+    }
   }
 
   void _deleteImage(ImageUrlDto img, int index) async {
@@ -122,64 +148,68 @@ class _MerchUploadScreenState extends State<MerchUploadScreen> {
       title: item.id != null ? 'Редагування мерчу' : 'Новий мерч',
       body: isLoading
           ? const TTLoading()
-          : Padding(
-              padding: const EdgeInsets.all(16),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    if (item.id != null)
-                      GoodsImagesEditor(
-                        images: item.images,
-                        accentColor: accentColor,
-                        onAdd: _addImage,
-                        onDelete: _deleteImage,
+          : SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      if (item.id != null)
+                        GoodsImagesEditor(
+                          images: item.images,
+                          accentColor: accentColor,
+                          onAdd: _addImage,
+                          onDelete: _deleteImage,
+                        ),
+                      const SizedBox(height: 24),
+                      CustomInputField(
+                        controller: item.titleController,
+                        label: 'Назва',
+                        // validator: (v) => (v == null || v.trim().isEmpty)
+                        //     ? 'Вкажіть назву'
+                        //     : null,
                       ),
-                    const SizedBox(height: 24),
-                    CustomInputField(
-                      controller: item.titleController,
-                      label: 'Назва',
-                      // validator: (v) => (v == null || v.trim().isEmpty)
-                      //     ? 'Вкажіть назву'
-                      //     : null,
-                    ),
-                    const SizedBox(height: 12),
-                    BigTextInput(
-                      controller: item.descriptionController,
-                      hint: 'Опис',
-                      minHeight: 50,
-                      minLines: 1,
-                    ),
-                    const SizedBox(height: 12),
+                      const SizedBox(height: 12),
+                      BigTextInput(
+                        controller: item.descriptionController,
+                        hint: 'Опис',
+                        minHeight: 50,
+                        minLines: 1,
+                      ),
+                      const SizedBox(height: 12),
 
-                    CustomInputField(
-                      controller: item.priceController,
-                      keyboardType: TextInputType.number,
-                      label: 'Ціна, грн',
-                    ),
-                    const SizedBox(height: 24),
+                      CustomInputField(
+                        controller: item.priceController,
+                        keyboardType: TextInputType.number,
+                        label: 'Ціна, грн',
+                      ),
+                      const SizedBox(height: 24),
 
-                    CustomInputField(
-                      controller: item.priorityController,
-                      keyboardType: TextInputType.number,
-                      label: 'Порядок',
-                    ),
-                    const SizedBox(height: 24),
-                    TTCheckbox(
-                      activeNotifier: item.activeNotifier,
-                      accentColor: accentColor,
-                    ),
-                    const SizedBox(height: 24),
+                      CustomInputField(
+                        controller: item.priorityController,
+                        keyboardType: TextInputType.number,
+                        label: 'Порядок',
+                      ),
+                      const SizedBox(height: 24),
+                      TTCheckbox(
+                        activeNotifier: item.activeNotifier,
+                        accentColor: accentColor,
+                      ),
+                      const SizedBox(height: 24),
 
-                    // твоя красивая кнопка
-                    GlowingButton(
-                      text:
-                          item.id != null ? 'Оновити товар' : 'Створити товар',
-                      colorGrowing: accentColor,
-                      onPressed: isLoading ? () {} : _saveGoods,
-                      // если у кнопки есть флаг isLoading – можно передать его сюда
-                    ),
-                  ],
+                      // твоя красивая кнопка
+                      GlowingButton(
+                        text: item.id != null
+                            ? 'Оновити товар'
+                            : 'Створити товар',
+                        colorGrowing: accentColor,
+                        onPressed: isLoading ? () {} : _saveGoods,
+                        // если у кнопки есть флаг isLoading – можно передать его сюда
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

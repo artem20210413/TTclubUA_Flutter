@@ -1,31 +1,32 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:tt_club_ua/api/routs/Dto/Goods/GoodsDto.dart';
-import 'package:tt_club_ua/api/routs/goods.dart';
-import 'package:tt_club_ua/config/default.dart';
-import 'package:tt_club_ua/pages/Nav/Admin/Merch/MerchUploadScreen.dart';
-import 'package:tt_club_ua/pages/Nav/Admin/Publication/CreatePostScreen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:ui';
 
 import '../../../../Storage/Cache/AccentColorCache.dart';
-import '../../../../Storage/Cache/DeviceInsetsCache.dart';
 import '../../../../Storage/UserStorage.dart';
+import '../../../../api/routs/Dto/Goods/GoodsDto.dart';
+import '../../../../api/routs/goods.dart';
 import '../../../../api/routs/root.dart';
-import '../../../../components/CustomAppBar.dart';
 import '../../../../components/TTLoading.dart';
+import '../../../../components/TTNeumorphicBox.dart';
+import '../../../../components/buttons/GlowingButton.dart';
 import '../../../../components/card/GoodsCard.dart';
-import '../../../../components/card/GoodsCardForAdmin.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/interface/SearchBarWidgetState.dart';
 import '../../../../components/layout/TTScaffold.dart';
+import '../../../../config/default.dart';
 
-class MerchScreen extends StatefulWidget {
+class MerchPage extends StatefulWidget {
+  const MerchPage({super.key});
+
   @override
-  _MerchScreenState createState() => _MerchScreenState();
+  State<MerchPage> createState() => _MerchPageState();
 }
 
-class _MerchScreenState extends State<MerchScreen> {
+class _MerchPageState extends State<MerchPage> {
   final TextEditingController _searchController = TextEditingController();
   List<GoodsDto> goods = [];
   bool isLoading = false;
@@ -51,7 +52,7 @@ class _MerchScreenState extends State<MerchScreen> {
 
   Future<void> fetchSearchResults({int page = 1, bool append = false}) async {
     final token = await UserStorage.getToken();
-    final res = await GOODS_LIST(token, _searchController.text, page: page);
+    final res = await GOODS_LIST(token, _searchController.text, page: page, onlyActive: true);
 
     bool isSuccess = await CHECK_API(res, context);
     if (isSuccess) {
@@ -99,33 +100,6 @@ class _MerchScreenState extends State<MerchScreen> {
   @override
   Widget build(BuildContext context) {
     return TTScaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: ClipRRect(
-        borderRadius: BorderRadius.circular(40),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            width: 64,
-            height: 64,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.12),
-              shape: BoxShape.circle,
-              border: Border.all(color: accentColor.withOpacity(0.5), width: 1.5),
-            ),
-            child: IconButton(
-              icon: Icon(Icons.add, color: accentColor, size: 30),
-              onPressed: () async {
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => MerchUploadScreen()),
-                );
-                if (result == true) _onSearch();
-              },
-            ),
-          ),
-        ),
-      ),
-
       body: Column(
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -155,22 +129,15 @@ class _MerchScreenState extends State<MerchScreen> {
                           return Container(
                             padding: const EdgeInsets.only(
                                 left: 16, right: 8, top: 12),
-                            child: GoodsCardForAdmin(
-                              textButton: 'Редагувати',
+                            child: GoodsCard(
+                              textButton: 'Детальніше',
                               accentColor: accentColor,
                               item: item,
-                              onButton: () async {
-                                final result = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) =>
-                                        MerchUploadScreen(item: item),
-                                  ),
-                                );
-
-                                if (result == true) {
-                                  _onSearch();
-                                }
+                              onButton: ()  {
+                                  // MaterialPageRoute(
+                                  //   builder: (_) =>
+                                  //       MerchUploadScreen(item: item),
+                                  // );
                               },
                             ),
                           );

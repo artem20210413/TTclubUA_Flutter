@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../../Storage/Cache/AccentColorCache.dart';
 import '../buttons/GlowingButton.dart';
 
 Future<File?> pickAndCropImage({
@@ -23,6 +24,7 @@ Future<File?> pickAndCropImage({
   final cropController = CropController();
   final completer = Completer<File?>();
   final screenWidth = MediaQuery.of(context).size.width;
+  Color accentColor = AccentColorCache.accentColor;
 
   showDialog(
     context: context,
@@ -79,6 +81,7 @@ Future<File?> pickAndCropImage({
                         Expanded(
                           flex: 3,
                           child: GlowingButton(
+                            colorGrowing: accentColor,
                             // margin: EdgeInsets.only(left: 30,right: 30),
                             margin: EdgeInsets.symmetric(
                                 horizontal: 25, vertical: 15),

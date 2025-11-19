@@ -35,7 +35,7 @@ class GoodsCard extends StatelessWidget {
 
           CarImageBlock(
             uniqueKey: item.id.toString(),
-            height: screenSize.width * 0.8,
+            height: screenSize.width * 0.5,
             imageUrl: imageUrl,
           ),
 

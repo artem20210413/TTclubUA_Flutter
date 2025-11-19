@@ -28,9 +28,12 @@ Future<http.Response> GOODS_CREATE(String? token, GoodsDto dto) async {
   return response;
 }
 
-Future<http.Response> GOODS_LIST(String? token, {int page = 1}) async {
+Future<http.Response> GOODS_LIST(String? token, String? title,
+    {int page = 1, bool onlyActive = false}) async {
   final uri = Uri.parse(URL_GOODS_LIST).replace(queryParameters: {
+    'title': title,
     'page': page.toString(),
+    if (onlyActive) 'active': '1', // или 'true' — как ждёт бек
   });
   final response = await http.get(uri, headers: HEADERS(token));
 
@@ -68,7 +71,6 @@ Future<http.Response> GOODS_LIST(String? token, {int page = 1}) async {
 //
 Future<http.Response> GOODS_IMAGE_DELETE(
     String? token, int itemId, ImageUrlDto dto) async {
-
   final url = URL_GOODS_IMAGE_DELETE
       .replaceAll('{goods}', itemId.toString())
       .replaceAll('{mediaId}', dto.id.toString());
@@ -77,6 +79,22 @@ Future<http.Response> GOODS_IMAGE_DELETE(
     Uri.parse(url),
     headers: HEADERS(token),
   );
+
+  return response;
+} //
+
+Future<http.Response> GOODS_IMAGE_ADD(
+    String? token, int itemId, String path) async {
+  var request = http.MultipartRequest(
+    'POST',
+    Uri.parse(URL_GOODS_IMAGE_CREATE.replaceAll('{goods}', itemId.toString())),
+  );
+
+  request.files.add(await http.MultipartFile.fromPath('file', path));
+  request.headers['Authorization'] = 'Bearer $token';
+
+  var streamedResponse = await request.send();
+  var response = await http.Response.fromStream(streamedResponse);
 
   return response;
 }
