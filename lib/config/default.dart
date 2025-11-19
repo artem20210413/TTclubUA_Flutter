@@ -53,6 +53,13 @@ class TTTextStyle {
     fontSize: 23,
     color: TTColors.text,
   );
+  static const TextStyle title18 = TextStyle(
+    fontFamily: fontFamily,
+    fontWeight: FontWeight.w700,
+    fontStyle: FontStyle.normal,
+    fontSize: 18,
+    color: TTColors.text,
+  );
 
   static const TextStyle subtitle = TextStyle(
     fontFamily: fontFamily,

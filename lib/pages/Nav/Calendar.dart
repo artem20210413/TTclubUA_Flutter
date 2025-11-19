@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tt_club_ua/config/default.dart';
 
 import '../../Storage/Cache/DeviceInsetsCache.dart';
+import '../../components/Selects/TTSelect.dart';
+import '../../components/TTNeumorphicBox.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
@@ -32,13 +34,13 @@ class CalendarEvent {
 
 class _CalendarState extends State<Calendar> {
   // ---------------- UI palette (заміняй на свої TTColors якщо є) -------------
-  final Color bg = const Color(0xFF16181C);
-  final Color card = const Color(0xFF1F2227);
+  final Color bg = TTColors.background;
+  final Color card = TTColors.card;
   final Color textPrimary = TTColors.text;
   final Color textSecondary = TTColors.text_secondary;
   final Color textDart = TTColors.background_second;
   final Color ring = const Color(0xFF2C2F35);
-  final Color dayInactive = const Color(0xFF2A2D33);
+  final Color dayInactive = TTColors.card;
   final Color dotClub = const Color(0xFF8FD6FA); // блакитний
   final Color dotBirthday = const Color(0xFF98A9D4); // ліловий
   final Color dotMuted = const Color(0xFF767474); // сірий для інших
@@ -159,53 +161,39 @@ class _CalendarState extends State<Calendar> {
   }
 
   Widget _buildFilter() {
-    return Container(
-      decoration: BoxDecoration(
-        color: card,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 8)],
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<EventCategory>(
-          value: _selectedCategory,
-          icon: const Icon(Icons.expand_more, color: Colors.white70),
-          dropdownColor: card,
-          borderRadius: BorderRadius.circular(16),
-          style: TextStyle(color: textPrimary, fontSize: 16),
-          items: const [
-            DropdownMenuItem(
-              value: EventCategory.all,
-              child: Text('Усі події'),
-            ),
-            DropdownMenuItem(
-              value: EventCategory.club,
-              child: Text('Події клубу'),
-            ),
-            DropdownMenuItem(
-              value: EventCategory.world,
-              child: Text('Події світу'),
-            ),
-            DropdownMenuItem(
-              value: EventCategory.birthday,
-              child: Text('Дні народження'),
-            ),
-          ],
-          onChanged: (v) {
-            if (v != null) setState(() => _selectedCategory = v);
-          },
-        ),
-      ),
+    return TTSelect<EventCategory>(
+      value: _selectedCategory,
+      items: const [
+        EventCategory.all,
+        EventCategory.club,
+        EventCategory.world,
+        EventCategory.birthday,
+      ],
+      labelBuilder: (cat) {
+        switch (cat) {
+          case EventCategory.all:
+            return 'Усі події';
+          case EventCategory.club:
+            return 'Події клубу';
+          case EventCategory.world:
+            return 'Події світу';
+          case EventCategory.birthday:
+            return 'Дні народження';
+        }
+      },
+      onChanged: (v) {
+        if (v != null) {
+          setState(() => _selectedCategory = v);
+        }
+      },
     );
   }
 
+
+
   Widget _buildCalendarCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: card,
-        borderRadius: BorderRadius.circular(24),
-      ),
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+    return TTNeumorphicBox(
+      padding: const EdgeInsets.only(top: 16, bottom: 24, left: 16, right: 24),
       child: Column(
         children: [
           // month header
@@ -225,11 +213,7 @@ class _CalendarState extends State<Calendar> {
               ),
               Text(
                 _monthTitle(_focusedMonth),
-                style: TextStyle(
-                  color: textPrimary,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: TTTextStyle.title18,
               ),
               IconButton(
                 tooltip: 'Наступний місяць',
@@ -365,34 +349,132 @@ class _CalendarState extends State<Calendar> {
     );
   }
 
+  // Widget _dayCell({
+  //   required DateTime date,
+  //   required bool isSelected,
+  //   required bool isToday,
+  //   required bool hasAny,
+  // }) {
+  //   final events = _byDate[_stripTime(date)] ?? const [];
+  //   final hasClub = events.any((e) => e.category == EventCategory.club);
+  //   final hasBirthday = events.any((e) => e.category == EventCategory.birthday);
+  //   final hasWorld = events.any((e) => e.category == EventCategory.world);
+  //
+  //   // final bgColor = isSelected
+  //   //     ? dotClub.withOpacity(0.25)
+  //   //     : (hasAny ? const Color(0xFF242830) : dayInactive);
+  //   Color bgColor;
+  //   Color tColor;
+  //   if (hasWorld) {
+  //     bgColor = dotMuted;
+  //     tColor = textDart;
+  //   } else if (hasBirthday) {
+  //     bgColor = dotBirthday;
+  //     tColor = textDart;
+  //   } else if (hasClub) {
+  //     bgColor = dotClub;
+  //     tColor = textDart;
+  //   } else {
+  //     bgColor = dayInactive;
+  //     tColor = textPrimary;
+  //   }
+  //
+  //   return InkWell(
+  //     borderRadius: BorderRadius.circular(14),
+  //     onTap: () => setState(() => _selectedDate = _stripTime(date)),
+  //     child: Container(
+  //       decoration: BoxDecoration(
+  //         color: bgColor,
+  //         borderRadius: BorderRadius.circular(99),
+  //         border: isSelected
+  //             ? Border.all(color: TTColors.text, width: 2)
+  //             : isToday
+  //                 ? Border.all(color: TTColors.text_secondary, width: 2)
+  //                 : null,
+  //         // border: isToday ? Border.all(color: ring, width: 2) : null,
+  //       ),
+  //       padding: const EdgeInsets.all(6),
+  //       child: Align(
+  //         alignment: Alignment.center,
+  //         child: Text(
+  //           '${date.day}'.padLeft(2, '0'),
+  //           style: TTTextStyle.subtitle.copyWith(color: tColor),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
   Widget _dayCell({
     required DateTime date,
     required bool isSelected,
     required bool isToday,
     required bool hasAny,
   }) {
-    final events = _byDate[_stripTime(date)] ?? const [];
-    final hasClub = events.any((e) => e.category == EventCategory.club);
-    final hasBirthday = events.any((e) => e.category == EventCategory.birthday);
-    final hasWorld = events.any((e) => e.category == EventCategory.world);
+    final allEvents = _byDate[_stripTime(date)] ?? const [];
 
-    // final bgColor = isSelected
-    //     ? dotClub.withOpacity(0.25)
-    //     : (hasAny ? const Color(0xFF242830) : dayInactive);
+    // 1) Сначала решаем, какие события учитывать для покраски
+    late final List<CalendarEvent> eventsForColor;
+
+    if (_selectedCategory == EventCategory.all) {
+      eventsForColor = allEvents;
+    } else {
+      eventsForColor =
+          allEvents.where((e) => e.category == _selectedCategory).toList();
+    }
+
+    final hasClub =
+    eventsForColor.any((e) => e.category == EventCategory.club);
+    final hasBirthday =
+    eventsForColor.any((e) => e.category == EventCategory.birthday);
+    final hasWorld =
+    eventsForColor.any((e) => e.category == EventCategory.world);
+
     Color bgColor;
     Color tColor;
-    if (hasWorld) {
-      bgColor = dotMuted;
-      tColor = textDart;
-    } else if (hasBirthday) {
-      bgColor = dotBirthday;
-      tColor = textDart;
-    } else if (hasClub) {
-      bgColor = dotClub;
-      tColor = textDart;
+
+    // 2) Логика подсветки
+    if (_selectedCategory == EventCategory.all) {
+      // как было раньше
+      if (hasWorld) {
+        bgColor = dotMuted;
+        tColor = textDart;
+      } else if (hasBirthday) {
+        bgColor = dotBirthday;
+        tColor = textDart;
+      } else if (hasClub) {
+        bgColor = dotClub;
+        tColor = textDart;
+      } else {
+        bgColor = dayInactive;
+        tColor = textPrimary;
+      }
     } else {
-      bgColor = dayInactive;
-      tColor = textPrimary;
+      // фильтр по конкретному типу:
+      if (eventsForColor.isNotEmpty) {
+        switch (_selectedCategory) {
+          case EventCategory.club:
+            bgColor = dotClub;
+            tColor = textDart;
+            break;
+          case EventCategory.birthday:
+            bgColor = dotBirthday;
+            tColor = textDart;
+            break;
+          case EventCategory.world:
+            bgColor = dotMuted;
+            tColor = textDart;
+            break;
+          case EventCategory.all:
+          // не попадём сюда, но нужно для switch
+            bgColor = dayInactive;
+            tColor = textPrimary;
+        }
+      } else {
+        // в этом дне нет событий выбранного типа
+        bgColor = dayInactive;
+        tColor = textPrimary;
+      }
     }
 
     return InkWell(
@@ -402,8 +484,11 @@ class _CalendarState extends State<Calendar> {
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(99),
-          border: isSelected ? Border.all(color: textPrimary, width: 2) : null,
-          // border: isToday ? Border.all(color: ring, width: 2) : null,
+          border: isSelected
+              ? Border.all(color: TTColors.text, width: 2)
+              : isToday
+              ? Border.all(color: TTColors.text_secondary, width: 2)
+              : null,
         ),
         padding: const EdgeInsets.all(6),
         child: Align(
@@ -428,24 +513,13 @@ class _CalendarState extends State<Calendar> {
       children: [
         Text(
           'Усі події $dd.$mm.$yyyy',
-          style: TextStyle(
-            color: textPrimary,
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-          ),
+          style: TTTextStyle.title18,
         ),
         const SizedBox(height: 12),
         if (events.isEmpty)
-          Container(
-            decoration: BoxDecoration(
-              color: card,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            padding: const EdgeInsets.all(20),
-            child: Text(
-              'Подій немає',
-              style: TextStyle(color: textSecondary),
-            ),
+          Text(
+            'Подій немає',
+            style: TTTextStyle.subtitle,
           ),
         for (final e in events) ...[
           _eventCard(e),
@@ -456,12 +530,9 @@ class _CalendarState extends State<Calendar> {
   }
 
   Widget _eventCard(CalendarEvent e) {
-    return Container(
-      decoration: BoxDecoration(
-        color: card,
-        borderRadius: BorderRadius.circular(24),
-      ),
-      padding: const EdgeInsets.all(14),
+    return TTNeumorphicBox(
+      radius: 18,
+      padding: EdgeInsets.only(top: 8, bottom: 8, left: 8, right: 16),
       child: Row(
         children: [
           ClipRRect(
@@ -472,7 +543,7 @@ class _CalendarState extends State<Calendar> {
               color: Colors.black26,
               child: e.imageUrl != null
                   ? Image.network(e.imageUrl!, fit: BoxFit.cover)
-                  : const Icon(Icons.image, color: Colors.white38),
+                  : Icon(Icons.image, color: TTColors.text_secondary),
             ),
           ),
           const SizedBox(width: 14),
@@ -484,16 +555,12 @@ class _CalendarState extends State<Calendar> {
                   e.time != null
                       ? '${_formatDayMonth(e.date)} • ${e.time!.format(context)}'
                       : _formatDayMonth(e.date),
-                  style: TextStyle(color: textSecondary, fontSize: 12),
+                  style: TTTextStyle.subtitle,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   e.title,
-                  style: TextStyle(
-                    color: textPrimary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: TTTextStyle.title18,
                 ),
                 if (e.place != null) ...[
                   const SizedBox(height: 4),
@@ -509,12 +576,8 @@ class _CalendarState extends State<Calendar> {
           Container(
             width: 42,
             height: 42,
-            decoration: BoxDecoration(
-              color: const Color(0xFF262A31),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(Icons.arrow_forward_ios,
-                size: 16, color: Colors.white70),
+            child: Icon(Icons.arrow_forward_ios,
+                size: 16, color: TTColors.text_secondary),
           ),
         ],
       ),
@@ -547,6 +610,15 @@ class _CalendarState extends State<Calendar> {
     DateTime d(int day) => DateTime(y, m, day);
 
     return [
+
+      CalendarEvent(
+        date: d(29),
+        title: 'День TT Club UA',
+        category: EventCategory.club,
+        time: const TimeOfDay(hour: 16, minute: 0),
+        place: 'місце скоро буде',
+        // imageUrl: 'https://picsum.photos/seed/tt1/300/200',
+      ),
       // CalendarEvent(
       //   date: d(2),
       //   title: 'TT Season Opening Drive',
@@ -554,6 +626,14 @@ class _CalendarState extends State<Calendar> {
       //   time: const TimeOfDay(hour: 11, minute: 0),
       //   place: 'Паркінг Ocean Plaza → Обухівська траса',
       //   imageUrl: 'https://picsum.photos/seed/tt1/300/200',
+      // ),
+      // CalendarEvent(
+      //   date: d(16),
+      //   title: 'Кава з TT Club',
+      //   category: EventCategory.club,
+      //   time: const TimeOfDay(hour: 10, minute: 30),
+      //   place: 'UNIT.City',
+      //   imageUrl: 'https://picsum.photos/seed/tt2/300/200',
       // ),
       // CalendarEvent(
       //   date: d(16),

@@ -7,9 +7,11 @@ class CarImageBlock extends StatelessWidget {
   final bool isActiveUser;
   final double height;
   final double borderRadius;
+  final String? uniqueKey;
 
   const CarImageBlock({
     super.key,
+    this.uniqueKey,
     required this.imageUrl,
     this.isActiveUser = true,
     this.height = 200,
@@ -18,13 +20,14 @@ class CarImageBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String displayUrl =
-    (imageUrl != null && imageUrl!.isNotEmpty) ? imageUrl! : CAR_IMAGE_DEFAULT;
+    final String displayUrl = (imageUrl != null && imageUrl!.isNotEmpty)
+        ? imageUrl!
+        : CAR_IMAGE_DEFAULT;
 
     return GestureDetector(
       onTap: () => FullImageViewer.show(context, displayUrl),
       child: Hero(
-        tag: displayUrl,
+        tag: uniqueKey ?? displayUrl,
         child: ClipRRect(
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(borderRadius),

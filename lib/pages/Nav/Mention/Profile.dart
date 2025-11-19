@@ -115,73 +115,66 @@ class _ProfileState extends State<Profile> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Row(
-                                    children: [
-                                      UserAvatar(
-                                        radius: 33,
-                                        name: _dto.nameController.text,
-                                        imageUrl: userProfileImage,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        // чтобы имя тоже переносилось
-                                        child: Text(
-                                          _dto.nameController.text,
-                                          style: TTTextStyle.title
-                                              .copyWith(fontSize: 15),
-                                          maxLines: 3,
-                                          softWrap: true,
-                                        ),
-                                      ),
-                                    ],
+                            Stack(clipBehavior: Clip.none, children: [
+                              Row(
+                                children: [
+                                  UserAvatar(
+                                    radius: 65,
+                                    uniqueKey: _dto.id.toString(),
+                                    name: _dto.nameController.text,
+                                    imageUrl: userProfileImage,
                                   ),
-                                ),
-                                const SizedBox(width: 12),
-                                if (_dto.isBirthdayToday)
-                                  Flexible(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          width: 50,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: TTColors.text, width: 1),
-                                            color: TTColors.card,
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                          ),
-                                          child: SvgPicture.asset(
-                                            'assets/svg/cake_outlined.svg',
-                                            fit: BoxFit.scaleDown,
-                                            colorFilter: ColorFilter.mode(
-                                              TTColors.text,
-                                              BlendMode.srcIn,
-                                            ),
-                                          ),
-                                        ),
-                                        // const SizedBox(width: 12),
-                                        // // тут был баг: Expanded внутри Row, который сам в Row без ограничений
-                                        // Flexible(
-                                        //   child: Text(
-                                        //     'Сьогодні святкує день народження!',
-                                        //     style: TTTextStyle.subtitle
-                                        //         .copyWith(fontSize: 10),
-                                        //     softWrap: true,
-                                        //   ),
-                                        // ),
-                                      ],
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    // чтобы имя тоже переносилось
+                                    child: Text(
+                                      _dto.nameController.text,
+                                      style: TTTextStyle.title,
+                                      // .copyWith(fontSize: 15),
+                                      maxLines: 3,
+                                      softWrap: true,
                                     ),
                                   ),
-                              ],
-                            ),
+                                ],
+                              ),
+                              if (_dto.isBirthdayToday)
+                                Flexible(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: TTColors.text, width: 1),
+                                          color: TTColors.card,
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ),
+                                        child: SvgPicture.asset(
+                                          'assets/svg/cake_outlined.svg',
+                                          fit: BoxFit.scaleDown,
+                                          colorFilter: ColorFilter.mode(
+                                            TTColors.text,
+                                            BlendMode.srcIn,
+                                          ),
+                                        ),
+                                      ),
+                                      // const SizedBox(width: 12),
+                                      // // тут был баг: Expanded внутри Row, который сам в Row без ограничений
+                                      // Flexible(
+                                      //   child: Text(
+                                      //     'Сьогодні святкує день народження!',
+                                      //     style: TTTextStyle.subtitle
+                                      //         .copyWith(fontSize: 10),
+                                      //     softWrap: true,
+                                      //   ),
+                                      // ),
+                                    ],
+                                  ),
+                                )
+                            ]),
                             SizedBox(height: 18),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

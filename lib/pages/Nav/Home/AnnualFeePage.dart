@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui';
 
+import '../../../Storage/Cache/AccentColorCache.dart';
 import '../../../Storage/UserStorage.dart';
 import '../../../api/routs.dart';
 import '../../../components/TTNeumorphicBox.dart';
@@ -25,6 +26,7 @@ class AnnualFeePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    Color accentColor = AccentColorCache.accentColor;
 
     return TTScaffold(
       title: 'Підтримка TT Club UA',
@@ -53,6 +55,7 @@ class AnnualFeePage extends StatelessWidget {
                   GlowingButton(
                     text: 'Підтримати клуб',
                     onPressed: _launchMonobankJar,
+                    colorGrowing: accentColor,
                   ),
                   const SizedBox(height: 15),
                   Text(

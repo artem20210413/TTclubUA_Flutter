@@ -12,14 +12,13 @@ class CarProfileCard extends StatefulWidget {
   final VoidCallback? onTap;
   final VoidCallback onButtonTap;
   final CarSearchDto dto;
+  final Color accentColor;
 
   const CarProfileCard({
     super.key,
-    // required this.licensePlate,
-    // required this.location,
-    // required this.nickname,
     required this.dto,
     this.onTap,
+    this.accentColor = Colors.white,
     required this.onButtonTap,
   });
 
@@ -59,6 +58,7 @@ class _CarProfileCardState extends State<CarProfileCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CarImageBlock(
+                  uniqueKey: widget.dto.id,
                   imageUrl: widget.dto.images.isNotEmpty
                       ? widget.dto.images.first.url
                       : CAR_IMAGE_DEFAULT,
@@ -144,6 +144,7 @@ class _CarProfileCardState extends State<CarProfileCard> {
                             child: GlowingButton(
                               text: 'ФА-ФА',
                               width: 150,
+                              colorGrowing: widget.accentColor,
                               onPressed: widget.onButtonTap,
                             ),
                           ),

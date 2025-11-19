@@ -41,7 +41,7 @@ Future<void> API_LOGOUT(String? token) async {
 }
 
 Future API_AUTH_CHECK(String? token) async {
-  print(URL_USER);
+  // print(URL_USER);
   final response = await http.get(Uri.parse(URL_USER), headers: HEADERS(token));
   // return response.statusCode == 200;
   return response;
@@ -54,7 +54,7 @@ Future<http.Response> API_CHANGE_PASSWORD(
     headers: HEADERS(token),
     body: jsonEncode(dto.toJson()),
   );
-  print(jsonDecode(response.body));
+  // print(jsonDecode(response.body));
 
   return response;
 }

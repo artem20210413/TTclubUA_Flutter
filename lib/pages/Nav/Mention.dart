@@ -128,6 +128,7 @@ class _MentionState extends State<Mention> {
 
                         return CarProfileCard(
                           dto: dto,
+                          accentColor: accentColor,
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(

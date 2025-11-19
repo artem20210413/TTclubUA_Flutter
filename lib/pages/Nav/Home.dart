@@ -38,39 +38,50 @@ class _HomeState extends State<Home> {
         child: Column(
           children: [
             SizedBox(height: DeviceInsetsCache.viewPaddingTop + 6),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TopActionCard(
-                  iconAsset: 'assets/svg/money.svg',
-                  iconSize: 40,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              AnnualFeePage()), // Переход на экран публикаций
-                    );
-                  },
-                ),
-                TopActionCard(
-                  iconAsset: 'assets/svg/telegram.svg',
-                  iconSize: 30,
-                  onTap: () async {
-                    final Uri url = Uri.parse('https://t.me/TTclubUaBot');
-                    await launchUrl(url, mode: LaunchMode.externalApplication);
-                  },
-                ),
-                TopActionCard(
-                  iconAsset: 'assets/svg/instagram.svg',
-                  iconSize: 30,
-                  onTap: () async {
-                    final Uri url = Uri.parse(
-                        'https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ==');
-                    await launchUrl(url, mode: LaunchMode.externalApplication);
-                  },
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(left: 5, right: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TopActionCard(
+                    iconAsset: 'assets/svg/money.svg',
+                    iconSize: 40,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                AnnualFeePage()), // Переход на экран публикаций
+                      );
+                    },
+                  ),
+                  TopActionCard(
+                    iconAsset: 'assets/svg/telegram.svg',
+                    iconSize: 30,
+                    onTap: () async {
+                      final Uri url = Uri.parse('https://t.me/TTclubUaBot');
+                      await launchUrl(url,
+                          mode: LaunchMode.externalApplication);
+                    },
+                  ),
+                  TopActionCard(
+                    iconAsset: 'assets/svg/instagram.svg',
+                    iconSize: 30,
+                    onTap: () async {
+                      final Uri url = Uri.parse(
+                          'https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ==');
+                      await launchUrl(url,
+                          mode: LaunchMode.externalApplication);
+                    },
+                  ),
+                  TopActionCard(
+                    iconAsset: 'assets/svg/question-mark.svg',
+                    iconSize: 30,
+                    iconColor: Colors.white.withOpacity(0.4),
+                    onTap: () {},
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             PromoCard(
