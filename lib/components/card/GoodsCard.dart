@@ -7,13 +7,15 @@ import 'CarImageBlock.dart';
 
 class GoodsCard extends StatelessWidget {
   final GoodsDto item;
-  final VoidCallback? onDetails;
+  final VoidCallback? onButton;
+  final String textButton;
   final Color accentColor;
 
   const GoodsCard({
     super.key,
     required this.item,
-    this.onDetails,
+    this.onButton,
+    this.textButton = 'Детальніше',
     this.accentColor = Colors.white,
   });
 
@@ -79,8 +81,8 @@ class GoodsCard extends StatelessWidget {
               Expanded(
                 flex: 1,
                 child: GlowingButton(
-                  text: "Детальніше",
-                  onPressed: onDetails ?? () {},
+                  text: textButton,
+                  onPressed: onButton ?? () {},
                   colorGrowing: accentColor,
                 ),
               ),

@@ -44,10 +44,6 @@ class GoodsDto {
       images: (json["images"] as List)
           .map((img) => ImageUrlDto.fromJson(img))
           .toList(),
-      // images: (json['images'] as List<dynamic>?)
-      //     ?.map((e) => e.toString())
-      //     .toList() ??
-      //     [],
       createdAt: json['created_at'],
     );
   }
@@ -68,12 +64,12 @@ class GoodsDto {
   /// В JSON (если будешь отправлять на бек)
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      // 'id': id,
       'title': titleController.text,
       'description': descriptionController.text,
       'price': priceController.text,
       'active': activeNotifier.value,
-      'images': images,
+      // 'images': images,
     };
   }
 

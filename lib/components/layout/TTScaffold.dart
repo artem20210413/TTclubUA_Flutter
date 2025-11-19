@@ -14,7 +14,7 @@ class TTScaffold extends StatelessWidget {
 
   const TTScaffold({
     super.key,
-    required this.title,
+    this.title = '',
     required this.body,
     this.showBack = true,
     this.backgroundColor = const Color(0xFF2B2F35),

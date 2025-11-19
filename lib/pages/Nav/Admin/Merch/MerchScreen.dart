@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tt_club_ua/api/routs/Dto/Goods/GoodsDto.dart';
 import 'package:tt_club_ua/api/routs/goods.dart';
 import 'package:tt_club_ua/config/default.dart';
+import 'package:tt_club_ua/pages/Nav/Admin/Merch/MerchUploadScreen.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/Publication/CreatePostScreen.dart';
 
 import '../../../../Storage/Cache/AccentColorCache.dart';
@@ -96,7 +97,6 @@ class _MerchScreenState extends State<MerchScreen> {
   @override
   Widget build(BuildContext context) {
     return TTScaffold(
-      title: '',
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         backgroundColor: accentColor,
@@ -105,12 +105,12 @@ class _MerchScreenState extends State<MerchScreen> {
           color: Colors.black,
         ),
         onPressed: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //       builder: (context) =>
-          //           CreatePostScreen()), // Переход на экран публикаций
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    MerchUploadScreen()), // Переход на экран публикаций
+          );
         },
       ),
       body: Column(
@@ -143,15 +143,16 @@ class _MerchScreenState extends State<MerchScreen> {
                             padding: const EdgeInsets.only(
                                 left: 16, right: 8, top: 12),
                             child: GoodsCard(
+                              textButton: 'Редагувати',
                               accentColor: accentColor,
                               item: item,
-                              onDetails: () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (_) => GoodsDetailsScreen(item: item),
-                                //   ),
-                                // );
+                              onButton: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          MerchUploadScreen(item: item,)), // Переход на экран публикаций
+                                );
                               },
                             ),
                           );
