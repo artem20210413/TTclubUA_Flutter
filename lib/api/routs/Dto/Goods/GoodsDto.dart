@@ -8,7 +8,7 @@ class GoodsDto {
   // Контроллеры для полей
   final TextEditingController titleController;
   final TextEditingController descriptionController;
-  final TextEditingController placeController;
+  final TextEditingController priceController;
 
   // Активность товара
   final ValueNotifier<bool> activeNotifier;
@@ -23,14 +23,14 @@ class GoodsDto {
     required this.id,
     String? title,
     String? description,
-    String? place,
+    String? price,
     required bool active,
     required this.images,
     this.createdAt,
   })  : titleController = TextEditingController(text: title ?? ''),
         descriptionController =
         TextEditingController(text: description ?? ''),
-        placeController = TextEditingController(text: place ?? ''),
+        priceController = TextEditingController(text: price ?? ''),
         activeNotifier = ValueNotifier<bool>(active);
 
   /// Создание из JSON
@@ -39,7 +39,7 @@ class GoodsDto {
       id: json['id'],
       title: json['title'],
       description: json['description'],
-      place: json['place'],
+      price: json['price']?.toString(),
       active: json['active'] == true || json['active'] == 1,
       images: (json["images"] as List)
           .map((img) => ImageUrlDto.fromJson(img))
@@ -58,7 +58,7 @@ class GoodsDto {
       id: null,
       title: '',
       description: '',
-      place: '',
+      price: '',
       active: true,
       images: [],
       createdAt: null,
@@ -71,7 +71,7 @@ class GoodsDto {
       'id': id,
       'title': titleController.text,
       'description': descriptionController.text,
-      'place': placeController.text,
+      'price': priceController.text,
       'active': activeNotifier.value,
       'images': images,
     };
@@ -80,7 +80,7 @@ class GoodsDto {
   void dispose() {
     titleController.dispose();
     descriptionController.dispose();
-    placeController.dispose();
+    priceController.dispose();
     activeNotifier.dispose();
   }
 }
