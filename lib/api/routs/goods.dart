@@ -6,8 +6,10 @@ import 'dart:convert';
 
 import 'package:tt_club_ua/api/routs/Dto/User/UserUpdateDto.dart';
 
+import '../../Storage/Search/ImageUrlDto.dart';
+
 Future<http.Response> GOODS_UPLOAD(String? token, GoodsDto dto) async {
-  final response = await http.post(
+  final response = await http.put(
     Uri.parse(URL_GOODS_UPDATE.replaceAll('{goods}', dto.id.toString())),
     headers: HEADERS(token),
     body: jsonEncode(dto.toJson()),
@@ -64,11 +66,17 @@ Future<http.Response> GOODS_LIST(String? token, {int page = 1}) async {
 //   return response;
 // }
 //
-// Future<http.Response> FINANCE_DELETE(String? token, int financeId) async {
-//   final response = await http.delete(
-//       Uri.parse(
-//           URL_FINANCE_DELETE.replaceAll('{financeId}', financeId.toString())),
-//       headers: HEADERS(token));
-//
-//   return response;
-// }
+Future<http.Response> GOODS_IMAGE_DELETE(
+    String? token, int itemId, ImageUrlDto dto) async {
+
+  final url = URL_GOODS_IMAGE_DELETE
+      .replaceAll('{goods}', itemId.toString())
+      .replaceAll('{mediaId}', dto.id.toString());
+
+  final response = await http.delete(
+    Uri.parse(url),
+    headers: HEADERS(token),
+  );
+
+  return response;
+}

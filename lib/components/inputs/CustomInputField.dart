@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../TTNeumorphicBox.dart';
+
 class CustomInputField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
@@ -47,30 +49,33 @@ class CustomInputField extends StatelessWidget {
                 ),
               ),
 
-            Container(
-              constraints: const BoxConstraints(minHeight: 57),
-              decoration: BoxDecoration(
-                // color: TTColors.input,
-                color: TTColors.input,
-                border: state.hasError
-                    ? Border.all(color: TTColors.danger, width: 1)
-                    : null,
-                borderRadius: BorderRadius.circular(30), //state.hasError
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.6),
-                    offset: const Offset(2, 2),
-                    blurRadius: 6,
-                  ),
-                  BoxShadow(
-                    color: Colors.white.withOpacity(0.05),
-                    offset: const Offset(-2, -2),
-                    blurRadius: 6,
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              alignment: Alignment.center,
+            // Container(
+            //   constraints: const BoxConstraints(minHeight: 57),
+            //   decoration: BoxDecoration(
+            //     // color: TTColors.input,
+            //     color: TTColors.input,
+            //     border: state.hasError
+            //         ? Border.all(color: TTColors.danger, width: 1)
+            //         : null,
+            //     borderRadius: BorderRadius.circular(30), //state.hasError
+            //     boxShadow: [
+            //       BoxShadow(
+            //         color: Colors.black.withOpacity(0.6),
+            //         offset: const Offset(2, 2),
+            //         blurRadius: 6,
+            //       ),
+            //       BoxShadow(
+            //         color: Colors.white.withOpacity(0.05),
+            //         offset: const Offset(-2, -2),
+            //         blurRadius: 6,
+            //       ),
+            //     ],
+            //   ),
+            //   padding: const EdgeInsets.symmetric(horizontal: 20),
+            //   alignment: Alignment.center,
+            TTNeumorphicBox(
+            radius: 32,
+            padding: const EdgeInsets.only(left: 18, right: 16, top: 0, bottom: 0),
               child: TextFormField(
                 controller: controller,
                 keyboardType: keyboardType,

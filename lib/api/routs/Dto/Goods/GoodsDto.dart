@@ -9,6 +9,7 @@ class GoodsDto {
   final TextEditingController titleController;
   final TextEditingController descriptionController;
   final TextEditingController priceController;
+  final TextEditingController priorityController;
 
   // Активность товара
   final ValueNotifier<bool> activeNotifier;
@@ -24,22 +25,25 @@ class GoodsDto {
     String? title,
     String? description,
     String? price,
+    String? priority,
     required bool active,
     required this.images,
     this.createdAt,
   })  : titleController = TextEditingController(text: title ?? ''),
-        descriptionController =
-        TextEditingController(text: description ?? ''),
+        descriptionController = TextEditingController(text: description ?? ''),
         priceController = TextEditingController(text: price ?? ''),
+        priorityController = TextEditingController(text: priority ?? '0'),
         activeNotifier = ValueNotifier<bool>(active);
 
   /// Создание из JSON
   factory GoodsDto.fromJson(Map<String, dynamic> json) {
+    // print(json);
     return GoodsDto(
       id: json['id'],
       title: json['title'],
       description: json['description'],
       price: json['price']?.toString(),
+      priority: json['priority']?.toString(),
       active: json['active'] == true || json['active'] == 1,
       images: (json["images"] as List)
           .map((img) => ImageUrlDto.fromJson(img))
@@ -55,6 +59,7 @@ class GoodsDto {
       title: '',
       description: '',
       price: '',
+      priority: '0',
       active: true,
       images: [],
       createdAt: null,
@@ -69,6 +74,7 @@ class GoodsDto {
       'description': descriptionController.text,
       'price': priceController.text,
       'active': activeNotifier.value,
+      'priority': priorityController.text,
       // 'images': images,
     };
   }
@@ -77,6 +83,7 @@ class GoodsDto {
     titleController.dispose();
     descriptionController.dispose();
     priceController.dispose();
+    priorityController.dispose();
     activeNotifier.dispose();
   }
 }

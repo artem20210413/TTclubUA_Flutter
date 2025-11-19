@@ -54,7 +54,6 @@ class _MerchScreenState extends State<MerchScreen> {
     bool isSuccess = await CHECK_API(res, context);
     if (isSuccess) {
       final data = jsonDecode(res.body)['data'] as List;
-      print(data);
       final newItems = data.map((e) => GoodsDto.fromJson(e)).toList();
       setState(() {
         if (append) {
@@ -76,6 +75,7 @@ class _MerchScreenState extends State<MerchScreen> {
       print("Ошибка загрузки: ${res.statusCode}");
     }
   }
+
   void _onSearch() {
     setState(() {
       isLoading = true;
@@ -104,13 +104,17 @@ class _MerchScreenState extends State<MerchScreen> {
           Icons.add,
           color: Colors.black,
         ),
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    MerchUploadScreen()), // Переход на экран публикаций
+              builder: (_) => MerchUploadScreen(),
+            ),
           );
+
+          if (result == true) {
+            _onSearch();
+          }
         },
       ),
       body: Column(
@@ -146,13 +150,18 @@ class _MerchScreenState extends State<MerchScreen> {
                               textButton: 'Редагувати',
                               accentColor: accentColor,
                               item: item,
-                              onButton: () {
-                                Navigator.push(
+                              onButton: () async {
+                                final result = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          MerchUploadScreen(item: item,)), // Переход на экран публикаций
+                                    builder: (_) =>
+                                        MerchUploadScreen(item: item),
+                                  ),
                                 );
+
+                                if (result == true) {
+                                  _onSearch();
+                                }
                               },
                             ),
                           );
@@ -161,37 +170,6 @@ class _MerchScreenState extends State<MerchScreen> {
                     ),
         ],
       ),
-    );
-
-    return TTScaffold(
-      title: 'Підтримка TT Club UA',
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        child: Icon(
-          Icons.add,
-          color: Colors.black,
-        ),
-        onPressed: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //       builder: (context) =>
-          //           CreatePostScreen()), // Переход на экран публикаций
-          // );
-        },
-      ),
-      body: Column(children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Title', style: TTTextStyle.title),
-            ],
-          ),
-        ),
-      ]),
     );
   }
 }
