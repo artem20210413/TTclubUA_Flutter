@@ -20,13 +20,10 @@ class CarImageBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final String displayUrl = (imageUrl != null && imageUrl!.isNotEmpty)
-    //     ? imageUrl!
-    //     : CAR_IMAGE_DEFAULT;
-
     return GestureDetector(
       onTap: () =>
           imageUrl != null ? FullImageViewer.show(context, imageUrl!) : null,
+
       child: Hero(
         tag: uniqueKey ?? imageUrl!,
         child: ClipRRect(

@@ -29,11 +29,11 @@ Future<http.Response> GOODS_CREATE(String? token, GoodsDto dto) async {
 }
 
 Future<http.Response> GOODS_LIST(String? token, String? title,
-    {int page = 1, bool onlyActive = false}) async {
+    {int page = 1, bool? onlyActive = null}) async {
   final uri = Uri.parse(URL_GOODS_LIST).replace(queryParameters: {
     'title': title,
     'page': page.toString(),
-    if (onlyActive) 'active': '1', // или 'true' — как ждёт бек
+    if (onlyActive != null) 'active': onlyActive ? '1' : '0'
   });
   final response = await http.get(uri, headers: HEADERS(token));
 
