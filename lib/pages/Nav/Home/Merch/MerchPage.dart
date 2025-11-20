@@ -18,6 +18,7 @@ import '../../../../components/generalModule.dart';
 import '../../../../components/interface/SearchBarWidgetState.dart';
 import '../../../../components/layout/TTScaffold.dart';
 import '../../../../config/default.dart';
+import 'MerchDetailsScreen.dart';
 
 class MerchPage extends StatefulWidget {
   const MerchPage({super.key});
@@ -52,7 +53,8 @@ class _MerchPageState extends State<MerchPage> {
 
   Future<void> fetchSearchResults({int page = 1, bool append = false}) async {
     final token = await UserStorage.getToken();
-    final res = await GOODS_LIST(token, _searchController.text, page: page, onlyActive: true);
+    final res = await GOODS_LIST(token, _searchController.text,
+        page: page, onlyActive: true);
 
     bool isSuccess = await CHECK_API(res, context);
     if (isSuccess) {
@@ -133,11 +135,18 @@ class _MerchPageState extends State<MerchPage> {
                               textButton: 'Детальніше',
                               accentColor: accentColor,
                               item: item,
-                              onButton: ()  {
-                                  // MaterialPageRoute(
-                                  //   builder: (_) =>
-                                  //       MerchUploadScreen(item: item),
-                                  // );
+                              onButton: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        MerchDetailsScreen(item: item),
+                                  ),
+                                );
+                                // MaterialPageRoute(
+                                //   builder: (_) =>
+                                //       MerchUploadScreen(item: item),
+                                // );
                               },
                             ),
                           );

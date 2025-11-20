@@ -11,13 +11,8 @@ class GoodsDto {
   final TextEditingController priceController;
   final TextEditingController priorityController;
 
-  // Активность товара
   final ValueNotifier<bool> activeNotifier;
-
-  // Список изображений (пока как строки-URL или пути)
   List<ImageUrlDto> images;
-
-  // Дата создания, если нужна для отображения
   final String? createdAt;
 
   GoodsDto({

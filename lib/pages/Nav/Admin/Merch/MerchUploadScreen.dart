@@ -91,7 +91,7 @@ class _MerchUploadScreenState extends State<MerchUploadScreen> {
   void _addImage() async {
     final File? croppedFile = await pickAndCropImage(
       context: context,
-      aspectRatio: 4 / 3,
+      aspectRatio: null,
     );
 
     if (croppedFile == null) return;
