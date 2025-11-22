@@ -47,6 +47,14 @@ const URL_GOODS_CHANGE_ACTIVE = '${_HOST}/api/goods/{goods}/active/{active}';
 const URL_GOODS_IMAGE_DELETE = '${_HOST}/api/goods/{goods}/images/{mediaId}';
 const URL_GOODS_IMAGE_CREATE = '${_HOST}/api/goods/{goods}/images';
 
+
+const URL_CALENDAR_LIST = '${_HOST}/api/calendar';
+const URL_EVENT_CREATE = '${_HOST}/api/event';
+const URL_EVENT_UPLOAD = '${_HOST}/api/event/{event}';
+const URL_EVENT_ADD_IMAGE = '${_HOST}/api/event/{event}/image';
+const URL_EVENT_DELETE_IMAGE = '${_HOST}/api/event/{event}/image';
+const url_event_change_active = '${_HOST}/api/event/{event}/active/{active}';
+
 const URL_SEARCH_CAR = '${_HOST}/api/car/search';
 const URL_CAR_CREATE = '${_HOST}/api/car/create';
 const URL_CAR_UPDATE = '${_HOST}/api/car/{id}';
