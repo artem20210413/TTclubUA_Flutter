@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/config/default.dart';
 
 import '../../Storage/Cache/DeviceInsetsCache.dart';
+import '../../Storage/UserStorage.dart';
+import '../../api/routs/Dto/Event/CalendarItemDto.dart';
+import '../../api/routs/events.dart';
 import '../../components/Selects/TTSelect.dart';
+import '../../components/TTLoading.dart';
 import '../../components/TTNeumorphicBox.dart';
 
 class Calendar extends StatefulWidget {
@@ -44,6 +50,8 @@ class _CalendarState extends State<Calendar> {
   final Color dotClub = const Color(0xFF8FD6FA); // блакитний
   final Color dotBirthday = const Color(0xFF98A9D4); // ліловий
   final Color dotMuted = const Color(0xFF767474); // сірий для інших
+  List<CalendarItemDto> _items = [];
+  bool _isLoading = false;
 
   // ---------------- State -----------------------------------------------------
   DateTime _focusedMonth = DateTime.now();
@@ -63,11 +71,143 @@ class _CalendarState extends State<Calendar> {
     _selectedDate =
         DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
 
-    _events = _mockEvents();
-    _byDate = _groupByDate(_events);
+    _loadCalendarForMonth(_focusedMonth);
+    // _events = _mockEvents();
+    // _byDate = _groupByDate(_events);
+  }
+
+  // Future<void> _loadCalendar() async {
+  //   try {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+  //
+  //     final currentMonth =
+  //         "${_focusedMonth.year}-${_focusedMonth.month.toString().padLeft(2, '0')}";
+  //     final token = await UserStorage.getToken();
+  //     final res = await CALENDAR_LIST(token, month: currentMonth);
+  //     if (res.statusCode != 200) {
+  //       // тут можешь использовать свой CHECK_API, если хочешь
+  //       print('Calendar load error: ${res.statusCode}');
+  //       return;
+  //     }
+  //
+  //     final body = jsonDecode(res.body);
+  //
+  //     // если бек отдаёт просто массив:
+  //     // final List data = body as List;
+  //
+  //     // если бек отдаёт { "data": [ ... ] }
+  //     final List data = body['data'] as List;
+  //
+  //     // 1) Мапим в DTO
+  //     _items = data
+  //         .map((e) => CalendarItemDto.fromJson(e as Map<String, dynamic>))
+  //         .toList();
+  //
+  //     // 2) Конвертим DTO → твою модель CalendarEvent
+  //     _events = _items
+  //         .where((i) => i.date != null)
+  //         .map((i) => _mapDtoToEvent(i))
+  //         .toList();
+  //
+  //     // 3) Группируем по дате
+  //     _byDate = _groupByDate(_events);
+  //   } catch (e) {
+  //     print('Calendar load exception: $e');
+  //   } finally {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
+  //
+
+  CalendarEvent _mapDtoToEvent(CalendarItemDto dto) {
+    // тип → категория
+    EventCategory cat;
+    switch (dto.type) {
+      case 'event_ttclubua':
+        cat = EventCategory.club;
+        break;
+      case 'event_world':
+        cat = EventCategory.world;
+        break;
+      case 'birthday':
+        cat = EventCategory.birthday;
+        break;
+      default:
+        cat = EventCategory.world; // всё остальное
+    }
+
+    // строка "16:00" → TimeOfDay
+    TimeOfDay? t;
+    if (dto.time != null && dto.time!.isNotEmpty) {
+      final parts = dto.time!.split(':');
+      if (parts.length >= 2) {
+        final h = int.tryParse(parts[0]) ?? 0;
+        final m = int.tryParse(parts[1]) ?? 0;
+        t = TimeOfDay(hour: h, minute: m);
+      }
+    }
+
+    return CalendarEvent(
+      date: dto.date ?? DateTime.now(),
+      // если вдруг null
+      title: dto.title,
+      category: cat,
+      place: dto.place,
+      time: t,
+      imageUrl: dto.images.isNotEmpty ? dto.images.first : null,
+    );
   }
 
   // ---------------- Helpers ---------------------------------------------------
+
+  Future<void> _loadCalendarForMonth(DateTime month) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      final token = await UserStorage.getToken();
+
+      // "2025-02"
+      final monthStr =
+          "${month.year}-${month.month.toString().padLeft(2, '0')}";
+
+      final res = await CALENDAR_LIST(token, month: monthStr);
+
+      if (res.statusCode != 200) {
+        print('Calendar load error: ${res.statusCode}');
+        return;
+      }
+
+      final body = jsonDecode(res.body);
+      final List data = body['data'] as List; // или просто body, если API = []
+
+      // 1) JSON → DTO
+      _items = data
+          .map((e) => CalendarItemDto.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+      // 2) DTO → CalendarEvent
+      _events = _items
+          .where((i) => i.date != null)
+          .map((i) => _mapDtoToEvent(i))
+          .toList();
+
+      // 3) групування по даті
+      _byDate = _groupByDate(_events);
+    } catch (e) {
+      print('Calendar load exception: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   DateTime _stripTime(DateTime d) => DateTime(d.year, d.month, d.day);
 
   Map<DateTime, List<CalendarEvent>> _groupByDate(List<CalendarEvent> items) {
@@ -189,12 +329,12 @@ class _CalendarState extends State<Calendar> {
     );
   }
 
-
-
   Widget _buildCalendarCard() {
     return TTNeumorphicBox(
       padding: const EdgeInsets.only(top: 16, bottom: 24, left: 16, right: 24),
-      child: Column(
+      child:  _isLoading
+          ? const TTLoading()
+          : Column(
         children: [
           // month header
           Row(
@@ -203,10 +343,16 @@ class _CalendarState extends State<Calendar> {
               IconButton(
                 tooltip: 'Попередній місяць',
                 onPressed: () {
+                  final newMonth = DateTime(
+                    _focusedMonth.year,
+                    _focusedMonth.month - 1,
+                    1,
+                  );
                   setState(() {
-                    _focusedMonth = DateTime(
-                        _focusedMonth.year, _focusedMonth.month - 1, 1);
+                    _focusedMonth = newMonth;
+                    _selectedDate = newMonth;
                   });
+                  _loadCalendarForMonth(newMonth);
                 },
                 icon: const Icon(Icons.chevron_left,
                     color: TTColors.text_secondary),
@@ -218,16 +364,23 @@ class _CalendarState extends State<Calendar> {
               IconButton(
                 tooltip: 'Наступний місяць',
                 onPressed: () {
+                  final newMonth = DateTime(
+                    _focusedMonth.year,
+                    _focusedMonth.month + 1,
+                    1,
+                  );
                   setState(() {
-                    _focusedMonth = DateTime(
-                        _focusedMonth.year, _focusedMonth.month + 1, 1);
+                    _focusedMonth = newMonth;
+                    _selectedDate = newMonth;
                   });
+                  _loadCalendarForMonth(newMonth);
                 },
                 icon: const Icon(Icons.chevron_right,
                     color: TTColors.text_secondary),
               ),
             ],
           ),
+
           const SizedBox(height: 4),
           _legend(),
           const SizedBox(height: 8),
@@ -423,12 +576,11 @@ class _CalendarState extends State<Calendar> {
           allEvents.where((e) => e.category == _selectedCategory).toList();
     }
 
-    final hasClub =
-    eventsForColor.any((e) => e.category == EventCategory.club);
+    final hasClub = eventsForColor.any((e) => e.category == EventCategory.club);
     final hasBirthday =
-    eventsForColor.any((e) => e.category == EventCategory.birthday);
+        eventsForColor.any((e) => e.category == EventCategory.birthday);
     final hasWorld =
-    eventsForColor.any((e) => e.category == EventCategory.world);
+        eventsForColor.any((e) => e.category == EventCategory.world);
 
     Color bgColor;
     Color tColor;
@@ -439,11 +591,11 @@ class _CalendarState extends State<Calendar> {
       if (hasWorld) {
         bgColor = dotMuted;
         tColor = textDart;
-      } else if (hasBirthday) {
-        bgColor = dotBirthday;
-        tColor = textDart;
       } else if (hasClub) {
         bgColor = dotClub;
+        tColor = textDart;
+      } else if (hasBirthday) {
+        bgColor = dotBirthday;
         tColor = textDart;
       } else {
         bgColor = dayInactive;
@@ -466,7 +618,7 @@ class _CalendarState extends State<Calendar> {
             tColor = textDart;
             break;
           case EventCategory.all:
-          // не попадём сюда, но нужно для switch
+            // не попадём сюда, но нужно для switch
             bgColor = dayInactive;
             tColor = textPrimary;
         }
@@ -487,8 +639,8 @@ class _CalendarState extends State<Calendar> {
           border: isSelected
               ? Border.all(color: TTColors.text, width: 2)
               : isToday
-              ? Border.all(color: TTColors.text_secondary, width: 2)
-              : null,
+                  ? Border.all(color: TTColors.text_secondary, width: 2)
+                  : null,
         ),
         padding: const EdgeInsets.all(6),
         child: Align(
@@ -610,7 +762,6 @@ class _CalendarState extends State<Calendar> {
     DateTime d(int day) => DateTime(y, m, day);
 
     return [
-
       CalendarEvent(
         date: d(29),
         title: 'День TT Club UA',
