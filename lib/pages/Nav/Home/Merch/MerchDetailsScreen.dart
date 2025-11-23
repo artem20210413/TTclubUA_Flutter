@@ -57,11 +57,15 @@ class _MerchDetailsScreenState extends State<MerchDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    ImagesCarousel(
-                      images: item.images,
-                      height: MediaQuery.of(context).size.width * 0.6,
-                      borderRadius: 32,
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: ImagesCarousel(
+                        images: item.images,
+                        height: MediaQuery.of(context).size.width * 0.6,
+                        borderRadius: 32,
+                      ),
                     ),
+
                     const SizedBox(height: 18),
                     // описание
                     Text(

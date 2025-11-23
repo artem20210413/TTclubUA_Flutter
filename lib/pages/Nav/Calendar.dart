@@ -10,6 +10,7 @@ import '../../api/routs/events.dart';
 import '../../components/Selects/TTSelect.dart';
 import '../../components/TTLoading.dart';
 import '../../components/TTNeumorphicBox.dart';
+import '../../components/calendar/CalendarEventCard.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
@@ -21,21 +22,19 @@ class Calendar extends StatefulWidget {
 enum EventCategory { all, club, birthday, world }
 
 class CalendarEvent {
+  final CalendarItemDto dto;
   final DateTime date;
-  final String title;
-  final String? place;
   final EventCategory category;
   final TimeOfDay? time;
-  final String? imageUrl;
 
   CalendarEvent({
+    required this.dto,
     required this.date,
-    required this.title,
     required this.category,
-    this.place,
     this.time,
-    this.imageUrl,
   });
+
+  String? get imageUrl => dto.images.isNotEmpty ? dto.images.first : null;
 }
 
 class _CalendarState extends State<Calendar> {
@@ -72,59 +71,9 @@ class _CalendarState extends State<Calendar> {
         DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
 
     _loadCalendarForMonth(_focusedMonth);
-    // _events = _mockEvents();
-    // _byDate = _groupByDate(_events);
   }
 
-  // Future<void> _loadCalendar() async {
-  //   try {
-  //     setState(() {
-  //       _isLoading = true;
-  //     });
-  //
-  //     final currentMonth =
-  //         "${_focusedMonth.year}-${_focusedMonth.month.toString().padLeft(2, '0')}";
-  //     final token = await UserStorage.getToken();
-  //     final res = await CALENDAR_LIST(token, month: currentMonth);
-  //     if (res.statusCode != 200) {
-  //       // тут можешь использовать свой CHECK_API, если хочешь
-  //       print('Calendar load error: ${res.statusCode}');
-  //       return;
-  //     }
-  //
-  //     final body = jsonDecode(res.body);
-  //
-  //     // если бек отдаёт просто массив:
-  //     // final List data = body as List;
-  //
-  //     // если бек отдаёт { "data": [ ... ] }
-  //     final List data = body['data'] as List;
-  //
-  //     // 1) Мапим в DTO
-  //     _items = data
-  //         .map((e) => CalendarItemDto.fromJson(e as Map<String, dynamic>))
-  //         .toList();
-  //
-  //     // 2) Конвертим DTO → твою модель CalendarEvent
-  //     _events = _items
-  //         .where((i) => i.date != null)
-  //         .map((i) => _mapDtoToEvent(i))
-  //         .toList();
-  //
-  //     // 3) Группируем по дате
-  //     _byDate = _groupByDate(_events);
-  //   } catch (e) {
-  //     print('Calendar load exception: $e');
-  //   } finally {
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-  //   }
-  // }
-  //
-
   CalendarEvent _mapDtoToEvent(CalendarItemDto dto) {
-    // тип → категория
     EventCategory cat;
     switch (dto.type) {
       case 'event_ttclubua':
@@ -153,12 +102,9 @@ class _CalendarState extends State<Calendar> {
 
     return CalendarEvent(
       date: dto.date ?? DateTime.now(),
-      // если вдруг null
-      title: dto.title,
       category: cat,
-      place: dto.place,
       time: t,
-      imageUrl: dto.images.isNotEmpty ? dto.images.first : null,
+      dto: dto,
     );
   }
 
@@ -182,8 +128,8 @@ class _CalendarState extends State<Calendar> {
         print('Calendar load error: ${res.statusCode}');
         return;
       }
-
       final body = jsonDecode(res.body);
+
       final List data = body['data'] as List; // или просто body, если API = []
 
       // 1) JSON → DTO
@@ -332,63 +278,63 @@ class _CalendarState extends State<Calendar> {
   Widget _buildCalendarCard() {
     return TTNeumorphicBox(
       padding: const EdgeInsets.only(top: 16, bottom: 24, left: 16, right: 24),
-      child:  _isLoading
+      child: _isLoading
           ? const TTLoading()
           : Column(
-        children: [
-          // month header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                tooltip: 'Попередній місяць',
-                onPressed: () {
-                  final newMonth = DateTime(
-                    _focusedMonth.year,
-                    _focusedMonth.month - 1,
-                    1,
-                  );
-                  setState(() {
-                    _focusedMonth = newMonth;
-                    _selectedDate = newMonth;
-                  });
-                  _loadCalendarForMonth(newMonth);
-                },
-                icon: const Icon(Icons.chevron_left,
-                    color: TTColors.text_secondary),
-              ),
-              Text(
-                _monthTitle(_focusedMonth),
-                style: TTTextStyle.title18,
-              ),
-              IconButton(
-                tooltip: 'Наступний місяць',
-                onPressed: () {
-                  final newMonth = DateTime(
-                    _focusedMonth.year,
-                    _focusedMonth.month + 1,
-                    1,
-                  );
-                  setState(() {
-                    _focusedMonth = newMonth;
-                    _selectedDate = newMonth;
-                  });
-                  _loadCalendarForMonth(newMonth);
-                },
-                icon: const Icon(Icons.chevron_right,
-                    color: TTColors.text_secondary),
-              ),
-            ],
-          ),
+              children: [
+                // month header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      tooltip: 'Попередній місяць',
+                      onPressed: () {
+                        final newMonth = DateTime(
+                          _focusedMonth.year,
+                          _focusedMonth.month - 1,
+                          1,
+                        );
+                        setState(() {
+                          _focusedMonth = newMonth;
+                          _selectedDate = newMonth;
+                        });
+                        _loadCalendarForMonth(newMonth);
+                      },
+                      icon: const Icon(Icons.chevron_left,
+                          color: TTColors.text_secondary),
+                    ),
+                    Text(
+                      _monthTitle(_focusedMonth),
+                      style: TTTextStyle.title18,
+                    ),
+                    IconButton(
+                      tooltip: 'Наступний місяць',
+                      onPressed: () {
+                        final newMonth = DateTime(
+                          _focusedMonth.year,
+                          _focusedMonth.month + 1,
+                          1,
+                        );
+                        setState(() {
+                          _focusedMonth = newMonth;
+                          _selectedDate = newMonth;
+                        });
+                        _loadCalendarForMonth(newMonth);
+                      },
+                      icon: const Icon(Icons.chevron_right,
+                          color: TTColors.text_secondary),
+                    ),
+                  ],
+                ),
 
-          const SizedBox(height: 4),
-          _legend(),
-          const SizedBox(height: 8),
-          _weekdayHeader(),
-          const SizedBox(height: 6),
-          _monthGrid(),
-        ],
-      ),
+                const SizedBox(height: 4),
+                _legend(),
+                const SizedBox(height: 8),
+                _weekdayHeader(),
+                const SizedBox(height: 6),
+                _monthGrid(),
+              ],
+            ),
     );
   }
 
@@ -404,7 +350,6 @@ class _CalendarState extends State<Calendar> {
                 Container(
                   width: 20,
                   height: 20,
-                  // margin: const EdgeInsets.only(top: 3),
                   decoration: BoxDecoration(color: c, shape: BoxShape.circle),
                 ),
               ],
@@ -501,62 +446,6 @@ class _CalendarState extends State<Calendar> {
       ),
     );
   }
-
-  // Widget _dayCell({
-  //   required DateTime date,
-  //   required bool isSelected,
-  //   required bool isToday,
-  //   required bool hasAny,
-  // }) {
-  //   final events = _byDate[_stripTime(date)] ?? const [];
-  //   final hasClub = events.any((e) => e.category == EventCategory.club);
-  //   final hasBirthday = events.any((e) => e.category == EventCategory.birthday);
-  //   final hasWorld = events.any((e) => e.category == EventCategory.world);
-  //
-  //   // final bgColor = isSelected
-  //   //     ? dotClub.withOpacity(0.25)
-  //   //     : (hasAny ? const Color(0xFF242830) : dayInactive);
-  //   Color bgColor;
-  //   Color tColor;
-  //   if (hasWorld) {
-  //     bgColor = dotMuted;
-  //     tColor = textDart;
-  //   } else if (hasBirthday) {
-  //     bgColor = dotBirthday;
-  //     tColor = textDart;
-  //   } else if (hasClub) {
-  //     bgColor = dotClub;
-  //     tColor = textDart;
-  //   } else {
-  //     bgColor = dayInactive;
-  //     tColor = textPrimary;
-  //   }
-  //
-  //   return InkWell(
-  //     borderRadius: BorderRadius.circular(14),
-  //     onTap: () => setState(() => _selectedDate = _stripTime(date)),
-  //     child: Container(
-  //       decoration: BoxDecoration(
-  //         color: bgColor,
-  //         borderRadius: BorderRadius.circular(99),
-  //         border: isSelected
-  //             ? Border.all(color: TTColors.text, width: 2)
-  //             : isToday
-  //                 ? Border.all(color: TTColors.text_secondary, width: 2)
-  //                 : null,
-  //         // border: isToday ? Border.all(color: ring, width: 2) : null,
-  //       ),
-  //       padding: const EdgeInsets.all(6),
-  //       child: Align(
-  //         alignment: Alignment.center,
-  //         child: Text(
-  //           '${date.day}'.padLeft(2, '0'),
-  //           style: TTTextStyle.subtitle.copyWith(color: tColor),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget _dayCell({
     required DateTime date,
@@ -664,75 +553,20 @@ class _CalendarState extends State<Calendar> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          'Усі події $dd.$mm.$yyyy',
+          events.isEmpty
+              ? 'Події відсутні на $dd.$mm.$yyyy'
+              : 'Усі події $dd.$mm.$yyyy',
           style: TTTextStyle.title18,
         ),
         const SizedBox(height: 12),
-        if (events.isEmpty)
-          Text(
-            'Подій немає',
-            style: TTTextStyle.subtitle,
-          ),
         for (final e in events) ...[
-          _eventCard(e),
+          CalendarEventCard(
+            event: e,
+            dateLabel: _formatDayMonth(e.date), // уже есть в твоём коде
+          ),
           const SizedBox(height: 12),
         ]
       ],
-    );
-  }
-
-  Widget _eventCard(CalendarEvent e) {
-    return TTNeumorphicBox(
-      radius: 18,
-      padding: EdgeInsets.only(top: 8, bottom: 8, left: 8, right: 16),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(18),
-            child: Container(
-              width: 96,
-              height: 72,
-              color: Colors.black26,
-              child: e.imageUrl != null
-                  ? Image.network(e.imageUrl!, fit: BoxFit.cover)
-                  : Icon(Icons.image, color: TTColors.text_secondary),
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  e.time != null
-                      ? '${_formatDayMonth(e.date)} • ${e.time!.format(context)}'
-                      : _formatDayMonth(e.date),
-                  style: TTTextStyle.subtitle,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  e.title,
-                  style: TTTextStyle.title18,
-                ),
-                if (e.place != null) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    e.place!,
-                    style: TTTextStyle.subtitle,
-                  ),
-                ],
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          Container(
-            width: 42,
-            height: 42,
-            child: Icon(Icons.arrow_forward_ios,
-                size: 16, color: TTColors.text_secondary),
-          ),
-        ],
-      ),
     );
   }
 
@@ -754,66 +588,4 @@ class _CalendarState extends State<Calendar> {
     return '${d.day.toString().padLeft(2, '0')} ${monthsUaShort[d.month - 1]}';
   }
 
-  // ---------------- Mock ------------------------------------------------------
-  List<CalendarEvent> _mockEvents() {
-    final now = DateTime.now();
-    final y = now.year;
-    final m = now.month; // зроблю приклад на поточний/сусідні місяці
-    DateTime d(int day) => DateTime(y, m, day);
-
-    return [
-      CalendarEvent(
-        date: d(29),
-        title: 'День TT Club UA',
-        category: EventCategory.club,
-        time: const TimeOfDay(hour: 16, minute: 0),
-        place: 'місце скоро буде',
-        // imageUrl: 'https://picsum.photos/seed/tt1/300/200',
-      ),
-      // CalendarEvent(
-      //   date: d(2),
-      //   title: 'TT Season Opening Drive',
-      //   category: EventCategory.club,
-      //   time: const TimeOfDay(hour: 11, minute: 0),
-      //   place: 'Паркінг Ocean Plaza → Обухівська траса',
-      //   imageUrl: 'https://picsum.photos/seed/tt1/300/200',
-      // ),
-      // CalendarEvent(
-      //   date: d(16),
-      //   title: 'Кава з TT Club',
-      //   category: EventCategory.club,
-      //   time: const TimeOfDay(hour: 10, minute: 30),
-      //   place: 'UNIT.City',
-      //   imageUrl: 'https://picsum.photos/seed/tt2/300/200',
-      // ),
-      // CalendarEvent(
-      //   date: d(16),
-      //   title: 'Кава з TT Club',
-      //   category: EventCategory.club,
-      //   time: const TimeOfDay(hour: 10, minute: 30),
-      //   place: 'UNIT.City',
-      //   imageUrl: 'https://picsum.photos/seed/tt2/300/200',
-      // ),
-      // CalendarEvent(
-      //   date: d(17),
-      //   title: 'День народження Оксани',
-      //   category: EventCategory.birthday,
-      //   imageUrl: 'https://picsum.photos/seed/bd1/300/200',
-      // ),
-      // CalendarEvent(
-      //   date: d(20),
-      //   title: 'Нічний виїзд на дамбу',
-      //   category: EventCategory.club,
-      //   time: const TimeOfDay(hour: 21, minute: 0),
-      //   place: 'Гаванський міст',
-      //   imageUrl: 'https://picsum.photos/seed/tt3/300/200',
-      // ),
-      // CalendarEvent(
-      //   date: d(24),
-      //   title: 'День народження Ігора',
-      //   category: EventCategory.birthday,
-      //   imageUrl: 'https://picsum.photos/seed/bd2/300/200',
-      // ),
-    ];
-  }
 }

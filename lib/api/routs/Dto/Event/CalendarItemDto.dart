@@ -15,6 +15,7 @@ class CalendarItemDto {
 
   // картинки — могут быть строками или объектами
   final List<String> images;
+  final List<ImageUrlDto> dtoImages;
 
   CalendarItemDto({
     required this.type,
@@ -26,6 +27,7 @@ class CalendarItemDto {
     required this.place,
     required this.googleMaps,
     required this.images,
+    required this.dtoImages,
   });
 
   // ---------- FROM JSON ----------
@@ -55,6 +57,10 @@ class CalendarItemDto {
       place: json['place'],
       googleMaps: json['google_maps'],
       images: parsedImages,
+      dtoImages: (json['images'] as List<dynamic>?)
+          ?.map((e) => ImageUrlDto.fromJson(e))
+          .toList() ??
+          [],
     );
   }
 
@@ -70,6 +76,7 @@ class CalendarItemDto {
       place: null,
       googleMaps: null,
       images: [],
+      dtoImages: [],
     );
   }
 }

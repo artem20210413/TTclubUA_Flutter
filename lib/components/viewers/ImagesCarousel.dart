@@ -37,11 +37,6 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
     final hasImages = widget.images.isNotEmpty;
 
     return Container(
-      decoration: BoxDecoration(
-        color: TTColors.card,
-        borderRadius: BorderRadius.circular(widget.borderRadius + 8),
-      ),
-      padding: const EdgeInsets.all(12),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
