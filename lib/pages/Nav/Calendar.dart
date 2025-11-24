@@ -47,8 +47,8 @@ class _CalendarState extends State<Calendar> {
   final Color ring = const Color(0xFF2C2F35);
   final Color dayInactive = TTColors.card;
   final Color dotClub = const Color(0xFF8FD6FA); // блакитний
-  final Color dotBirthday = const Color(0xFF98A9D4); // ліловий
-  final Color dotMuted = const Color(0xFF767474); // сірий для інших
+  final Color dotBirthday =  TTColors.text_secondary.withOpacity(0.3); // ліловий Color(0xFF98A9D4)
+  final Color dotMuted = Color(0xFF98A9D4); //const Color(0xFF767474); // сірий для інших
   List<CalendarItemDto> _items = [];
   bool _isLoading = false;
 
@@ -485,7 +485,7 @@ class _CalendarState extends State<Calendar> {
         tColor = textDart;
       } else if (hasBirthday) {
         bgColor = dotBirthday;
-        tColor = textDart;
+        tColor = textPrimary;
       } else {
         bgColor = dayInactive;
         tColor = textPrimary;
