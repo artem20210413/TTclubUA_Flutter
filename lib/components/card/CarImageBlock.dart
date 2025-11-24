@@ -20,14 +20,12 @@ class CarImageBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String displayUrl = (imageUrl != null && imageUrl!.isNotEmpty)
-        ? imageUrl!
-        : CAR_IMAGE_DEFAULT;
-
     return GestureDetector(
-      onTap: () => FullImageViewer.show(context, displayUrl),
+      onTap: () =>
+          imageUrl != null ? FullImageViewer.show(context, imageUrl!) : null,
+
       child: Hero(
-        tag: uniqueKey ?? displayUrl,
+        tag: uniqueKey ?? imageUrl!,
         child: ClipRRect(
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(borderRadius),
@@ -38,28 +36,36 @@ class CarImageBlock extends StatelessWidget {
               isActiveUser ? Colors.transparent : Colors.grey,
               isActiveUser ? BlendMode.srcOver : BlendMode.saturation,
             ),
-            child: Image.network(
-              displayUrl,
-              height: height,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Container(
-                  height: height,
-                  color: Colors.black12,
-                  alignment: Alignment.center,
-                  child: const CircularProgressIndicator(color: Colors.white),
-                );
-              },
-              errorBuilder: (_, __, ___) => Container(
-                height: height,
-                color: Colors.black12,
-                alignment: Alignment.center,
-                child: const Icon(Icons.image_not_supported,
-                    color: Colors.white54, size: 40),
-              ),
-            ),
+            child: imageUrl != null
+                ? Image.network(
+                    imageUrl!,
+                    height: height,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        height: height,
+                        color: Colors.black12,
+                        alignment: Alignment.center,
+                        child: const CircularProgressIndicator(
+                            color: Colors.white),
+                      );
+                    },
+                    errorBuilder: (_, __, ___) => Container(
+                      height: height,
+                      color: Colors.black12,
+                      alignment: Alignment.center,
+                      child: const Icon(Icons.image_not_supported,
+                          color: Colors.white54, size: 40),
+                    ),
+                  )
+                : Container(
+                    height: height,
+                    width: double.infinity,
+                    color: TTColors.background_second,
+                    child: const Icon(Icons.image, color: Colors.white30),
+                  ),
           ),
         ),
       ),

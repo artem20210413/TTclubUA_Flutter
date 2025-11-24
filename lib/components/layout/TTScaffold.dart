@@ -10,16 +10,18 @@ class TTScaffold extends StatelessWidget {
   final PreferredSizeWidget? bottom;
   final Widget? floatingActionButton;
   final Widget? bottomNavigationBar;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
 
   const TTScaffold({
     super.key,
-    required this.title,
+    this.title = '',
     required this.body,
     this.showBack = true,
     this.backgroundColor = const Color(0xFF2B2F35),
     this.bottom,
     this.floatingActionButton,
     this.bottomNavigationBar,
+    this.floatingActionButtonLocation,
   });
 
   @override
@@ -56,6 +58,7 @@ class TTScaffold extends StatelessWidget {
         ),
         body: body,
         floatingActionButton: floatingActionButton,
+        floatingActionButtonLocation: floatingActionButtonLocation,
         bottomNavigationBar: bottomNavigationBar,
       ),
     );

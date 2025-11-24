@@ -22,4 +22,13 @@ class ImageUrlDto {
       networkImage: NetworkImage(imageUrl),
     );
   }
+
+  // ---------- EMPTY ----------
+  factory ImageUrlDto.empty() {
+    return ImageUrlDto(
+      id: 0,
+      url: '',
+      networkImage: const NetworkImage(''),
+    );
+  }
 }

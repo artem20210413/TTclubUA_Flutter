@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/Storage/UserStorage.dart';
 import 'package:tt_club_ua/config/default.dart';
+import 'package:tt_club_ua/pages/Nav/Home/Merch/MerchPage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Storage/Cache/DeviceInsetsCache.dart';
@@ -88,8 +89,12 @@ class _HomeState extends State<Home> {
               imagePath: 'assets/ui/banners/merch.webp',
               title: 'Мерч',
               onButtonTap: () {
-                MessageModule(
-                    context, 'Ось ось буде..', MessageType.information);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          MerchPage()), // Переход на экран публикаций
+                );
               },
             ),
             const SizedBox(height: 20),

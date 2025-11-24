@@ -1,4 +1,4 @@
-package com.example.tt_club_ua
+package ua.com.ttclub.app
 
 import io.flutter.embedding.android.FlutterActivity
 

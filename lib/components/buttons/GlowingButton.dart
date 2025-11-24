@@ -76,7 +76,7 @@ class _GlowingButtonState extends State<GlowingButton> {
             ],
           ),
           borderRadius: BorderRadius.circular(300),
-          border: Border.all(color: widget.colorGrowing, width: 2),
+          border: Border.all(color: widget.colorGrowing, width: 1),
           boxShadow: [
             BoxShadow(
               color: widget.colorGrowing.withOpacity(0.7),
@@ -94,7 +94,7 @@ class _GlowingButtonState extends State<GlowingButton> {
                 style: TextStyle(
                   color: textColor,
                   fontFamily: TTTextStyle.fontFamily,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                   fontSize: 24,
                 ),
               ),

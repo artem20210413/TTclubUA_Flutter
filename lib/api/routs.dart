@@ -1,4 +1,3 @@
-
 // const _HOST = 'https://tt.tishchenko.kiev.ua';
 const _HOST = 'https://ttclub.com.ua';
 
@@ -26,7 +25,8 @@ const URL_USER_UPDATE_BY_ID = '${_HOST}/api/user/{id}/update';
 
 const URL_REGISTATION_LIST = '${_HOST}/api/registration/list';
 const URL_REGISTATION_COUNT = '${_HOST}/api/registration/count';
-const URL_REGISTATION_CHANHE_ACTIVE = '${_HOST}/api/registration/{id}/change-active';
+const URL_REGISTATION_CHANHE_ACTIVE =
+    '${_HOST}/api/registration/{id}/change-active';
 const URL_REGISTATION_APPROVE = '${_HOST}/api/registration/{id}/approve';
 
 const URL_FINANCE_LIST = '${_HOST}/api/finance/user/{userId}';
@@ -40,11 +40,26 @@ const URL_COSTS_LIST = '${_HOST}/api/costs';
 const URL_COSTS_DELETE = '${_HOST}/api/costs/{costsId}';
 const URL_COSTS_SET = '${_HOST}/api/costs';
 
+const URL_GOODS_LIST = '${_HOST}/api/goods';
+const URL_GOODS_CREATE = '${_HOST}/api/goods';
+const URL_GOODS_UPDATE = '${_HOST}/api/goods/{goods}';
+const URL_GOODS_CHANGE_ACTIVE = '${_HOST}/api/goods/{goods}/active/{active}';
+const URL_GOODS_IMAGE_DELETE = '${_HOST}/api/goods/{goods}/images/{mediaId}';
+const URL_GOODS_IMAGE_CREATE = '${_HOST}/api/goods/{goods}/images';
+
+
+const URL_CALENDAR_LIST = '${_HOST}/api/calendar';
+const URL_EVENT_CREATE = '${_HOST}/api/event';
+const URL_EVENT_UPLOAD = '${_HOST}/api/event/{event}';
+const URL_EVENT_ADD_IMAGE = '${_HOST}/api/event/{event}/image';
+const URL_EVENT_DELETE_IMAGE = '${_HOST}/api/event/{event}/image';
+const url_event_change_active = '${_HOST}/api/event/{event}/active/{active}';
+
 const URL_SEARCH_CAR = '${_HOST}/api/car/search';
 const URL_CAR_CREATE = '${_HOST}/api/car/create';
 const URL_CAR_UPDATE = '${_HOST}/api/car/{id}';
 const URL_CAR_DELETE = '${_HOST}/api/car/{id}';
-const URL_MENTION_CAR= '${_HOST}/api/mention/car/';
+const URL_MENTION_CAR = '${_HOST}/api/mention/car/';
 const URL_CAR_ADD_COLLECTIONS = '${_HOST}/api/car/{id}/collections';
 const URL_CAR_FIND = '${_HOST}/api/car/{id}';
 
