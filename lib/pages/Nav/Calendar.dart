@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../../Storage/Cache/AccentColorCache.dart';
 import '../../Storage/Cache/DeviceInsetsCache.dart';
 import '../../Storage/UserStorage.dart';
 import '../../api/routs/Dto/Event/CalendarItemDto.dart';
@@ -38,6 +39,8 @@ class CalendarEvent {
 }
 
 class _CalendarState extends State<Calendar> {
+
+  Color accentColor = AccentColorCache.accentColor;
   // ---------------- UI palette (заміняй на свої TTColors якщо є) -------------
   final Color bg = TTColors.background;
   final Color card = TTColors.card;
@@ -47,7 +50,9 @@ class _CalendarState extends State<Calendar> {
   final Color ring = const Color(0xFF2C2F35);
   final Color dayInactive = TTColors.card;
   final Color dotClub = const Color(0xFF8FD6FA); // блакитний
-  final Color dotBirthday =  TTColors.text_secondary.withOpacity(0.3); // ліловий Color(0xFF98A9D4)
+  late Color dotBirthday =  (accentColor ?? Colors.white).withOpacity(0.2);// ліловий Color(0xFF98A9D4) f
+  // final Color dotBirthday =  Color(0xFFDB00BE).withOpacity(0.3); // ліловий Color(0xFF98A9D4) f
+  // final Color dotBirthday =  TTColors.text_secondary.withOpacity(0.3); // ліловий Color(0xFF98A9D4)
   final Color dotMuted = Color(0xFF98A9D4); //const Color(0xFF767474); // сірий для інших
   List<CalendarItemDto> _items = [];
   bool _isLoading = false;
