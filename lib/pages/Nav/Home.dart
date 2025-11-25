@@ -43,7 +43,8 @@ class _HomeState extends State<Home> {
             Padding(
               padding: const EdgeInsets.only(left: 5, right: 5),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   TopActionCard(
                     iconAsset: 'assets/svg/money.svg',
@@ -57,6 +58,8 @@ class _HomeState extends State<Home> {
                       );
                     },
                   ),
+
+                  const SizedBox(width: 20),
                   TopActionCard(
                     iconAsset: 'assets/svg/telegram.svg',
                     iconSize: 30,
@@ -71,6 +74,7 @@ class _HomeState extends State<Home> {
                       //     mode: LaunchMode.externalApplication);
                     },
                   ),
+                  const SizedBox(width: 20),
                   TopActionCard(
                     iconAsset: 'assets/svg/instagram.svg',
                     iconSize: 30,
@@ -83,12 +87,12 @@ class _HomeState extends State<Home> {
                       //     mode: LaunchMode.externalApplication);
                     },
                   ),
-                  TopActionCard(
-                    iconAsset: 'assets/svg/question-mark.svg',
-                    iconSize: 30,
-                    iconColor: Colors.white.withOpacity(0.4),
-                    onTap: () {},
-                  ),
+                  // TopActionCard(
+                  //   iconAsset: 'assets/svg/question-mark.svg',
+                  //   iconSize: 30,
+                  //   iconColor: Colors.white.withOpacity(0.4),
+                  //   onTap: () {},
+                  // ),
                 ],
               ),
             ),
@@ -124,32 +128,32 @@ class _HomeState extends State<Home> {
             //   },
             // ),
             const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/ttclubua_in_world.webp',
-              title: 'TTclubUA у світі',
-              enabled: false,
-              onButtonTap: () {
-                // TODO: действие по нажатию
-              },
-            ),
-            const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/partners.webp',
-              title: 'Партнери TTclubUA',
-              enabled: false,
-              onButtonTap: () {
-                // TODO: действие по нажатию
-              },
-            ),
-            const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/promotions_from_partners.webp',
-              title: 'Акції  партнерів',
-              enabled: false,
-              onButtonTap: () {
-                // TODO: действие по нажатию
-              },
-            ),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/ttclubua_in_world.webp',
+            //   title: 'TTclubUA у світі',
+            //   enabled: false,
+            //   onButtonTap: () {
+            //     // TODO: действие по нажатию
+            //   },
+            // ),
+            // const SizedBox(height: 20),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/partners.webp',
+            //   title: 'Партнери TTclubUA',
+            //   enabled: false,
+            //   onButtonTap: () {
+            //     // TODO: действие по нажатию
+            //   },
+            // ),
+            // const SizedBox(height: 20),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/promotions_from_partners.webp',
+            //   title: 'Акції  партнерів',
+            //   enabled: false,
+            //   onButtonTap: () {
+            //     // TODO: действие по нажатию
+            //   },
+            // ),
             // const SizedBox(height: 20),
             // PromoCard(
             //   imagePath: 'assets/ui/banners/military_aid.webp',
