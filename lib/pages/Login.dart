@@ -263,37 +263,49 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                       const SizedBox(height: 80),
+
                       Center(
-                        child: GestureDetector(
-                          onTap:
-                              _isLoadingSubmit ? null : () => _open(_signupUri),
-                          child: RichText(
-                            text: TextSpan(
-                              style: const TextStyle(
-                                  fontFamily: TTTextStyle.fontFamily),
-                              children: [
-                                TextSpan(
-                                  text: 'Ще не з нами? ',
-                                  style: TextStyle(
-                                    color: TTColors.text_secondary,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                const TextSpan(
-                                  text: 'Зареєструйся!',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w700,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                              ],
-                            ),
+                        child: Text(
+                          'Заявки для вступу подаються на нашому сайті.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: TTColors.text_secondary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ),
+                      // Center(
+                      //   child: GestureDetector(
+                      //     onTap:
+                      //         _isLoadingSubmit ? null : () => _open(_signupUri),
+                      //     child: RichText(
+                      //       text: TextSpan(
+                      //         style: const TextStyle(
+                      //             fontFamily: TTTextStyle.fontFamily),
+                      //         children: [
+                      //           TextSpan(
+                      //             text: 'Ще не з нами? ',
+                      //             style: TextStyle(
+                      //               color: TTColors.text_secondary,
+                      //               fontSize: 16,
+                      //               fontWeight: FontWeight.w400,
+                      //             ),
+                      //           ),
+                      //           const TextSpan(
+                      //             text: 'Зареєструйся!',
+                      //             style: TextStyle(
+                      //               color: Colors.white,
+                      //               fontSize: 17,
+                      //               fontWeight: FontWeight.w700,
+                      //               decoration: TextDecoration.underline,
+                      //             ),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
