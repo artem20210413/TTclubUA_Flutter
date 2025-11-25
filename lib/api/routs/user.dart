@@ -104,16 +104,16 @@ Future<http.Response> DELETE_USER_PHOTO(String? token) async {
 
 Future<http.Response> UPLOAD_USER_BY_ID(
     String? token, UserUpdateDto user) async {
-  print('URL: ' + URL_USER_UPDATE_BY_ID.replaceAll('{id}', user.id.toString()));
-  print('User Data: ${user.toJson()}');
+  // print('URL: ' + URL_USER_UPDATE_BY_ID.replaceAll('{id}', user.id.toString()));
+  // print('User Data: ${user.toJson()}');
 
   final response = await http.post(
     Uri.parse(URL_USER_UPDATE_BY_ID.replaceAll('{id}', user.id.toString())),
     headers: HEADERS(token),
     body: jsonEncode(user.toJson()),
   );
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${jsonDecode(response.body)}');
+  // print('Response status: ${response.statusCode}');
+  // print('Response body: ${jsonDecode(response.body)}');
 
   return response;
 }

@@ -14,8 +14,10 @@ import 'package:tt_club_ua/pages/Nav/Admin.dart';
 
 import '../../Storage/Cache/AccentColorCache.dart';
 import '../../Storage/Cache/DeviceInsetsCache.dart';
+import '../../api/routs.dart';
 import '../../api/routs/Dto/Car/CarDto.dart';
 import '../../api/routs/Dto/User/UserUpdateDto.dart';
+import '../../api/routs/auth.dart';
 import '../../api/routs/car/car.dart';
 import '../../components/TTLoading.dart';
 import '../../components/TTNeumorphicBox.dart';
@@ -139,6 +141,30 @@ class _UserState extends State<User> {
   }
 
   Future<void> _logout() async {
+    await UserStorage.clearUserInfo();
+    Navigator.pushReplacementNamed(context, '/login');
+  }
+
+
+  Future<void> _deleteAccount() async {
+    final token = await UserStorage.getToken();
+    final res =  await API_DELETE_ACCOUNT(token);
+    final isSuccess = await CHECK_API(res, context);
+
+    if (isSuccess) {
+
+      MessageModule(
+        context,
+        'Всі дані успішно видалено',
+        MessageType.information,
+      );
+    } else {
+      MessageModule(
+        context,
+        'Видалити не вийшло',
+        MessageType.error,
+      );
+    }
     await UserStorage.clearUserInfo();
     Navigator.pushReplacementNamed(context, '/login');
   }
@@ -707,6 +733,28 @@ class _UserState extends State<User> {
                       ],
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 34),
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          ConfirmAndRun(
+                            context: context,
+                            dialogTitle: 'Видалити акаунт?',
+                            dialogMessage:
+                            'Цю дію неможливо скасувати. Ваш профіль і всі дані будуть видалені назавжди.',
+                            action: _deleteAccount, // 👈 тут просто передаём метод
+                          );
+                        },
+                        child: Text(
+                          'Видалити акаунт назавжди',
+                          style: TTTextStyle.subtitle,
+                        ),
+                      ),
+                    ),
+                  ),
+
+
 
                   // TileButton(
                   //   icon: Icons.payment_outlined,

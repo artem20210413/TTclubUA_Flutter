@@ -10,6 +10,7 @@ import '../../components/TTNeumorphicBox.dart';
 import '../../components/card/PromoCard.dart';
 import '../../components/card/TopActionCard.dart';
 import '../../components/generalModule.dart';
+import '../../utils/url_launcher.dart';
 import '../Nav.dart';
 import 'Calendar.dart';
 import 'Home/AnnualFeePage.dart';
@@ -60,19 +61,26 @@ class _HomeState extends State<Home> {
                     iconAsset: 'assets/svg/telegram.svg',
                     iconSize: 30,
                     onTap: () async {
-                      final Uri url = Uri.parse('https://t.me/TTclubUaBot');
-                      await launchUrl(url,
-                          mode: LaunchMode.externalApplication);
+                      UrlHelper.openExternal(
+                          context, Uri.parse('https://t.me/TTclubUaBot'),
+                          title: 'Перехід до Telegram',
+                          message:
+                              'Ви збираєтесь відкрити зовнішній застосунок Telegram. Продовжити?');
+                      // final Uri url = Uri.parse('https://t.me/TTclubUaBot');
+                      // await launchUrl(url,
+                      //     mode: LaunchMode.externalApplication);
                     },
                   ),
                   TopActionCard(
                     iconAsset: 'assets/svg/instagram.svg',
                     iconSize: 30,
                     onTap: () async {
-                      final Uri url = Uri.parse(
-                          'https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ==');
-                      await launchUrl(url,
-                          mode: LaunchMode.externalApplication);
+                      UrlHelper.openExternal(context,
+                          Uri.parse('https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ=='));
+                      // final Uri url = Uri.parse(
+                      //     'https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ==');
+                      // await launchUrl(url,
+                      //     mode: LaunchMode.externalApplication);
                     },
                   ),
                   TopActionCard(
