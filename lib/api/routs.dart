@@ -19,6 +19,7 @@ const URL_USER_CHANGE_PASSWORD = '${_HOST}/api/user/{id}/change-password';
 const URL_SEARCH_USER_OLD = '${_HOST}/api/user/search/';
 const URL_SEARCH_USER = '${_HOST}/api/user/search';
 const URL_USER_PICTURE = '${_HOST}/api/user/profile-picture';
+const URL_USER_PICTURE_DELETE = '${_HOST}/api/user/profile-picture';
 const URL_USER_PICTURE_BY_ID = '${_HOST}/api/user/{id}/profile-picture';
 const URL_USER_CHANGE_ACTIVE = '${_HOST}/api/user/{id}/change-active';
 const URL_USER_UPDATE_BY_ID = '${_HOST}/api/user/{id}/update';
@@ -61,6 +62,7 @@ const URL_CAR_UPDATE = '${_HOST}/api/car/{id}';
 const URL_CAR_DELETE = '${_HOST}/api/car/{id}';
 const URL_MENTION_CAR = '${_HOST}/api/mention/car/';
 const URL_CAR_ADD_COLLECTIONS = '${_HOST}/api/car/{id}/collections';
+const URL_CAR_DELETE_COLLECTIONS = '${_HOST}/api/car/{car}/collections/{images}';
 const URL_CAR_FIND = '${_HOST}/api/car/{id}';
 
 const URL_CITIES = '${_HOST}/api/cities';

@@ -95,6 +95,13 @@ Future<http.Response> CHANGE_ACTIVE_USER(String? token, int userId) async {
   return response;
 }
 
+Future<http.Response> DELETE_USER_PHOTO(String? token) async {
+  final response = await http.delete(Uri.parse(URL_USER_PICTURE_DELETE),
+      headers: HEADERS(token));
+
+  return response;
+}
+
 Future<http.Response> UPLOAD_USER_BY_ID(
     String? token, UserUpdateDto user) async {
   print('URL: ' + URL_USER_UPDATE_BY_ID.replaceAll('{id}', user.id.toString()));

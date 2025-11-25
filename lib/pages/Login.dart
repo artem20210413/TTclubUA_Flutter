@@ -264,17 +264,19 @@ class _LoginState extends State<Login> {
                       ),
                       const SizedBox(height: 80),
 
-                      Center(
-                        child: Text(
-                          'Заявки для вступу подаються на нашому сайті.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: TTColors.text_secondary,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
+                      // Center(
+                      //   child: Text(
+                      //     'Заявки для вступу подаються на нашому сайті.',
+                      //     textAlign: TextAlign.center,
+                      //     style: TextStyle(
+                      //       color: TTColors.text_secondary,
+                      //       fontSize: 16,
+                      //       fontWeight: FontWeight.w400,
+                      //     ),
+                      //   ),
+                      // ),
+
+
                       // Center(
                       //   child: GestureDetector(
                       //     onTap:

@@ -40,7 +40,8 @@ Future<Response> GET_COLORS(String? token) async {
   return response;
 }
 
-Future<http.Response> SEARCH_CAR(String? token, String? search, {int page = 1}) async {
+Future<http.Response> SEARCH_CAR(String? token, String? search,
+    {int page = 1}) async {
   final uri = Uri.parse(URL_SEARCH_CAR).replace(queryParameters: {
     'search': search ?? '',
     'page': page.toString(),
@@ -50,7 +51,6 @@ Future<http.Response> SEARCH_CAR(String? token, String? search, {int page = 1}) 
   return response;
 }
 
-
 Future<http.Response> CAR_FIND(String? token, int carId) async {
   final response = await http.get(
       Uri.parse(URL_CAR_FIND.replaceAll('{id}', carId.toString())),
@@ -58,6 +58,7 @@ Future<http.Response> CAR_FIND(String? token, int carId) async {
 
   return response;
 }
+
 Future<http.Response> CAR_DELETE(String? token, int carId) async {
   final response = await http.delete(
       Uri.parse(URL_CAR_DELETE.replaceAll('{id}', carId.toString())),
@@ -144,6 +145,17 @@ Future<http.Response> CAR_ADD_COLLECTION(
 
   var streamedResponse = await request.send();
   var response = await http.Response.fromStream(streamedResponse);
+
+  return response;
+}
+
+Future<http.Response> CAR_IMAGE_DELETE(String? token, CarDto car) async {
+  final response = await http.delete(
+    Uri.parse(URL_CAR_DELETE_COLLECTIONS
+        .replaceAll('{car}', car.id.toString())
+        .replaceAll('{images}', car.imageUrls!.first.id.toString())),
+    headers: HEADERS(token),
+  );
 
   return response;
 }
