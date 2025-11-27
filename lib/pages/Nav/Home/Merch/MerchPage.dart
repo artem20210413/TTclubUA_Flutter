@@ -103,7 +103,7 @@ class _MerchPageState extends State<MerchPage> {
   Widget build(BuildContext context) {
     return TTScaffold(
       body: Column(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SearchBarWidget(
             controller: _searchController,

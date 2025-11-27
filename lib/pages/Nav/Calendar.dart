@@ -222,8 +222,8 @@ class _CalendarState extends State<Calendar> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 8),
-              _buildHeader(),
+              // const SizedBox(height: 8),
+              // _buildHeader(),
               const SizedBox(height: 16),
               _buildFilter(),
               const SizedBox(height: 16),

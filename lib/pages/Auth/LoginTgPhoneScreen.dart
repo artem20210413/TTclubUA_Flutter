@@ -44,8 +44,8 @@ class _LoginTgPhoneScreenState extends State<LoginTgPhoneScreen> {
 
     try {
       final res = await API_LOGIN_TG_SEND_CODE(phone);
-print('--------');
-print(res.statusCode);
+      print('--------');
+      print(res.statusCode);
       if (res.statusCode == 200) {
         MessageModule(
           context,
@@ -74,7 +74,7 @@ print(res.statusCode);
           _tgForgotUri,
           title: 'Перехід до Telegram',
           message:
-          'Будь ласка, підтвердіть номер телефону через Telegram-бот, перш ніж входити. \nВи збираєтесь відкрити зовнішній застосунок Telegram. Продовжити?',
+              'Будь ласка, підтвердіть номер телефону через Telegram-бот, перш ніж входити. \nВи збираєтесь відкрити зовнішній застосунок Telegram. Продовжити?',
         );
       }
     } catch (e) {
@@ -96,115 +96,109 @@ print(res.statusCode);
         child: _isLoading
             ? const TTLoading()
             : SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+                padding: const EdgeInsets.all(24),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      /// Заголовок
+                      // Text(
+                      //   'Вхід через Telegram',
+                      //   style: TTTextStyle.title.copyWith(fontSize: 28),
+                      //   textAlign: TextAlign.center,
+                      // ),
 
-                /// Заголовок
-                // Text(
-                //   'Вхід через Telegram',
-                //   style: TTTextStyle.title.copyWith(fontSize: 28),
-                //   textAlign: TextAlign.center,
-                // ),
+                      const SizedBox(height: 16),
 
-                const SizedBox(height: 16),
-
-                /// Подзаголовок
-                Text(
-                  'Введіть номер телефону, на який зареєстрований ваш Telegram. Ми надішлемо код входу в бот.',
-                  style: TTTextStyle.subtitle,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-
-                /// Поле ввода номера
-                CustomInputField(
-                  controller: _phoneController,
-                  label: 'Номер телефону',
-                  prefixText: '+',
-                  keyboardType: TextInputType.phone,
-                  icon: SvgPicture.asset(
-                    'assets/svg/user.svg',
-                    fit: BoxFit.none,
-                    width: 36,
-                    height: 36,
-                    colorFilter: ColorFilter.mode(
-                      TTColors.text_secondary,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                  validator: (_) {
-                    final value = _phoneController.text;
-                    if (value
-                        .trim()
-                        .isEmpty) {
-                      return 'Введіть номер телефону';
-                    }
-                    final v = value.replaceAll(' ', '');
-                    if (!RegExp(r'^\+?\d{9,15}$').hasMatch(v)) {
-                      return 'Невірний формат номеру телефону';
-                    }
-                    return null;
-                  },
-                ),
-
-                const SizedBox(height: 32),
-
-                GlowingButton(
-                  text: 'Надіслати код в Telegram',
-                  onPressed: _isLoading ? () {} : _sendCode,
-                  isLoading: _isLoading,
-                ),
-
-                const SizedBox(height: 32),
-
-                /// ✨ Дополнительный информационный текст
-                Center(
-                  child: Text(
-                    'Якщо ви ще не знайомі з нашим Telegram-ботом — '
-                        'відкрийте його та надішліть свій номер телефону, '
-                        'щоб активувати авторизацію.',
-                    textAlign: TextAlign.center,
-                    style: TTTextStyle.subtitle,
-                  ),
-                ),
-
-                Center(
-                  child: TextButton(
-                    onPressed: _isLoading
-                        ? null
-                        : () =>
-                        UrlHelper.openExternal(
-                          context,
-                          _tgForgotUri,
-                          title: 'Перехід до Telegram',
-                          message:
-                          'Ви збираєтесь відкрити зовнішній застосунок Telegram. Продовжити?',
-                        ),
-                    style: TextButton.styleFrom(
-                      foregroundColor: TTColors.text_secondary,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 6),
-                    ),
-                    child: const Text(
-                      'Перейти до бота',
-                      style: TextStyle(
-                        fontSize: 16,
-                        decoration: TextDecoration.underline,
+                      /// Подзаголовок
+                      Text(
+                        'Введіть номер телефону, на який зареєстрований ваш Telegram. Ми надішлемо код входу в бот.',
+                        style: TTTextStyle.subtitle,
+                        textAlign: TextAlign.center,
                       ),
-                    ),
+                      const SizedBox(height: 16),
+
+                      /// Поле ввода номера
+                      CustomInputField(
+                        controller: _phoneController,
+                        label: 'Номер телефону',
+                        prefixText: '+',
+                        keyboardType: TextInputType.phone,
+                        icon: SvgPicture.asset(
+                          'assets/svg/user.svg',
+                          fit: BoxFit.none,
+                          width: 36,
+                          height: 36,
+                          colorFilter: ColorFilter.mode(
+                            TTColors.text_secondary,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        validator: (_) {
+                          final value = _phoneController.text;
+                          if (value.trim().isEmpty) {
+                            return 'Введіть номер телефону';
+                          }
+                          final v = value.replaceAll(' ', '');
+                          if (!RegExp(r'^\+?\d{9,12}$').hasMatch(v)) {
+                            return 'Невірний формат номеру телефону';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      GlowingButton(
+                        text: 'Надіслати код в Telegram',
+                        onPressed: _isLoading ? () {} : _sendCode,
+                        isLoading: _isLoading,
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      /// ✨ Дополнительный информационный текст
+                      Center(
+                        child: Text(
+                          'Вперше? Надішліть свій номер у Telegram-бот.',
+                          textAlign: TextAlign.center,
+                          style: TTTextStyle.subtitle,
+                        ),
+                      ),
+
+                      Center(
+                        child: TextButton(
+                          onPressed: _isLoading
+                              ? null
+                              : () => UrlHelper.openExternal(
+                                    context,
+                                    _tgForgotUri,
+                                    title: 'Перехід до Telegram',
+                                    message:
+                                        'Ви збираєтесь відкрити зовнішній застосунок Telegram. Продовжити?',
+                                  ),
+                          style: TextButton.styleFrom(
+                            foregroundColor: TTColors.text_secondary,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 6),
+                          ),
+                          child: Text(
+                            'Перейти до бота',
+                            style: TTTextStyle.subtitle.copyWith(
+                              color: TTColors.text,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 8),
+                    ],
                   ),
                 ),
-
-                const SizedBox(height: 8),
-              ],
-            ),
-          ),
-        ),
+              ),
       ),
     );
   }

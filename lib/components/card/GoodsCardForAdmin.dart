@@ -5,6 +5,7 @@ import '../../api/routs/Dto/Goods/GoodsDto.dart';
 import '../../components/TTNeumorphicBox.dart';
 import '../../components/buttons/GlowingButton.dart';
 import '../buttons/CircleButton.dart';
+import '../viewers/ImagesCarousel.dart';
 import 'CarImageBlock.dart';
 
 class GoodsCardForAdmin extends StatelessWidget {
@@ -24,8 +25,10 @@ class GoodsCardForAdmin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? imageUrl =
-        item.images.isNotEmpty ? item.images.first.url : null;
-    final screenSize = MediaQuery.of(context).size;
+    item.images.isNotEmpty ? item.images.first.url : null;
+    final screenSize = MediaQuery
+        .of(context)
+        .size;
 
     return Stack(
       clipBehavior: Clip.none,
@@ -38,12 +41,19 @@ class GoodsCardForAdmin extends StatelessWidget {
             children: [
               // --- Фото товару ---
 
-              CarImageBlock(
-                uniqueKey: item.id.toString(),
-                height: screenSize.width * 0.5,
-                imageUrl: imageUrl,
+              // CarImageBlock(
+              //   uniqueKey: item.id.toString(),
+              //   height: screenSize.width * 0.5,
+              //   imageUrl: imageUrl,
+              // ),
+              ImagesCarousel(
+                images: item.images,
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.5,
+                borderRadius: 32,
               ),
-
               const SizedBox(height: 14),
 
               // --- Назва ---
@@ -67,11 +77,53 @@ class GoodsCardForAdmin extends StatelessWidget {
               ),
 
               const SizedBox(height: 24),
-              Text(
-                'Пріоритет:  '+ item.priorityController.text,
-                style: TTTextStyle.title18,
-                textAlign: TextAlign.start,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Порядок:  ' + item.priorityController.text,
+                    style: TTTextStyle.title18,
+                    textAlign: TextAlign.start,
 
+                  ),
+
+                  // const SizedBox(width: 24),
+                  // /// 🔼 стрелка вверх
+                  // GestureDetector(
+                  //   // onTap: onUp,
+                  //   child: Container(
+                  //     padding: const EdgeInsets.all(8),
+                  //     decoration: BoxDecoration(
+                  //       shape: BoxShape.circle,
+                  //       color: Colors.white12,
+                  //     ),
+                  //     child: const Icon(
+                  //       Icons.keyboard_arrow_up_rounded,
+                  //       color: Colors.white,
+                  //       size: 26,
+                  //     ),
+                  //   ),
+                  // ),
+                  //
+                  // const SizedBox(width: 24),
+                  //
+                  // /// 🔽 стрелка вниз
+                  // GestureDetector(
+                  //   // onTap: onDown,
+                  //   child: Container(
+                  //     padding: const EdgeInsets.all(8),
+                  //     decoration: BoxDecoration(
+                  //       shape: BoxShape.circle,
+                  //       color: Colors.white12,
+                  //     ),
+                  //     child: const Icon(
+                  //       Icons.keyboard_arrow_down_rounded,
+                  //       color: Colors.white,
+                  //       size: 26,
+                  //     ),
+                  //   ),
+                  // ),
+                ],
               ),
 
               const SizedBox(height: 24),
@@ -98,6 +150,7 @@ class GoodsCardForAdmin extends StatelessWidget {
                       colorGrowing: accentColor,
                     ),
                   ),
+
                 ],
               ),
             ],

@@ -145,31 +145,30 @@ class _MerchScreenState extends State<MerchScreen> {
   @override
   Widget build(BuildContext context) {
     return TTScaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: ClipRRect(
         borderRadius: BorderRadius.circular(40),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            width: 64,
-            height: 64,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.12),
-              shape: BoxShape.circle,
-              border:
-                  Border.all(color: accentColor.withOpacity(0.5), width: 1.5),
-            ),
-            child: IconButton(
-              icon: Icon(Icons.add, color: accentColor, size: 30),
-              onPressed: () async {
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => MerchUploadScreen()),
-                );
-                if (result == true) _onSearch();
-              },
-            ),
+        child: Container(
+          width: 64,
+          height: 64,
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.12),
+            shape: BoxShape.circle,
+            border: Border.all(color: accentColor.withOpacity(0.5), width: 1.5),
           ),
+          child: IconButton(
+            icon: Icon(Icons.add, color: accentColor, size: 30),
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => MerchUploadScreen()),
+              );
+              if (result == true) _onSearch();
+            },
+          ),
+        ),
         ),
       ),
       body: Column(

@@ -37,19 +37,19 @@ class _MerchDetailsScreenState extends State<MerchDetailsScreen> {
     final item = widget.item;
 
     return TTScaffold(
-      title: '',
+      title: item.titleController.text,
       body: SafeArea(
         child: SingleChildScrollView(
           padding:
               const EdgeInsets.only(top: 16, bottom: 24, left: 16, right: 8),
           child: Column(
             children: [
-              Text(
-                item.titleController.text,
-                textAlign: TextAlign.center,
-                style: TTTextStyle.title,
-              ),
-              const SizedBox(height: 18),
+              // Text(
+              //   item.titleController.text,
+              //   textAlign: TextAlign.center,
+              //   style: TTTextStyle.title,
+              // ),
+              // const SizedBox(height: 18),
               TTNeumorphicBox(
                 padding:
                     EdgeInsets.only(top: 12, bottom: 24, left: 8, right: 14),
