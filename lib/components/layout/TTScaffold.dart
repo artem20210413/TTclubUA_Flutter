@@ -48,11 +48,7 @@ class TTScaffold extends StatelessWidget {
               : null,
           title: Text(
             title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TTTextStyle.title18,
           ),
           bottom: bottom,
         ),

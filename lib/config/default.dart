@@ -55,7 +55,7 @@ class TTTextStyle {
   );
   static const TextStyle title18 = TextStyle(
     fontFamily: fontFamily,
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w600,
     fontStyle: FontStyle.normal,
     fontSize: 18,
     color: TTColors.text,

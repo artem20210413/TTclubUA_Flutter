@@ -14,6 +14,7 @@ import '../components/TTLoading.dart';
 import '../components/buttons/GlowingButton.dart';
 import '../components/inputs/CustomInputField.dart';
 import '../utils/url_launcher.dart';
+import 'Auth/LoginTgPhoneScreen.dart';
 
 // import 'package:local_auth/local_auth.dart';
 // import 'package:flutter/services.dart';
@@ -111,8 +112,6 @@ class _LoginState extends State<Login> {
   //     debugPrint('Could not launch $uri');
   //   }
   // }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -259,9 +258,46 @@ class _LoginState extends State<Login> {
                       const SizedBox(height: 12),
                       Center(
                         child: TextButton(
+                          onPressed: _isLoadingSubmit ? null : () => {},
+                          style: TextButton.styleFrom(
+                            foregroundColor: TTColors.text_secondary,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 6),
+                          ),
+                          child: const Text(
+                            'Увійти за допомогою Телеграма (БЕТА)',
+                            style: TextStyle(
+                              fontSize: 16,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ),
+                      GlowingButton(
+                        text: 'Увійти через код в Telegram',
+                        onPressed: _isLoadingSubmit
+                            ? () {}
+                            : () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => LoginTgPhoneScreen(
+                                initialPhone: _phoneController.text, // подставляем, если ввёл
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+
+                      Center(
+                        child: TextButton(
                           onPressed: _isLoadingSubmit
                               ? null
-                              : () => UrlHelper.openExternal(context, _tgForgotUri, title: 'Перехід до Telegram', message: 'Ви збираєтесь відкрити зовнішній застосунок Telegram. Продовжити?'),
+                              : () => UrlHelper.openExternal(
+                                  context, _tgForgotUri,
+                                  title: 'Перехід до Telegram',
+                                  message:
+                                      'Ви збираєтесь відкрити зовнішній застосунок Telegram. Продовжити?'),
                           style: TextButton.styleFrom(
                             foregroundColor: TTColors.text_secondary,
                             padding: const EdgeInsets.symmetric(
@@ -290,11 +326,11 @@ class _LoginState extends State<Login> {
                       //   ),
                       // ),
 
-
                       Center(
                         child: GestureDetector(
-                          onTap:
-                              _isLoadingSubmit ? null : () => UrlHelper.openInternal(_signupUri),
+                          onTap: _isLoadingSubmit
+                              ? null
+                              : () => UrlHelper.openInternal(_signupUri),
                           child: RichText(
                             text: TextSpan(
                               style: const TextStyle(
