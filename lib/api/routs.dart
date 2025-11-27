@@ -10,6 +10,8 @@ Map<String, String> HEADERS([String? token = null]) {
 }
 
 const URL_LOGIN = '${_HOST}/api/login';
+const URL_LOGIN_TG_VERIFY = '${_HOST}/api/login/tg/verify';
+const URL_LOGIN_TG_SEND_CODE = '${_HOST}/api/login/tg/send-code';
 const URL_LOGOUT = '${_HOST}/api/logout';
 const URL_USER = '${_HOST}/api/user';
 const URL_USER_EXPORT = '${_HOST}/api/user/export';

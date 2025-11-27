@@ -33,6 +33,31 @@ Future API_LOGIN(String login, String password) async {
   return response;
 }
 
+Future API_LOGIN_TG_VERIFY(String phone, String code) async {
+  final response = await http.post(
+    Uri.parse(URL_LOGIN_TG_VERIFY),
+    headers: HEADERS(),
+    body: jsonEncode(<String, String>{
+      'phone': phone,
+      'code': code,
+    }),
+  );
+
+  return response;
+}
+
+Future API_LOGIN_TG_SEND_CODE(String phone) async {
+  final response = await http.post(
+    Uri.parse(URL_LOGIN_TG_SEND_CODE),
+    headers: HEADERS(),
+    body: jsonEncode(<String, String>{
+      'phone': phone,
+    }),
+  );
+
+  return response;
+}
+
 Future<void> API_LOGOUT(String? token) async {
   await http.post(
     Uri.parse(URL_LOGOUT),
