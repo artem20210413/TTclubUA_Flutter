@@ -23,13 +23,11 @@ import '../../../../api/routs/Dto/Event/EventTypeDto.dart';
 import '../../../../api/routs/events.dart';
 
 class EventUploadScreen extends StatefulWidget {
-  final EventDto? item;
-  // List<EventTypeDto> allTypes; // 👈 список возможных типів подій
+  final EventDto? item; // 👈 список возможных типів подій
 
   const EventUploadScreen({
     super.key,
     this.item,
-    // this.allTypes = EventTypeDto.empty(),
   });
 
   @override
@@ -37,6 +35,7 @@ class EventUploadScreen extends StatefulWidget {
 }
 
 class _EventUploadScreenState extends State<EventUploadScreen> {
+  List<EventTypeDto> allTypes = [];
   final _formKey = GlobalKey<FormState>();
   late EventDto _event;
   bool _isLoading = false;
@@ -45,8 +44,33 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
   @override
   void initState() {
     super.initState();
+
+    setState(() {
+      _isLoading = true;
+    });
+    _fetchEventType();
     // если пришёл существующий ивент — редактируем, иначе создаём новый
     _event = widget.item ?? EventDto.empty();
+  }
+
+  Future<void> _fetchEventType() async {
+    final token = await UserStorage.getToken();
+
+    final res = await EVENT_TYPE_LIST(token);
+
+    final isSuccess = await CHECK_API(res, context);
+
+    if (!isSuccess) return;
+
+    final data = jsonDecode(res.body)['data'] as List;
+
+    final newItems = data.map((e) => EventTypeDto.fromJson(e)).toList();
+
+    setState(() {
+      allTypes = newItems;
+
+      _isLoading = false;
+    });
   }
 
   Future<void> _saveEvent() async {
@@ -287,7 +311,7 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
                     const SizedBox(height: 6),
                     // TTSelect<EventTypeDto>(
                     //   value: _event.eventType,
-                    //   items: widget.allTypes,
+                    //   items: allTypes,
                     //   labelBuilder: (t) => t.name,
                     //   onChanged: (v) {
                     //     if (v == null) return;

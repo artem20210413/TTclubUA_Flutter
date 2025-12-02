@@ -51,7 +51,7 @@ class TTSelect<T> extends StatelessWidget {
                 child: Text(
                   label,
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis, // 👈 не даём вылезать
+                  overflow: TextOverflow.ellipsis,
                   style: baseStyle.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,

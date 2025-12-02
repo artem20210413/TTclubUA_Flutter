@@ -60,6 +60,8 @@ const URL_EVENT_ADD_IMAGE = '${_HOST}/api/event/{event}/image';
 const URL_EVENT_DELETE_IMAGE = '${_HOST}/api/event/{event}/image';
 const url_event_change_active = '${_HOST}/api/event/{event}/active/{active}';
 
+const URL_EVENT_TYPE_LIST = '${_HOST}/api/event/type';
+
 const URL_SEARCH_CAR = '${_HOST}/api/car/search';
 const URL_CAR_CREATE = '${_HOST}/api/car/create';
 const URL_CAR_UPDATE = '${_HOST}/api/car/{id}';

@@ -77,12 +77,23 @@ Future<http.Response> EVENT_LIST(
   return response;
 }
 
+Future<http.Response> EVENT_TYPE_LIST(String? token) async {
+  final uri = Uri.parse(URL_EVENT_TYPE_LIST);
+
+  final response = await http.get(
+    uri,
+    headers: HEADERS(token),
+  );
+
+  return response;
+}
+
 Future<http.Response> EVENT_IMAGE_DELETE(
     String? token, int itemId, ImageUrlDto dto) async {
   final url = URL_EVENT_DELETE_IMAGE
       .replaceAll('{event}', itemId.toString())
       .replaceAll('{mediaId}', dto.id.toString());
-
+// print(url);
   final response = await http.delete(
     Uri.parse(url),
     headers: HEADERS(token),

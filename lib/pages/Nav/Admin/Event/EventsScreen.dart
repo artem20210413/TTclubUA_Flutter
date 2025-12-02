@@ -241,7 +241,7 @@ class _EventsScreenState extends State<EventsScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (_) => EventUploadScreen(
-                            item: null,               // 👉 создаём новую подію
+                            item: event,               // 👉 создаём новую подію
                           ),
                         ),
                       );
