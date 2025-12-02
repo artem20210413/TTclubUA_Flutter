@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tt_club_ua/config/default.dart';
 import 'package:tt_club_ua/api/routs/Dto/Event/EventDto.dart';
 
+import '../../../../components/TTNeumorphicBox.dart';
+import '../../../../components/labels/StatusBadge.dart';
 import '../../../../components/viewers/ImagesCarousel.dart';
 
 class EventAdminCard extends StatelessWidget {
@@ -34,21 +36,11 @@ class EventAdminCard extends StatelessWidget {
     final isActive = event.activeNotifier.value;
     final dateText = event.descriptionController.text;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: TTColors.card,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: isActive
-              ? accentColor.withOpacity(0.5)
-              : TTColors.text_secondary.withOpacity(0.3),
-        ),
-      ),
-      padding: const EdgeInsets.all(12),
+    return TTNeumorphicBox(
+      padding: EdgeInsets.only(top: 16, bottom: 24, left: 16, right: 24),
+      // radius: 32,
       child: Column(
         children: [
-          // Expanded(
-          //   child:
           GestureDetector(
             onTapUp: (_) => onEdit(),
             child: Column(
@@ -76,13 +68,7 @@ class EventAdminCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Text(
-                      isActive ? 'Активна' : 'Неактивна',
-                      style: TTTextStyle.subtitle.copyWith(
-                        fontSize: 11,
-                        color: isActive ? TTColors.success : TTColors.danger,
-                      ),
-                    ),
+                    StatusBadge(isActive: isActive),
                   ],
                 ),
 

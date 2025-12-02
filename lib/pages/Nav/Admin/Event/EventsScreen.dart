@@ -15,6 +15,7 @@ import '../../../../components/TTLoading.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/interface/SearchBarWidgetState.dart';
 import '../../../../components/layout/TTScaffold.dart';
+import 'EventUploadScreen.dart';
 
 class EventsScreen extends StatefulWidget {
   const EventsScreen({super.key});
@@ -236,15 +237,15 @@ class _EventsScreenState extends State<EventsScreen> {
                     accentColor: accentColor,
                     event: event,
                     onEdit: () async {
-                      // final result = await Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (_) => EventUploadScreen(
-                      //       item: event,
-                      //     ),
-                      //   ),
-                      // );
-                      // if (result == true) _onSearch();
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => EventUploadScreen(
+                            item: null,               // 👉 создаём новую подію
+                          ),
+                        ),
+                      );
+                      if (result == true) _onSearch();
                     },
                   ),
                 );
@@ -275,13 +276,13 @@ class _EventsScreenState extends State<EventsScreen> {
           child: IconButton(
             icon: Icon(Icons.add, color: accentColor, size: 30),
             onPressed: () async {
-              // final result = await Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (_) => const EventUploadScreen(),
-              //   ),
-              // );
-              // if (result == true) _onSearch();
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const EventUploadScreen(),
+                ),
+              );
+              if (result == true) _onSearch();
             },
           ),
         ),
