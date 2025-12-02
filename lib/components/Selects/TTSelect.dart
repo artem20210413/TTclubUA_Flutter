@@ -36,6 +36,7 @@ class TTSelect<T> extends StatelessWidget {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<T>(
           value: value,
+          isExpanded: true,
           dropdownColor: dropdownColor ?? TTColors.card,
           borderRadius: BorderRadius.circular(16),
           icon: Icon(icon, color: iconColor),
@@ -49,6 +50,8 @@ class TTSelect<T> extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis, // 👈 не даём вылезать
                   style: baseStyle.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -67,6 +70,8 @@ class TTSelect<T> extends StatelessWidget {
               value: item,
               child: Text(
                 label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: baseStyle.copyWith(
                   color: isSelected ? TTColors.text : TTColors.text_secondary,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,

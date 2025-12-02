@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tt_club_ua/config/default.dart';
-import '../../api/routs/Dto/Goods/GoodsDto.dart';
-import '../../components/TTNeumorphicBox.dart';
-import '../../components/buttons/GlowingButton.dart';
-import '../buttons/CircleButton.dart';
-import '../viewers/ImagesCarousel.dart';
-import 'CarImageBlock.dart';
+import '../../../../api/routs/Dto/Goods/GoodsDto.dart';
+import '../../../../components/TTNeumorphicBox.dart';
+import '../../../../components/buttons/GlowingButton.dart';
+import '../../../../components/buttons/CircleButton.dart';
+import '../../../../components/viewers/ImagesCarousel.dart';
+import '../../../../components/card/CarImageBlock.dart';
 
 class GoodsCardForAdmin extends StatelessWidget {
   final GoodsDto item;
@@ -39,6 +39,27 @@ class GoodsCardForAdmin extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Порядок:  ' + item.priorityController.text,
+                    style: TTTextStyle.subtitle,
+                    textAlign: TextAlign.start,
+
+                  ),
+
+                  Text(
+                    item.activeNotifier.value ? 'Активна' : 'Неактивна',
+                    style: TTTextStyle.subtitle.copyWith(
+                      fontSize: 11,
+                      color: item.activeNotifier.value ? TTColors.success : TTColors.danger,
+                    ),
+                  ),
+
+                ],
+              ),
+              const SizedBox(height: 14),
               // --- Фото товару ---
 
               // CarImageBlock(
@@ -82,7 +103,7 @@ class GoodsCardForAdmin extends StatelessWidget {
                 children: [
                   Text(
                     'Порядок:  ' + item.priorityController.text,
-                    style: TTTextStyle.title18,
+                    style: TTTextStyle.subtitle,
                     textAlign: TextAlign.start,
 
                   ),
@@ -156,21 +177,21 @@ class GoodsCardForAdmin extends StatelessWidget {
             ],
           ),
         ),
-        Positioned(
-          right: 8,
-          top: 0,
-          child: CircleButton(
-            accentColor: item.activeNotifier.value ? Colors.green : Colors.red,
-            iconAsset: item.activeNotifier.value
-                ? 'assets/svg/check_mark.svg'
-                : 'assets/svg/circle-fill.svg',
-          ),
-          //   accentColor: item.activeNotifier.value ? Colors.green : Colors.red,
-          //   iconAsset: item.activeNotifier.value ? 'assets/svg/check_mark.svg' : 'assets/svg/circle-fill.svg',
-          //   // onTap: _pickAndUploadImage,
-          // ),
-          // CircleButton(
-        ),
+        // Positioned(
+        //   right: 8,
+        //   top: 0,
+        //   child: CircleButton(
+        //     accentColor: item.activeNotifier.value ? Colors.green : Colors.red,
+        //     iconAsset: item.activeNotifier.value
+        //         ? 'assets/svg/check_mark.svg'
+        //         : 'assets/svg/circle-fill.svg',
+        //   ),
+        //   //   accentColor: item.activeNotifier.value ? Colors.green : Colors.red,
+        //   //   iconAsset: item.activeNotifier.value ? 'assets/svg/check_mark.svg' : 'assets/svg/circle-fill.svg',
+        //   //   // onTap: _pickAndUploadImage,
+        //   // ),
+        //   // CircleButton(
+        // ),
         // Positioned(
         //   left: 15,
         //   top: 15,

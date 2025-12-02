@@ -29,18 +29,50 @@ Future<http.Response> EDENT_CREATE(String? token, EventDto dto) async {
   return response;
 }
 
-Future<http.Response> CALENDAR_LIST(String? token, {String? month = null, int page = 1}) async {
+Future<http.Response> CALENDAR_LIST(String? token,
+    {String? month = null, int page = 1}) async {
   final uri = Uri.parse(URL_CALENDAR_LIST).replace(queryParameters: {
     // 'title': title,
     'month': month, // формат YYYY-MM
     'page': page.toString(),
   });
 
-
   final response = await http.get(uri, headers: HEADERS(token));
 
   // print('Response status: ${response.statusCode}');
   // print('Response body: ${jsonDecode(response.body)}');
+
+  return response;
+}
+
+Future<http.Response> EVENT_LIST(
+  String? token,
+  String search, {
+  int page = 1,
+  int? type, // наприклад: "club", "world", "birthday"
+  bool? active, // якщо потрібно
+}) async {
+  final query = <String, String>{
+    'page': page.toString(),
+  };
+
+  if (search.trim().isNotEmpty) {
+    query['search'] = search.trim();
+  }
+  if (type != null && type != 0) {
+    query['type'] = type.toString();
+  }
+  if (active != null) {
+    query['active'] = active ? '1' : '0';
+  }
+  print(URL_EVENT_LIST);
+  print(query);
+  final uri = Uri.parse(URL_EVENT_LIST).replace(queryParameters: query);
+
+  final response = await http.get(
+    uri,
+    headers: HEADERS(token),
+  );
 
   return response;
 }
