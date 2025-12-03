@@ -58,6 +58,7 @@ const URL_EVENT_CREATE = '${_HOST}/api/event';
 const URL_EVENT_UPLOAD = '${_HOST}/api/event/{event}';
 const URL_EVENT_ADD_IMAGE = '${_HOST}/api/event/{event}/image';
 const URL_EVENT_DELETE_IMAGE = '${_HOST}/api/event/{event}/image';
+const URL_EVENT_COLLECTIONS_IMAGE = '${_HOST}/api/event/{event}/collections/{mediaId}';
 const url_event_change_active = '${_HOST}/api/event/{event}/active/{active}';
 
 const URL_EVENT_TYPE_LIST = '${_HOST}/api/event/type';

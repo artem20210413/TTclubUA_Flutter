@@ -90,10 +90,10 @@ Future<http.Response> EVENT_TYPE_LIST(String? token) async {
 
 Future<http.Response> EVENT_IMAGE_DELETE(
     String? token, int itemId, ImageUrlDto dto) async {
-  final url = URL_EVENT_DELETE_IMAGE
+  final url = URL_EVENT_COLLECTIONS_IMAGE
       .replaceAll('{event}', itemId.toString())
       .replaceAll('{mediaId}', dto.id.toString());
-// print(url);
+print(url);
   final response = await http.delete(
     Uri.parse(url),
     headers: HEADERS(token),
