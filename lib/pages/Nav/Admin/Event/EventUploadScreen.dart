@@ -23,7 +23,7 @@ import '../../../../api/routs/Dto/Event/EventTypeDto.dart';
 import '../../../../api/routs/events.dart';
 
 class EventUploadScreen extends StatefulWidget {
-  final EventDto? item; // 👈 список возможных типів подій
+  final EventDto? item;
 
   const EventUploadScreen({
     super.key,
@@ -45,42 +45,44 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
   void initState() {
     super.initState();
 
-    setState(() {
-      _isLoading = true;
-    });
-    _fetchEventType();
-    // если пришёл существующий ивент — редактируем, иначе создаём новый
+    _isLoading = true;
     _event = widget.item ?? EventDto.empty();
+    _fetchEventType();
   }
 
   Future<void> _fetchEventType() async {
     final token = await UserStorage.getToken();
-
     final res = await EVENT_TYPE_LIST(token);
-
     final isSuccess = await CHECK_API(res, context);
 
     if (!isSuccess) return;
 
     final data = jsonDecode(res.body)['data'] as List;
-
-    final newItems = data.map((e) => EventTypeDto.fromJson(e)).toList();
+    final loaded = data.map((e) => EventTypeDto.fromJson(e)).toList();
 
     setState(() {
-      allTypes = newItems;
+      allTypes = loaded;
+
+      // выбираем тип из списка
+      final match = allTypes.firstWhere(
+        (t) => t.id == _event.eventType.id,
+        orElse: () => allTypes.first,
+      );
+
+      _event.eventType = match;
 
       _isLoading = false;
     });
   }
 
   Future<void> _saveEvent() async {
+    // print(_event.toJson());
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
 
     final token = await UserStorage.getToken();
     final bool isEdit = _event.id != null;
-
     final res = isEdit
         ? await EDENT_UPLOAD(token, _event)
         : await EDENT_CREATE(token, _event);
@@ -165,23 +167,31 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
     }
   }
 
+  String _formatDate(DateTime? dt) {
+    if (dt == null) return 'Оберіть дату';
+    return "${dt.day.toString().padLeft(2, '0')}.${dt.month.toString().padLeft(2, '0')}.${dt.year}";
+  }
+
+  String _formatTime(DateTime? dt) {
+    if (dt == null) return 'Оберіть час';
+    return "${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
+  }
+
   Future<void> _pickEventDate() async {
     final now = DateTime.now();
-    final initial = _event.eventDate ?? now;
 
-    final picked = await showDatePicker(
+    final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: initial,
+      initialDate: _event.eventDate ?? now,
       firstDate: DateTime(now.year - 1),
       lastDate: DateTime(now.year + 5),
       builder: (context, child) {
-        // можно оформить в твоём стиле
         return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.dark(
-              primary: Colors.white,
-              onPrimary: Colors.black,
-              surface: TTColors.card,
+          data: ThemeData.dark().copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: accentColor,
+              onPrimary: Colors.white,
+              surface: TTColors.background,
               onSurface: Colors.white,
             ),
           ),
@@ -191,17 +201,59 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
     );
 
     if (picked != null) {
+      // якщо вже є час — зберегти годину
+      final old = _event.eventDate ?? now;
+
       setState(() {
-        _event.eventDate = picked;
+        _event.eventDate = DateTime(
+          picked.year,
+          picked.month,
+          picked.day,
+          old.hour,
+          old.minute,
+        );
       });
     }
   }
 
-  String _formatDate(DateTime? d) {
-    if (d == null) return 'Оберіть дату';
-    return '${d.day.toString().padLeft(2, '0')}.'
-        '${d.month.toString().padLeft(2, '0')}.'
-        '${d.year}';
+  Future<void> _pickEventTime() async {
+    final old = _event.eventDate ?? DateTime.now();
+
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(old),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.dark().copyWith(
+            timePickerTheme: TimePickerThemeData(
+              backgroundColor: TTColors.background,
+              dialHandColor: accentColor,
+              hourMinuteColor: Colors.transparent,
+              hourMinuteTextColor: Colors.white,
+              dayPeriodColor: TTColors.background,
+              dayPeriodTextColor: Colors.white,
+              entryModeIconColor: Colors.white,
+            ),
+          ),
+          child: MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+            child: child!,
+          ),
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        _event.eventDate = DateTime(
+          old.year,
+          old.month,
+          old.day,
+          picked.hour,
+          picked.minute,
+        );
+      });
+    }
   }
 
   @override
@@ -219,20 +271,23 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
                 child: Column(
                   children: [
                     // Блок фото (только если событие уже создано и есть id)
-                    if (_event.id != null)
+                    if (isEdit)
                       GoodsImagesEditor(
                         images: _event.images,
                         accentColor: accentColor,
                         onAdd: _addImage,
                         onDelete: _deleteImage,
                       ),
-                    if (_event.id != null) const SizedBox(height: 24),
+                    if (isEdit) const SizedBox(height: 24),
 
                     /// Назва
                     CustomInputField(
                       controller: _event.titleController,
                       label: 'Назва події',
-                      validator: (v) => (v == null || v.trim().isEmpty)
+                      validator: (_) => (_event.titleController.value
+                              .toString()
+                              .trim()
+                              .isEmpty)
                           ? 'Вкажіть назву події'
                           : null,
                     ),
@@ -258,6 +313,31 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
                     CustomInputField(
                       controller: _event.googleMapsController,
                       label: 'Посилання на Google Maps',
+                    ),
+                    const SizedBox(height: 16),
+
+                    /// Тип події
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Тип події',
+                        style: TTTextStyle.subtitle,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    allTypes.isEmpty
+                        ? const TTLoading()
+                        : SingleChildScrollView(
+
+                      child: TTSelect<EventTypeDto>(
+                        value: _event.eventType,
+                        items: allTypes,
+                        labelBuilder: (t) => t.name,
+                        onChanged: (v) {
+                          if (v == null) return;
+                          setState(() => _event.eventType = v);
+                        },
+                      ),
                     ),
                     const SizedBox(height: 16),
 
@@ -300,26 +380,41 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    /// Тип події
+                    /// Час події
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Тип події',
+                        'Час події',
                         style: TTTextStyle.subtitle,
                       ),
                     ),
                     const SizedBox(height: 6),
-                    // TTSelect<EventTypeDto>(
-                    //   value: _event.eventType,
-                    //   items: allTypes,
-                    //   labelBuilder: (t) => t.name,
-                    //   onChanged: (v) {
-                    //     if (v == null) return;
-                    //     setState(() {
-                    //       _event.eventType = v;
-                    //     });
-                    //   },
-                    // ),
+
+                    GestureDetector(
+                      onTap: _pickEventTime,
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: TTColors.card,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: TTColors.text_secondary.withOpacity(0.3),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              _formatTime(_event.eventDate),
+                              style: TTTextStyle.subtitle,
+                            ),
+                            const Icon(Icons.schedule, color: Colors.white70),
+                          ],
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 16),
 
                     /// Активність

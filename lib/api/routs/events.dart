@@ -93,11 +93,12 @@ Future<http.Response> EVENT_IMAGE_DELETE(
   final url = URL_EVENT_COLLECTIONS_IMAGE
       .replaceAll('{event}', itemId.toString())
       .replaceAll('{mediaId}', dto.id.toString());
-print(url);
+// print(url);
   final response = await http.delete(
     Uri.parse(url),
     headers: HEADERS(token),
   );
+  // print(response.body);
 
   return response;
 } //

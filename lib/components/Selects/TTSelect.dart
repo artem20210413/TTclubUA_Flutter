@@ -30,12 +30,15 @@ class TTSelect<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextStyle baseStyle = (textStyle ?? TTTextStyle.title18);
+// 👇 Проверяем, что value реально есть в списке
+    final bool hasValue = value != null && items.contains(value);
+    final T? safeValue = hasValue ? value : null;
 
     return TTNeumorphicBox(
       padding: padding,
       child: DropdownButtonHideUnderline(
         child: DropdownButton<T>(
-          value: value,
+          value: safeValue,
           isExpanded: true,
           dropdownColor: dropdownColor ?? TTColors.card,
           borderRadius: BorderRadius.circular(16),

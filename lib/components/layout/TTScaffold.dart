@@ -48,7 +48,7 @@ class TTScaffold extends StatelessWidget {
                     color: Colors.white,
                     size: 20,
                   ),
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pop(context, true),
                 )
               : null,
           title: title != null
