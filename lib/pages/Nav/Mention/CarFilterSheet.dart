@@ -114,6 +114,16 @@ class _CarFilterSheetState extends State<CarFilterSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 12),
+              decoration: BoxDecoration(
+                color: widget.accentColor.withOpacity(0.4),
+                // color: Colors.white24,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
             // ─── Хедер ────────────────────────────────
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
