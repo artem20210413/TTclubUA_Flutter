@@ -126,7 +126,7 @@ class _LoginTgPhoneScreenState extends State<LoginTgPhoneScreen> {
                         label: 'Номер телефону',
                         prefixText: '+',
                         keyboardType: TextInputType.phone,
-                        icon: SvgPicture.asset(
+                        suffixIcon: SvgPicture.asset(
                           'assets/svg/user.svg',
                           fit: BoxFit.none,
                           width: 36,

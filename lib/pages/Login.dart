@@ -203,7 +203,7 @@ class _LoginState extends State<Login> {
                           label: 'Номер телефону',
                           prefixText: '+',
                           keyboardType: TextInputType.phone,
-                          icon: SvgPicture.asset(
+                          suffixIcon: SvgPicture.asset(
                             'assets/svg/user.svg',
                             fit: BoxFit.none,
                             // игнорировать внешние ограничения на масштаб
@@ -236,7 +236,7 @@ class _LoginState extends State<Login> {
                           controller: _passwordController,
                           label: 'Пароль',
                           obscureText: true,
-                          icon: SvgPicture.asset(
+                          suffixIcon: SvgPicture.asset(
                             'assets/svg/lock.svg',
                             width: 36,
                             height: 36,

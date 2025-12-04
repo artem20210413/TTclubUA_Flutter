@@ -40,16 +40,49 @@ Future<Response> GET_COLORS(String? token) async {
   return response;
 }
 
-Future<http.Response> SEARCH_CAR(String? token, String? search,
-    {int page = 1}) async {
-  final uri = Uri.parse(URL_SEARCH_CAR).replace(queryParameters: {
-    'search': search ?? '',
+// Future<http.Response> SEARCH_CAR(String? token, String? search,
+//     {int page = 1}) async {
+//   final uri = Uri.parse(URL_SEARCH_CAR).replace(queryParameters: {
+//     'search': search ?? '',
+//     'page': page.toString(),
+//   });
+//
+//   final response = await http.get(uri, headers: HEADERS(token));
+//   return response;
+// }
+Future<http.Response> SEARCH_CAR(
+    String? token,
+    String query, {
+      int page = 1,
+      List<int>? geneIds,
+      List<int>? modelIds,
+      List<int>? colorIds,
+      String? city,
+    }) async {
+  final params = {
+    'search': query,
     'page': page.toString(),
-  });
+  };
 
+  if (city != null && city.isNotEmpty) {
+    params['city'] = city;
+  }
+
+  if (geneIds != null && geneIds.isNotEmpty) {
+    params['gene_ids'] = geneIds.join(',');
+  }
+  if (modelIds != null && modelIds.isNotEmpty) {
+    params['model_ids'] = modelIds.join(',');
+  }
+  if (colorIds != null && colorIds.isNotEmpty) {
+    params['color_ids'] = colorIds.join(',');
+  }
+  final uri = Uri.parse(URL_SEARCH_CAR).replace(queryParameters: params);
+print(uri);
   final response = await http.get(uri, headers: HEADERS(token));
   return response;
 }
+
 
 Future<http.Response> CAR_FIND(String? token, int carId) async {
   final response = await http.get(

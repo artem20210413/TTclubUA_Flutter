@@ -90,7 +90,7 @@ class _ColorAccentPickerState extends State<ColorAccentPicker> {
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: isActive
-                        ? Colors.white
+                        ? c
                         : Colors.black.withOpacity(0.35),
                     width: isActive ? 2 : 1.2,
                   ),

@@ -9,7 +9,8 @@ class CustomInputField extends StatelessWidget {
   final String prefixText;
   final bool obscureText;
 
-  final Widget? icon;
+  final Widget? suffixIcon;
+  final Widget? prefixIcon;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
 
@@ -23,7 +24,8 @@ class CustomInputField extends StatelessWidget {
     required this.label,
     this.prefixText = '',
     this.obscureText = false,
-    this.icon,
+    this.suffixIcon,
+    this.prefixIcon,
     this.keyboardType = TextInputType.text,
     this.validator,
     this.onChanged,
@@ -88,7 +90,8 @@ class CustomInputField extends StatelessWidget {
                   border: InputBorder.none,
                   errorStyle: const TextStyle(height: 0),
                   // скрываем стандартный текст под полем
-                  suffixIcon: icon,
+                  suffixIcon: suffixIcon,
+                  prefixIcon: prefixIcon
                 ),
                 onChanged: (value) {
                   state.didChange(value); // ✅ для валидации FormField

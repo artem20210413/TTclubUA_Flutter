@@ -118,7 +118,7 @@ class _LoginTgCodeScreenState extends State<LoginTgCodeScreen> {
                   controller: _codeController,
                   label: 'Код з Telegram',
                   keyboardType: TextInputType.number,
-                  icon: SvgPicture.asset(
+                  suffixIcon: SvgPicture.asset(
                     'assets/svg/lock.svg',
                     width: 36,
                     height: 36,
