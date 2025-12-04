@@ -78,7 +78,7 @@ Future<http.Response> SEARCH_CAR(
     params['color_ids'] = colorIds.join(',');
   }
   final uri = Uri.parse(URL_SEARCH_CAR).replace(queryParameters: params);
-print(uri);
+// print(uri);
   final response = await http.get(uri, headers: HEADERS(token));
   return response;
 }
@@ -186,7 +186,7 @@ Future<http.Response> CAR_IMAGE_DELETE(String? token, CarDto car) async {
   final url = Uri.parse(URL_CAR_DELETE_COLLECTIONS
       .replaceAll('{car}', car.id.toString())
       .replaceAll('{images}', car.imageUrls!.first.id.toString()));
-  print(url);
+  // print(url);
   final response = await http.delete(
     url,
     headers: HEADERS(token),
