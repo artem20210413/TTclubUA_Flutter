@@ -284,48 +284,6 @@ class _UserState extends State<User> {
                             flex: 2,
                             child: Row(
                               children: [
-                                // Stack(
-                                //   clipBehavior: Clip.none,
-                                //   children: [
-                                //     Padding(
-                                //       padding:
-                                //           EdgeInsets.only(left: 20, bottom: 20),
-                                //       child: UserAvatar(
-                                //         radius: 65,
-                                //         name: _dto.nameController.text,
-                                //         imageUrl: userProfileImage,
-                                //       ),
-                                //     ),
-                                //     Positioned(
-                                //       left: 0,
-                                //       bottom: 0,
-                                //       child: CircleButton(
-                                //         accentColor: accentColorButton,
-                                //         iconAsset: 'assets/svg/image_add.svg',
-                                //         onTap: _pickAndUploadImage,
-                                //       ),
-                                //     ),
-                                //     if (userProfileImage !=
-                                //         USER_PROFILE_IMAGE_DEFAULT)
-                                //       Positioned(
-                                //         right: -10,
-                                //         top: -20,
-                                //         child: CircleButton(
-                                //           accentColor: accentColorButton,
-                                //           iconAsset: 'assets/svg/trash.svg',
-                                //           onTap: () {
-                                //             ConfirmAndRun(
-                                //               context: context,
-                                //               dialogTitle: 'Видалити фото?',
-                                //               dialogMessage:
-                                //                   'Точно видалити фото профілю?',
-                                //               action: _deleteProfileImage,
-                                //             );
-                                //           },
-                                //         ),
-                                //       ),
-                                //   ],
-                                // ),
                                 Stack(
                                   clipBehavior: Clip.none,
                                   children: [
@@ -733,7 +691,16 @@ class _UserState extends State<User> {
                             text: 'Вихід',
                             colorGrowing: accentColorButton,
                             onPressed: () {
-                              _logout();
+
+                              ConfirmAndRun(
+                                context: context,
+                                dialogTitle: 'Вийти з акаунту?',
+                                dialogMessage:
+                                'Ви впевнені, що хочете вийти зі свого облікового запису?',
+                                action:
+                                _logout, // 👈 тут просто передаём метод
+                              );
+
                             },
                             // isLoading: _isLoadingSubmit,
                           ),
