@@ -58,3 +58,12 @@ Future<http.Response> API_CHANGE_PASSWORD(
 
   return response;
 }
+
+Future<http.Response> API_DELETE_ACCOUNT(String? token) async {
+  final response = await http.delete(
+    Uri.parse(URL_DELETE_ACCOUNT),
+    headers: HEADERS(token),
+  );
+
+  return response;
+}

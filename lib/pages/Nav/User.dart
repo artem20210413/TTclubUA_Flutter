@@ -14,8 +14,10 @@ import 'package:tt_club_ua/pages/Nav/Admin.dart';
 
 import '../../Storage/Cache/AccentColorCache.dart';
 import '../../Storage/Cache/DeviceInsetsCache.dart';
+import '../../api/routs.dart';
 import '../../api/routs/Dto/Car/CarDto.dart';
 import '../../api/routs/Dto/User/UserUpdateDto.dart';
+import '../../api/routs/auth.dart';
 import '../../api/routs/car/car.dart';
 import '../../components/TTLoading.dart';
 import '../../components/TTNeumorphicBox.dart';
@@ -26,6 +28,7 @@ import '../../components/card/UserAvatar.dart';
 import '../../components/inputs/BigTextInput.dart';
 import '../../components/viewers/ChangePasswordSection.dart';
 import '../../components/viewers/ColorAccentPicker.dart';
+import '../../components/viewers/ConfirmAndRun.dart';
 import '../../components/viewers/InstagramLink.dart';
 import '../../components/viewers/PickAndCropImage.dart';
 import '../../components/viewers/TelegramLink.dart';
@@ -142,6 +145,30 @@ class _UserState extends State<User> {
     Navigator.pushReplacementNamed(context, '/login');
   }
 
+
+  Future<void> _deleteAccount() async {
+    final token = await UserStorage.getToken();
+    final res =  await API_DELETE_ACCOUNT(token);
+    final isSuccess = await CHECK_API(res, context);
+
+    if (isSuccess) {
+
+      MessageModule(
+        context,
+        'Всі дані успішно видалено',
+        MessageType.information,
+      );
+    } else {
+      MessageModule(
+        context,
+        'Видалити не вийшло',
+        MessageType.error,
+      );
+    }
+    await UserStorage.clearUserInfo();
+    Navigator.pushReplacementNamed(context, '/login');
+  }
+
   Future<void> _pickAndUploadImage() async {
     final File? croppedFile = await pickAndCropImage(
       context: context,
@@ -159,6 +186,39 @@ class _UserState extends State<User> {
       setState(() {
         userProfileImage = newImageUrl;
       });
+    }
+  }
+
+  Future<void> _deleteProfileImage() async {
+    final token = await UserStorage.getToken();
+
+    final res = await DELETE_USER_PHOTO(token);
+    final isSuccess = await CHECK_API(res, context);
+
+    if (isSuccess) {
+      // если бэк вернёт нового юзера — можно обновить локально
+      try {
+        final body = jsonDecode(res.body);
+        if (body['data'] != null && body['data']['user'] != null) {
+          UserStorage.saveUserInfo(body['data']['user']);
+        }
+      } catch (_) {}
+
+      setState(() {
+        userProfileImage = USER_PROFILE_IMAGE_DEFAULT;
+      });
+
+      MessageModule(
+        context,
+        'Фото профілю успішно видалено',
+        MessageType.success,
+      );
+    } else {
+      MessageModule(
+        context,
+        'Не вдалося видалити фото',
+        MessageType.error,
+      );
     }
   }
 
@@ -244,7 +304,26 @@ class _UserState extends State<User> {
                                         iconAsset: 'assets/svg/image_add.svg',
                                         onTap: _pickAndUploadImage,
                                       ),
-                                    )
+                                    ),
+                                    if (userProfileImage !=
+                                        USER_PROFILE_IMAGE_DEFAULT)
+                                      Positioned(
+                                        right: -10,
+                                        top: -20,
+                                        child: CircleButton(
+                                          accentColor: accentColorButton,
+                                          iconAsset: 'assets/svg/trash.svg',
+                                          onTap: () {
+                                            ConfirmAndRun(
+                                              context: context,
+                                              dialogTitle: 'Видалити фото?',
+                                              dialogMessage:
+                                                  'Точно видалити фото профілю?',
+                                              action: _deleteProfileImage,
+                                            );
+                                          },
+                                        ),
+                                      ),
                                   ],
                                 ),
                                 const SizedBox(width: 12),
@@ -403,7 +482,11 @@ class _UserState extends State<User> {
                         separatorBuilder: (_, __) => const SizedBox(width: 12),
                         itemBuilder: (context, index) {
                           final car = _dto.cars[index];
-                          final imageUrl = _carImages[index];
+                          String imageUrl = _carImages[index];
+                          // bool hasCustomImage = car.imageUrls != null &&
+                          //     car.imageUrls!.isNotEmpty &&
+                          //     car.imageUrls!.first.url != null &&
+                          //     car.imageUrls!.first.url != CAR_IMAGE_DEFAULT;
 
                           Future<void> _pickAndUploadImageCar(
                               CarDto car) async {
@@ -434,6 +517,39 @@ class _UserState extends State<User> {
                                 // car.imageUrls?.clear();
                                 // car.imageUrls?.add(ImageUrlDto(url: newImageUrl));
                               });
+                            }
+                          }
+
+                          Future<void> _deleteCarImage(CarDto car) async {
+                            if (car.imageUrls == null || car.imageUrls!.isEmpty)
+                              return;
+
+                            final token = await UserStorage.getToken();
+
+                            final res = await CAR_IMAGE_DELETE(token,
+                                car); // пример по аналогии с GOODS_IMAGE_DELETE
+                            final isSuccess = await CHECK_API(res, context);
+
+                            if (isSuccess) {
+                              _carImages[index] = CAR_IMAGE_DEFAULT;
+
+                              setState(() {
+                                imageUrl =
+                                    CAR_IMAGE_DEFAULT; // убираем фото локально
+                                // при следующем build imageUrl станет CAR_IMAGE_DEFAULT
+                              });
+
+                              MessageModule(
+                                context,
+                                'Фото успішно видалено',
+                                MessageType.information,
+                              );
+                            } else {
+                              MessageModule(
+                                context,
+                                'Не вдалося видалити фото',
+                                MessageType.error,
+                              );
                             }
                           }
 
@@ -531,8 +647,8 @@ class _UserState extends State<User> {
                                   ],
                                 ),
                                 Positioned(
-                                  right: 0,
-                                  top: 0,
+                                  left: 5,
+                                  bottom: 90,
                                   child: CircleButton(
                                     accentColor: accentColorButton,
                                     iconAsset: 'assets/svg/image_add.svg',
@@ -540,7 +656,26 @@ class _UserState extends State<User> {
                                       _pickAndUploadImageCar(car);
                                     },
                                   ),
-                                )
+                                ),
+                                if (_carImages[index] != CAR_IMAGE_DEFAULT)
+                                  Positioned(
+                                    right: 5,
+                                    top: -5,
+                                    child: CircleButton(
+                                      accentColor: accentColorButton,
+                                      iconAsset: 'assets/svg/trash.svg',
+                                      // сделай такой svg, или замени
+                                      onTap: () {
+                                        ConfirmAndRun(
+                                          context: context,
+                                          dialogTitle: 'Видалити фото?',
+                                          dialogMessage:
+                                              'Точно видалити фото цього авто?',
+                                          action: () => _deleteCarImage(car),
+                                        );
+                                      },
+                                    ),
+                                  ),
                               ],
                             ),
                           );
@@ -598,6 +733,28 @@ class _UserState extends State<User> {
                       ],
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 34),
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          ConfirmAndRun(
+                            context: context,
+                            dialogTitle: 'Видалити акаунт?',
+                            dialogMessage:
+                            'Цю дію неможливо скасувати. Ваш профіль і всі дані будуть видалені назавжди.',
+                            action: _deleteAccount, // 👈 тут просто передаём метод
+                          );
+                        },
+                        child: Text(
+                          'Видалити акаунт назавжди',
+                          style: TTTextStyle.subtitle,
+                        ),
+                      ),
+                    ),
+                  ),
+
+
 
                   // TileButton(
                   //   icon: Icons.payment_outlined,

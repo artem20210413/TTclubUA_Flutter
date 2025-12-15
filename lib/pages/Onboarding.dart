@@ -40,7 +40,7 @@ class _OnboardingState extends State<Onboarding> {
       'subtitle': 'Атмосфера, підтримка, спільні поїздки та справжні знайомства'
     },
     {
-      'image': 'https://tt.tishchenko.kiev.ua/media/images/banner_3.webp',
+      'image': 'assets/ui/banners/banner_3.webp',
       // 'image': 'https://tt.tishchenko.kiev.ua/media/images/banner_3.webp',
       'title': '',
       'subtitle': ''

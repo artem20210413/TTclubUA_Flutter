@@ -10,6 +10,7 @@ import '../../components/TTNeumorphicBox.dart';
 import '../../components/card/PromoCard.dart';
 import '../../components/card/TopActionCard.dart';
 import '../../components/generalModule.dart';
+import '../../utils/url_launcher.dart';
 import '../Nav.dart';
 import 'Calendar.dart';
 import 'Home/AnnualFeePage.dart';
@@ -42,7 +43,8 @@ class _HomeState extends State<Home> {
             Padding(
               padding: const EdgeInsets.only(left: 5, right: 5),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   TopActionCard(
                     iconAsset: 'assets/svg/money.svg',
@@ -56,31 +58,41 @@ class _HomeState extends State<Home> {
                       );
                     },
                   ),
+
+                  const SizedBox(width: 20),
                   TopActionCard(
                     iconAsset: 'assets/svg/telegram.svg',
                     iconSize: 30,
                     onTap: () async {
-                      final Uri url = Uri.parse('https://t.me/TTclubUaBot');
-                      await launchUrl(url,
-                          mode: LaunchMode.externalApplication);
+                      UrlHelper.openExternal(
+                          context, Uri.parse('https://t.me/TTclubUaBot'),
+                          title: 'Перехід до Telegram',
+                          message:
+                              'Ви збираєтесь відкрити зовнішній застосунок Telegram. Продовжити?');
+                      // final Uri url = Uri.parse('https://t.me/TTclubUaBot');
+                      // await launchUrl(url,
+                      //     mode: LaunchMode.externalApplication);
                     },
                   ),
+                  const SizedBox(width: 20),
                   TopActionCard(
                     iconAsset: 'assets/svg/instagram.svg',
                     iconSize: 30,
                     onTap: () async {
-                      final Uri url = Uri.parse(
-                          'https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ==');
-                      await launchUrl(url,
-                          mode: LaunchMode.externalApplication);
+                      UrlHelper.openExternal(context,
+                          Uri.parse('https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ=='));
+                      // final Uri url = Uri.parse(
+                      //     'https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ==');
+                      // await launchUrl(url,
+                      //     mode: LaunchMode.externalApplication);
                     },
                   ),
-                  TopActionCard(
-                    iconAsset: 'assets/svg/question-mark.svg',
-                    iconSize: 30,
-                    iconColor: Colors.white.withOpacity(0.4),
-                    onTap: () {},
-                  ),
+                  // TopActionCard(
+                  //   iconAsset: 'assets/svg/question-mark.svg',
+                  //   iconSize: 30,
+                  //   iconColor: Colors.white.withOpacity(0.4),
+                  //   onTap: () {},
+                  // ),
                 ],
               ),
             ),
@@ -116,32 +128,32 @@ class _HomeState extends State<Home> {
             //   },
             // ),
             const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/ttclubua_in_world.webp',
-              title: 'TTclubUA у світі',
-              enabled: false,
-              onButtonTap: () {
-                // TODO: действие по нажатию
-              },
-            ),
-            const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/partners.webp',
-              title: 'Партнери TTclubUA',
-              enabled: false,
-              onButtonTap: () {
-                // TODO: действие по нажатию
-              },
-            ),
-            const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/promotions_from_partners.webp',
-              title: 'Акції  партнерів',
-              enabled: false,
-              onButtonTap: () {
-                // TODO: действие по нажатию
-              },
-            ),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/ttclubua_in_world.webp',
+            //   title: 'TTclubUA у світі',
+            //   enabled: false,
+            //   onButtonTap: () {
+            //     // TODO: действие по нажатию
+            //   },
+            // ),
+            // const SizedBox(height: 20),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/partners.webp',
+            //   title: 'Партнери TTclubUA',
+            //   enabled: false,
+            //   onButtonTap: () {
+            //     // TODO: действие по нажатию
+            //   },
+            // ),
+            // const SizedBox(height: 20),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/promotions_from_partners.webp',
+            //   title: 'Акції  партнерів',
+            //   enabled: false,
+            //   onButtonTap: () {
+            //     // TODO: действие по нажатию
+            //   },
+            // ),
             // const SizedBox(height: 20),
             // PromoCard(
             //   imagePath: 'assets/ui/banners/military_aid.webp',

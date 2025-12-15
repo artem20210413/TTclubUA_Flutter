@@ -13,6 +13,7 @@ import 'dart:convert';
 import '../components/TTLoading.dart';
 import '../components/buttons/GlowingButton.dart';
 import '../components/inputs/CustomInputField.dart';
+import '../utils/url_launcher.dart';
 
 // import 'package:local_auth/local_auth.dart';
 // import 'package:flutter/services.dart';
@@ -99,6 +100,19 @@ class _LoginState extends State<Login> {
           context, 'Не вдалось відкрити посилання', MessageType.error);
     }
   }
+
+  // Future<void> _open(Uri uri, {LaunchMode mode = LaunchMode.inAppWebView}) async {
+  //   final ok = await launchUrl(
+  //     uri,
+  //     mode: mode, // iOS: откроет внутри приложения (SFSafariViewController / webview)
+  //   );
+  //
+  //   if (!ok) {
+  //     debugPrint('Could not launch $uri');
+  //   }
+  // }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -247,7 +261,7 @@ class _LoginState extends State<Login> {
                         child: TextButton(
                           onPressed: _isLoadingSubmit
                               ? null
-                              : () => _open(_tgForgotUri),
+                              : () => UrlHelper.openExternal(context, _tgForgotUri, title: 'Перехід до Telegram', message: 'Ви збираєтесь відкрити зовнішній застосунок Telegram. Продовжити?'),
                           style: TextButton.styleFrom(
                             foregroundColor: TTColors.text_secondary,
                             padding: const EdgeInsets.symmetric(
@@ -263,10 +277,24 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                       const SizedBox(height: 80),
+
+                      // Center(
+                      //   child: Text(
+                      //     'Заявки для вступу подаються на нашому сайті.',
+                      //     textAlign: TextAlign.center,
+                      //     style: TextStyle(
+                      //       color: TTColors.text_secondary,
+                      //       fontSize: 16,
+                      //       fontWeight: FontWeight.w400,
+                      //     ),
+                      //   ),
+                      // ),
+
+
                       Center(
                         child: GestureDetector(
                           onTap:
-                              _isLoadingSubmit ? null : () => _open(_signupUri),
+                              _isLoadingSubmit ? null : () => UrlHelper.openInternal(_signupUri),
                           child: RichText(
                             text: TextSpan(
                               style: const TextStyle(
@@ -281,7 +309,7 @@ class _LoginState extends State<Login> {
                                   ),
                                 ),
                                 const TextSpan(
-                                  text: 'Зареєструйся!',
+                                  text: 'Заповнюй форму!',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 17,
