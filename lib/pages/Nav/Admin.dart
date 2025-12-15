@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:tt_club_ua/pages/Nav/Admin/Event/EventsScreen.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/Merch/MerchScreen.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/Publication/PublicationsScreen.dart';
 
@@ -57,7 +58,7 @@ class _AdminState extends State<Admin> {
       });
     } else {
       MessageModule(
-          context, 'Затвердженя не туспішно отримано', MessageType.error);
+          context, 'Затвердженя не успішно отримано', MessageType.error);
     }
   }
 
@@ -145,7 +146,7 @@ class _AdminState extends State<Admin> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          PublicationsScreen()), // Переход на экран публикаций
+                          EventsScreen()), // Переход на экран публикаций
                 );
               },
             ),

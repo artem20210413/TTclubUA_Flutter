@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../Storage/Cache/DeviceInsetsCache.dart';
 import '../../config/default.dart';
 
 class TTScaffold extends StatelessWidget {
-  final String title;
+  final String? title;
   final Widget body;
   final bool showBack;
   final Color backgroundColor;
@@ -14,7 +15,7 @@ class TTScaffold extends StatelessWidget {
 
   const TTScaffold({
     super.key,
-    this.title = '',
+    this.title = null,
     required this.body,
     this.showBack = true,
     this.backgroundColor = const Color(0xFF2B2F35),
@@ -35,7 +36,11 @@ class TTScaffold extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
+          toolbarHeight: 32,
+          // 🔥 высота AppBar
           centerTitle: true,
+          scrolledUnderElevation: 0,
+          surfaceTintColor: Colors.transparent,
           leading: showBack
               ? IconButton(
                   icon: const Icon(
@@ -43,17 +48,15 @@ class TTScaffold extends StatelessWidget {
                     color: Colors.white,
                     size: 20,
                   ),
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pop(context, true),
                 )
               : null,
-          title: Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          title: title != null
+              ? Text(
+                  title!,
+                  style: TTTextStyle.title18,
+                )
+              : null,
           bottom: bottom,
         ),
         body: body,

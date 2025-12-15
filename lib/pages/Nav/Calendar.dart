@@ -222,8 +222,8 @@ class _CalendarState extends State<Calendar> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 8),
-              _buildHeader(),
+              // const SizedBox(height: 8),
+              // _buildHeader(),
               const SizedBox(height: 16),
               _buildFilter(),
               const SizedBox(height: 16),
@@ -382,7 +382,7 @@ class _CalendarState extends State<Calendar> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Expanded(child: item(dotClub, 'Події нашого клубу')),
+              Expanded(child: item(dotClub, 'Події клубу')),
               const SizedBox(width: 16),
               Expanded(child: item(dotBirthday, 'Дні народження')),
               const SizedBox(width: 16),
@@ -482,11 +482,11 @@ class _CalendarState extends State<Calendar> {
     // 2) Логика подсветки
     if (_selectedCategory == EventCategory.all) {
       // как было раньше
-      if (hasWorld) {
-        bgColor = dotMuted;
-        tColor = textDart;
-      } else if (hasClub) {
+      if (hasClub) {
         bgColor = dotClub;
+        tColor = textDart;
+      } else if (hasWorld) {
+        bgColor = dotMuted;
         tColor = textDart;
       } else if (hasBirthday) {
         bgColor = dotBirthday;

@@ -12,17 +12,22 @@ import '../inputs/CustomInputField.dart';
 class SearchBarWidget extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback onSearch;
+  final EdgeInsets? padding;
   final Color accentColor;
 
-  SearchBarWidget(
-      {required this.controller,
-      required this.onSearch,
-      this.accentColor = Colors.white});
+  SearchBarWidget({
+    required this.controller,
+    required this.onSearch,
+    this.accentColor = Colors.white,
+    this.padding = null,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+      padding: padding == null
+          ? EdgeInsets.symmetric(horizontal: 16.0, vertical: 8)
+          : padding!,
       child: Row(
         children: [
           Expanded(

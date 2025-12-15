@@ -36,5 +36,13 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+<<<<<<< HEAD
+=======
+	<key>UIDeviceFamily</key>
+    <array>
+        <integer>1</integer> <!-- 1 = iPhone, 2 = iPad -->
+    </array>
+
+>>>>>>> 7d404e607709cebb75542c70a5e0ddcfb334e1d5
 </dict>
 </plist>

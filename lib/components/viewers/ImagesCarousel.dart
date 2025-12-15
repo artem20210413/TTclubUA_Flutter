@@ -72,37 +72,6 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
             )
         ],
       ),
-
-      // Column(
-      //   children: [
-      //     ClipRRect(
-      //       borderRadius: BorderRadius.circular(widget.borderRadius),
-      //       child: SizedBox(
-      //         height: widget.height,
-      //         child: hasImages
-      //             ? PageView.builder(
-      //                 controller: _pageController,
-      //                 itemCount: widget.images.length,
-      //                 onPageChanged: (i) {
-      //                   setState(() => _current = i);
-      //                 },
-      //                 itemBuilder: (_, index) {
-      //                   final img = widget.images[index];
-      //                   return
-      //                     CarImageBlock(
-      //                       uniqueKey: img.id.toString(),
-      //                       imageUrl: img.url,
-      //                     );
-      //                 },
-      //               )
-      //             : _buildEmptyImage(),
-      //       ),
-      //     ),
-      //     const SizedBox(height: 10),
-      //     if (widget.showDots && hasImages && widget.images.length > 1)
-      //       _buildDots(widget.images.length),
-      //   ],
-      // ),
     );
   }
 
@@ -117,7 +86,7 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
           margin: const EdgeInsets.symmetric(horizontal: 4),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: _current == index ? Colors.white : Colors.white24,
+            color: _current == index ? Colors.white : Colors.black54,
           ),
         ),
       ),

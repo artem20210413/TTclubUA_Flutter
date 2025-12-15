@@ -45,5 +45,7 @@ class CarSearchDto {
         images = (json["imageUrls"] as List)
             .map((img) => ImageUrlDto.fromJson(img))
             .toList(),
-        user = UserSearchDto.fromJson(json['user'] ?? {});
+        user = json['user'] == null
+            ? UserSearchDto.empty()
+            : UserSearchDto.fromJson(json['user']);
 }

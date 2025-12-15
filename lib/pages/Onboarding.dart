@@ -61,11 +61,12 @@ class _OnboardingState extends State<Onboarding> {
   Future<void> _checkTokenAndProceed() async {
     bool isValidToken = await UserStorage.checkAndUpdate();
 
-    setState(() {
-      _isLoading = false;
-    });
-
-    if (!isValidToken) return;
+    if (!isValidToken) {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
 
     Navigator.pushReplacementNamed(context, '/nav');
   }

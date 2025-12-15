@@ -4,6 +4,7 @@ import 'package:tt_club_ua/config/default.dart';
 import 'package:tt_club_ua/pages/Nav/Home/Merch/MerchPage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../Storage/Cache/AccentColorCache.dart';
 import '../../Storage/Cache/DeviceInsetsCache.dart';
 import '../../api/routs.dart';
 import '../../components/TTNeumorphicBox.dart';
@@ -33,6 +34,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final accentColor = AccentColorCache.accentColor;
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
@@ -49,6 +51,7 @@ class _HomeState extends State<Home> {
                   TopActionCard(
                     iconAsset: 'assets/svg/money.svg',
                     iconSize: 40,
+                    iconColor: accentColor,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -63,6 +66,7 @@ class _HomeState extends State<Home> {
                   TopActionCard(
                     iconAsset: 'assets/svg/telegram.svg',
                     iconSize: 30,
+                    iconColor: accentColor,
                     onTap: () async {
                       UrlHelper.openExternal(
                           context, Uri.parse('https://t.me/TTclubUaBot'),
@@ -78,6 +82,7 @@ class _HomeState extends State<Home> {
                   TopActionCard(
                     iconAsset: 'assets/svg/instagram.svg',
                     iconSize: 30,
+                    iconColor: accentColor,
                     onTap: () async {
                       UrlHelper.openExternal(context,
                           Uri.parse('https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ=='));

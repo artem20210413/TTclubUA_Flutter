@@ -100,7 +100,7 @@ class _ProfileState extends State<Profile> {
     final screenSize = MediaQuery.of(context).size;
 
     return TTScaffold(
-      title: '',
+      // title: '',
       body: Column(
         children: [
           TTNeumorphicBox(
@@ -138,7 +138,9 @@ class _ProfileState extends State<Profile> {
                                 ],
                               ),
                               if (_dto.isBirthdayToday)
-                                Flexible(
+                                Positioned(
+                                  left: 0,
+                                  top: 0,
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [

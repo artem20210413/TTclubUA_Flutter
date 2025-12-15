@@ -13,9 +13,10 @@ import '../../../../Storage/Cache/DeviceInsetsCache.dart';
 import '../../../../Storage/UserStorage.dart';
 import '../../../../api/routs/root.dart';
 import '../../../../components/CustomAppBar.dart';
+import '../../../../components/Selects/TTSelect.dart';
 import '../../../../components/TTLoading.dart';
 import '../../../../components/card/GoodsCard.dart';
-import '../../../../components/card/GoodsCardForAdmin.dart';
+import 'GoodsCardForAdmin.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/interface/SearchBarWidgetState.dart';
 import '../../../../components/layout/TTScaffold.dart';
@@ -23,6 +24,16 @@ import '../../../../components/layout/TTScaffold.dart';
 class MerchScreen extends StatefulWidget {
   @override
   _MerchScreenState createState() => _MerchScreenState();
+}
+
+enum EventActiveFilter {
+  all(null),
+  active(true),
+  inactive(false);
+
+  final bool? value;
+
+  const EventActiveFilter(this.value);
 }
 
 class _MerchScreenState extends State<MerchScreen> {
@@ -34,7 +45,7 @@ class _MerchScreenState extends State<MerchScreen> {
   bool _hasMore = true;
   ScrollController _scrollController = ScrollController();
   Color accentColor = AccentColorCache.accentColor;
-  bool? _activeFilter = null;
+  EventActiveFilter _activeFilter = EventActiveFilter.all;
 
   @override
   void initState() {
@@ -53,7 +64,7 @@ class _MerchScreenState extends State<MerchScreen> {
   Future<void> fetchSearchResults({int page = 1, bool append = false}) async {
     final token = await UserStorage.getToken();
     final res = await GOODS_LIST(token, _searchController.text,
-        page: page, onlyActive: _activeFilter);
+        page: page, onlyActive: _activeFilter.value);
 
     bool isSuccess = await CHECK_API(res, context);
     if (isSuccess) {
@@ -98,46 +109,40 @@ class _MerchScreenState extends State<MerchScreen> {
     await fetchSearchResults(page: _currentPage, append: true);
   }
 
+  // Widget _buildActiveFilter() {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //       children: [
+  //         _filterChip("Усі", null),
+  //         _filterChip("Активні", true),
+  //         _filterChip("Неактивні", false),
+  //       ],
+  //     ),
+  //   );
+  // }
   Widget _buildActiveFilter() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _filterChip("Усі", null),
-          _filterChip("Активні", true),
-          _filterChip("Неактивні", false),
-        ],
-      ),
-    );
-  }
-
-  Widget _filterChip(String text, bool? value) {
-    final bool selected = _activeFilter == value;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _activeFilter = value;
-        });
-        _onSearch();
-      },
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 180),
-        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(
-          // color: selected ? accentColor : TTColors.card,
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: selected ? accentColor : TTColors.text_secondary,
-          ),
-        ),
-        child: Text(text,
-            style: TTTextStyle.subtitle.copyWith(
-              color: selected ? accentColor : TTColors.text_secondary,
-              fontWeight: selected ? FontWeight.w500 : null,
-            )),
+    return Container(
+      padding: EdgeInsets.only(top: 16, left: 16, right: 8, bottom: 0),
+      child: TTSelect<EventActiveFilter>(
+        value: _activeFilter,
+        items: EventActiveFilter.values,
+        labelBuilder: (v) {
+          switch (v) {
+            case EventActiveFilter.all:
+              return 'Усі';
+            case EventActiveFilter.active:
+              return 'Активні';
+            case EventActiveFilter.inactive:
+              return 'Неактивні';
+          }
+        },
+        onChanged: (v) {
+          if (v == null) return;
+          setState(() => _activeFilter = v);
+          _onSearch();
+        },
       ),
     );
   }
@@ -145,7 +150,7 @@ class _MerchScreenState extends State<MerchScreen> {
   @override
   Widget build(BuildContext context) {
     return TTScaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: ClipRRect(
         borderRadius: BorderRadius.circular(40),
         child: BackdropFilter(

@@ -62,4 +62,9 @@ class UserSearchDto {
             ? json["cities"].map((c) => c["name"]).join(", ")
             : "Міста не вказані",
         isBirthdayToday = json['is_birthday_today'] ?? false;
+
+  static empty() => UserSearchDto.fromJson({
+    'id': 0,
+    'name': '-',
+  });
 }

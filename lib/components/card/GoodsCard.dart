@@ -3,6 +3,7 @@ import 'package:tt_club_ua/config/default.dart';
 import '../../api/routs/Dto/Goods/GoodsDto.dart';
 import '../../components/TTNeumorphicBox.dart';
 import '../../components/buttons/GlowingButton.dart';
+import '../viewers/ImagesCarousel.dart';
 import 'CarImageBlock.dart';
 
 class GoodsCard extends StatelessWidget {
@@ -33,10 +34,15 @@ class GoodsCard extends StatelessWidget {
         children: [
           // --- Фото товару ---
 
-          CarImageBlock(
-            uniqueKey: item.id.toString(),
-            height: screenSize.width * 0.5,
-            imageUrl: imageUrl,
+          // CarImageBlock(
+          //   uniqueKey: item.id.toString(),
+          //   height: screenSize.width * 0.5,
+          //   imageUrl: imageUrl,
+          // ),
+          ImagesCarousel(
+            images: item.images,
+            height: MediaQuery.of(context).size.width * 0.5,
+            borderRadius: 32,
           ),
 
           const SizedBox(height: 14),

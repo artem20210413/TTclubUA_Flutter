@@ -10,6 +10,8 @@ Map<String, String> HEADERS([String? token = null]) {
 }
 
 const URL_LOGIN = '${_HOST}/api/login';
+const URL_LOGIN_TG_VERIFY = '${_HOST}/api/login/tg/verify';
+const URL_LOGIN_TG_SEND_CODE = '${_HOST}/api/login/tg/send-code';
 const URL_LOGOUT = '${_HOST}/api/logout';
 const URL_USER = '${_HOST}/api/user';
 const URL_USER_EXPORT = '${_HOST}/api/user/export';
@@ -51,11 +53,15 @@ const URL_GOODS_IMAGE_CREATE = '${_HOST}/api/goods/{goods}/images';
 
 
 const URL_CALENDAR_LIST = '${_HOST}/api/calendar';
+const URL_EVENT_LIST = '${_HOST}/api/event';
 const URL_EVENT_CREATE = '${_HOST}/api/event';
 const URL_EVENT_UPLOAD = '${_HOST}/api/event/{event}';
 const URL_EVENT_ADD_IMAGE = '${_HOST}/api/event/{event}/image';
 const URL_EVENT_DELETE_IMAGE = '${_HOST}/api/event/{event}/image';
+const URL_EVENT_COLLECTIONS_IMAGE = '${_HOST}/api/event/{event}/collections/{mediaId}';
 const url_event_change_active = '${_HOST}/api/event/{event}/active/{active}';
+
+const URL_EVENT_TYPE_LIST = '${_HOST}/api/event/type';
 
 const URL_SEARCH_CAR = '${_HOST}/api/car/search';
 const URL_CAR_CREATE = '${_HOST}/api/car/create';
