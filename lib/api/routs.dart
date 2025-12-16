@@ -1,10 +1,25 @@
 // const _HOST = 'https://tt.tishchenko.kiev.ua';
+import 'dart:io';
+
 const _HOST = 'https://ttclub.com.ua';
+
+String buildEnvironment() {
+  if (Platform.isAndroid) {
+    return 'android';
+  }
+
+  if (Platform.isIOS) {
+    return 'ios';
+  }
+
+  return 'unknown';
+}
 
 Map<String, String> HEADERS([String? token = null]) {
   return {
     'Content-Type': 'application/json; charset=UTF-8',
     'Accept': 'application/json; charset=UTF-8',
+    'X-Client-Platform': buildEnvironment(),
     if (token != null) 'Authorization': 'Bearer $token',
   };
 }

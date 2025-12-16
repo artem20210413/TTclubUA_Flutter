@@ -10,10 +10,10 @@ Future<http.Response> SEND_SUGGESTIONS(
   // print(request.url);
   request.headers['Authorization'] = 'Bearer $token';
   request.headers['Accept'] = 'application/json';
+  request.headers['X-Client-Platform'] = buildEnvironment();
   // request.headers['Content-Type'] = 'multipart/form-data';
 
   request.fields['description'] = description;
-  request.fields['environment'] = buildEnvironment();
 
   // Добавляем несколько файлов
   for (final image in pickedImages) {
