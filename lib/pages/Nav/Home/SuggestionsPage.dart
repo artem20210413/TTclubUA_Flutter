@@ -7,6 +7,7 @@ import '../../../Storage/UserStorage.dart';
 import '../../../api/routs/suggestions.dart';
 import '../../../components/TTNeumorphicBox.dart';
 import '../../../components/buttons/GlowingButton.dart';
+import '../../../components/generalModule.dart';
 import '../../../components/inputs/BigTextInput.dart';
 import '../../../components/layout/TTScaffold.dart';
 import '../../../components/viewers/ImagesPickerEditor.dart';
@@ -21,6 +22,7 @@ class SuggestionsPage extends StatefulWidget {
 
 class _SuggestionsPageState extends State<SuggestionsPage> {
   Color accentColor = AccentColorCache.accentColor;
+
   // final ImagePicker _picker = ImagePicker();
   List<XFile> _images = [];
   bool isLoading = false;
@@ -31,8 +33,31 @@ class _SuggestionsPageState extends State<SuggestionsPage> {
     final description = descriptionController.text.trim();
 
     if (description.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Опис не може бути порожнім')),
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Опис не може бути порожнім')),
+      // );
+      MessageModule(
+        context,
+        'Опис не може бути порожнім',
+        MessageType.information,
+      );
+      return;
+    }
+
+    if (description.length < 10) {
+      MessageModule(
+        context,
+        'Опис занадто короткий (мінімум 10 символів)',
+        MessageType.information,
+      );
+      return;
+    }
+
+    if (description.length > 500) {
+      MessageModule(
+        context,
+        'Опис занадто довгий (максимум 500 символів)',
+        MessageType.information,
       );
       return;
     }
@@ -51,17 +76,28 @@ class _SuggestionsPageState extends State<SuggestionsPage> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         descriptionController.clear();
         _images.clear();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Дякуємо за відгук! 🙌')),
+
+        MessageModule(
+          context,
+          'Дякуємо за відгук! 🙌',
+          MessageType.information,
         );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text('Дякуємо за відгук! 🙌')),
+        // );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Помилка: ${response.statusCode}')),
+        MessageModule(
+          context,
+          'Помилка: ${response.statusCode}',
+          MessageType.error,
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Помилка відправки: $e')),
+
+      MessageModule(
+        context,
+        'Помилка відправки: $e',
+        MessageType.error,
       );
     } finally {
       setState(() => isLoading = false);
@@ -75,7 +111,7 @@ class _SuggestionsPageState extends State<SuggestionsPage> {
     return TTScaffold(
       title: 'Покращення додатку',
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(top:16, bottom: 0, left: 24, right: 16),
+        padding: const EdgeInsets.only(top: 16, bottom: 0, left: 24, right: 16),
         child: Column(
           children: [
             TTNeumorphicBox(
