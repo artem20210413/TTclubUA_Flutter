@@ -1,86 +1,145 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../Storage/Cache/AccentColorCache.dart';
 import '../../../Storage/UserStorage.dart';
-import '../../../api/routs.dart';
+import '../../../api/routs/suggestions.dart';
 import '../../../components/TTNeumorphicBox.dart';
 import '../../../components/buttons/GlowingButton.dart';
+import '../../../components/inputs/BigTextInput.dart';
 import '../../../components/layout/TTScaffold.dart';
+import '../../../components/viewers/ImagesPickerEditor.dart';
 import '../../../config/default.dart';
 
-class SuggestionsPage extends StatelessWidget {
+class SuggestionsPage extends StatefulWidget {
   const SuggestionsPage({super.key});
 
-  // Future<void> _launchMonobankJar() async {
-  //   final userID = await UserStorage.getId();
-  //
-  //   final Uri url =
-  //   Uri.parse(URL_REDIRECT_JAK.replaceAll('{userId}', userID.toString()));
-  //
-  //   await launchUrl(url, mode: LaunchMode.externalApplication);
-  // }
+  @override
+  State<SuggestionsPage> createState() => _SuggestionsPageState();
+}
+
+class _SuggestionsPageState extends State<SuggestionsPage> {
+  Color accentColor = AccentColorCache.accentColor;
+  // final ImagePicker _picker = ImagePicker();
+  List<XFile> _images = [];
+  bool isLoading = false;
+
+  TextEditingController descriptionController = new TextEditingController();
+
+  Future<void> _sendFeedback() async {
+    final description = descriptionController.text.trim();
+
+    if (description.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Опис не може бути порожнім')),
+      );
+      return;
+    }
+
+    setState(() => isLoading = true);
+
+    try {
+      final token = await UserStorage.getToken();
+
+      final response = await SEND_SUGGESTIONS(
+        token!,
+        _images,
+        description,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        descriptionController.clear();
+        _images.clear();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Дякуємо за відгук! 🙌')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Помилка: ${response.statusCode}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Помилка відправки: $e')),
+      );
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    Color accentColor = AccentColorCache.accentColor;
+    final Color accentColor = AccentColorCache.accentColor;
 
     return TTScaffold(
-      title: 'Спільнота покращень',
+      title: 'Покращення додатку',
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: const EdgeInsets.only(top:16, bottom: 0, left: 24, right: 16),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TTNeumorphicBox(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Разом робимо додаток кращим! 🤝',
-                    style: TTTextStyle.title.copyWith(fontSize: 18, color: accentColor),
+                    'Разом робимо додаток кращим!',
+                    style: TTTextStyle.title18.copyWith(
+                      color: accentColor,
+                    ),
                   ),
+
                   const SizedBox(height: 10),
+
                   Text(
-                    'Ваші ідеї, пропозиції та повідомлення про помилки є ключем до розвитку TT Club UA. Напишіть, що варто додати чи покращити, або опишіть проблему, з якою ви зіткнулися.',
+                    textAlign: TextAlign.center,
+                    'Ваші ідеї, пропозиції та повідомлення про помилки допомагають нам розвивати TT Club UA кожного дня. Діліться своїм досвідом — разом ми зробимо додаток ще кращим для всієї спільноти.',
                     style: TTTextStyle.subtitle,
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 20),
+
+                  // Text(
+                  //   'Опис пропозиції або проблеми (макс. 500 символів)',
+                  //   style: TTTextStyle.subtitle.copyWith(color: accentColor),
+                  // ),
+                  // const SizedBox(height: 8),
+                  BigTextInput(
+                    controller: descriptionController,
+                    hint: 'Опишіть вашу ідею або проблему (макс. 500 символів)',
+                    minHeight: 80,
+                    minLines: 3,
+                  ),
+
+                  const SizedBox(height: 20),
+
                   Text(
-                    'Ваш зворотний зв\'язок допомагає нам створювати стабільний та корисний продукт для всієї спільноти.',
-                    style: TTTextStyle.subtitle.copyWith(fontSize: 12),
-                  ),const SizedBox(height: 20),
-
-                  // --- БЛОК 2: ФОРМА ДЛЯ ПРОПОЗИЦІЙ ТА БАГІВ ---
-
-                  // 1. ОПИС ТЕКСТУ
-                  Text('Опис пропозиції або проблеми (макс. 500 символів)', style: TTTextStyle.subtitle.copyWith(color: accentColor)),
-                  const SizedBox(height: 8),
-
-                  //Опишіть детально: що ви пропонуєте, або як відтворити баг...
-
-                  //Скриншоти або фото
-
-                  // 3. КНОПКА ВІДПРАВКИ
-                  GlowingButton(
-                    text: 'Надіслати відгук',
-                    onPressed: () {
-                      // _sendFeedback(); 👈 Тут має бути метод для відправки даних на бекенд
+                    'Скріншоти або фото до 5 шт. (необовʼязково)',
+                    style: TTTextStyle.subtitle,
+                  ),
+                  const SizedBox(height: 10),
+                  ImagesPickerEditor(
+                    images: _images,
+                    accentColor: accentColor,
+                    maxImages: 5,
+                    onChanged: (images) {
+                      setState(() {
+                        _images = images;
+                      });
                     },
+                  ),
+
+                  const SizedBox(height: 40),
+
+                  GlowingButton(
+                    text: isLoading ? 'Відправка...' : 'Надіслати відгук',
+                    onPressed: isLoading ? () => {} : _sendFeedback,
                     colorGrowing: accentColor,
                   ),
                 ],
               ),
             ),
-
           ],
         ),
       ),
     );
   }
 }
-
