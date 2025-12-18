@@ -321,7 +321,6 @@ class _UserState extends State<User> {
                                     ),
                                   ],
                                 ),
-
                                 const SizedBox(width: 12),
                                 Expanded(
                                   // чтобы имя тоже переносилось
@@ -339,30 +338,61 @@ class _UserState extends State<User> {
                         ],
                       ),
                       SizedBox(height: 18),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   crossAxisAlignment: CrossAxisAlignment.center,
+                      //   children: [
+                      //     Container(
+                      //       child: Row(
+                      //         children: [
+                      //           SvgPicture.asset(
+                      //             'assets/svg/location.svg',
+                      //             width: 15,
+                      //             colorFilter: ColorFilter.mode(
+                      //               TTColors.text_secondary,
+                      //               BlendMode.srcIn,
+                      //             ),
+                      //           ),
+                      //           const SizedBox(width: 4),
+                      //           Text(
+                      //             _dto.citiesText ?? '',
+                      //             style: TTTextStyle.subtitle,
+                      //             overflow: TextOverflow.ellipsis,
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //     InstagramLink(
+                      //       username: _dto.instagramNicknameController.text,
+                      //     ),
+                      //   ],
+                      // ),
+
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/svg/location.svg',
-                                  width: 15,
-                                  colorFilter: ColorFilter.mode(
-                                    TTColors.text_secondary,
-                                    BlendMode.srcIn,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  _dto.citiesText ?? '',
-                                  style: TTTextStyle.subtitle,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
+                          SvgPicture.asset(
+                            'assets/svg/location.svg',
+                            width: 15,
+                            colorFilter: ColorFilter.mode(
+                              TTColors.text_secondary,
+                              BlendMode.srcIn,
                             ),
                           ),
+                          const SizedBox(width: 4),
+
+                          // 👇 ВАЖНО: именно этот Expanded ограничивает ширину текста городов
+                          Expanded(
+                            child: Text(
+                              _dto.citiesText ?? '',
+                              style: TTTextStyle.subtitle,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+
+                          const SizedBox(width: 8),
+
                           InstagramLink(
                             username: _dto.instagramNicknameController.text,
                           ),
@@ -692,16 +722,13 @@ class _UserState extends State<User> {
                             text: 'Вихід',
                             colorGrowing: accentColorButton,
                             onPressed: () {
-
                               ConfirmAndRun(
                                 context: context,
                                 dialogTitle: 'Вийти з акаунту?',
                                 dialogMessage:
-                                'Ви впевнені, що хочете вийти зі свого облікового запису?',
-                                action:
-                                _logout, // 👈 тут просто передаём метод
+                                    'Ви впевнені, що хочете вийти зі свого облікового запису?',
+                                action: _logout, // 👈 тут просто передаём метод
                               );
-
                             },
                             // isLoading: _isLoadingSubmit,
                           ),
@@ -724,32 +751,31 @@ class _UserState extends State<User> {
                               // isLoading: _isLoadingSubmit,
                             ),
                           ),
-                          Expanded(
-                            flex: 3,
-                            child: GlowingButton(
-                              margin: EdgeInsets.only(left: 30),
-                              text: 'Редагувати',
-                              colorGrowing: accentColorButton,
-                              onPressed: () async {
+                        Expanded(
+                          flex: 3,
+                          child: GlowingButton(
+                            margin: EdgeInsets.only(left: 30),
+                            text: 'Редагувати',
+                            colorGrowing: accentColorButton,
+                            onPressed: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ProfileEditPage(),
+                                ),
+                              );
+                              if (result == true) _load();
 
-                                final result = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => ProfileEditPage(),
-                                  ),
-                                );
-                                if (result == true) _load();
-
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => const ProfileEditPage(),
-                                //   ), // Переход на экран публикаций
-                                // );
-                              },
-                              // isLoading: _isLoadingSubmit,
-                            ),
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => const ProfileEditPage(),
+                              //   ), // Переход на экран публикаций
+                              // );
+                            },
+                            // isLoading: _isLoadingSubmit,
                           ),
+                        ),
                       ],
                     ),
                   ),

@@ -101,10 +101,12 @@ class _SendMentionScreenState extends State<SendMentionScreen> {
                         ),
                       ),
                       const SizedBox(width: 4),
-                      Text(
-                        widget.dto.user.citiesText ?? '',
-                        style: TTTextStyle.subtitle,
-                        overflow: TextOverflow.ellipsis,
+                      Expanded(
+                        child: Text(
+                          widget.dto.user.citiesText ?? '',
+                          style: TTTextStyle.subtitle,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),

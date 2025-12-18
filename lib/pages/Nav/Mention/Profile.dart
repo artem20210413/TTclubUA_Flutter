@@ -178,33 +178,64 @@ class _ProfileState extends State<Profile> {
                                 )
                             ]),
                             SizedBox(height: 18),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   crossAxisAlignment: CrossAxisAlignment.center,
+                            //   children: [
+                            //     Container(
+                            //       child: Row(
+                            //         children: [
+                            //           SvgPicture.asset(
+                            //             'assets/svg/location.svg',
+                            //             width: 15,
+                            //             colorFilter: ColorFilter.mode(
+                            //               TTColors.text_secondary,
+                            //               BlendMode.srcIn,
+                            //             ),
+                            //           ),
+                            //           const SizedBox(width: 4),
+                            //
+                            //           Text(
+                            //             _dto.citiesText ?? '',
+                            //             style: TTTextStyle.subtitle,
+                            //             overflow: TextOverflow.ellipsis,
+                            //           ),
+                            //         ],
+                            //       ),
+                            //     ),
+                            //     InstagramLink(
+                            //       username:
+                            //           _dto.instagramNicknameController.text,
+                            //     ),
+                            //   ],
+                            // ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Container(
-                                  child: Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/svg/location.svg',
-                                        width: 15,
-                                        colorFilter: ColorFilter.mode(
-                                          TTColors.text_secondary,
-                                          BlendMode.srcIn,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        _dto.citiesText ?? '',
-                                        style: TTTextStyle.subtitle,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
+                                SvgPicture.asset(
+                                  'assets/svg/location.svg',
+                                  width: 15,
+                                  colorFilter: ColorFilter.mode(
+                                    TTColors.text_secondary,
+                                    BlendMode.srcIn,
                                   ),
                                 ),
+                                const SizedBox(width: 4),
+
+                                // 👇 ВАЖНО: именно этот Expanded ограничивает ширину текста городов
+                                Expanded(
+                                  child: Text(
+                                    _dto.citiesText ?? '',
+                                    style: TTTextStyle.subtitle,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+
+                                const SizedBox(width: 8),
+
                                 InstagramLink(
-                                  username:
-                                      _dto.instagramNicknameController.text,
+                                  username: _dto.instagramNicknameController.text,
                                 ),
                               ],
                             ),
