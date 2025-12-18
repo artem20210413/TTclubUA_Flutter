@@ -147,7 +147,8 @@ class _SendMentionScreenState extends State<SendMentionScreen> {
                   children: [
                     BigTextInput(
                       controller: _descriptionController,
-                      hint: 'Текст привітання...',
+                      label: 'Текст привітання',
+                      hint: 'Знйшов тебе!',
                       minHeight: 50,
                       minLines: 2,
                     ),

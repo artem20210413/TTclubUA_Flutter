@@ -35,6 +35,7 @@ import '../../components/viewers/PhotoActionsButton.dart';
 import '../../components/viewers/PickAndCropImage.dart';
 import '../../components/viewers/TelegramLink.dart';
 import 'Admin/User/FinanceScreen.dart';
+import 'User/ProfileEditPage.dart';
 
 class User extends StatefulWidget {
   const User({super.key});
@@ -436,7 +437,7 @@ class _UserState extends State<User> {
                                 child: BigTextInput(
                                   controller:
                                       _dto.occupationDescriptionController,
-                                  hint: 'Яка твоя сфера діяльності?',
+                                  label: 'Яка твоя сфера діяльності?',
                                   minHeight: 50,
                                   minLines: 1,
                                 ),
@@ -719,6 +720,32 @@ class _UserState extends State<User> {
                                     builder: (context) => const Admin(),
                                   ), // Переход на экран публикаций
                                 );
+                              },
+                              // isLoading: _isLoadingSubmit,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: GlowingButton(
+                              margin: EdgeInsets.only(left: 30),
+                              text: 'Редагувати',
+                              colorGrowing: accentColorButton,
+                              onPressed: () async {
+
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => ProfileEditPage(),
+                                  ),
+                                );
+                                if (result == true) _load();
+
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => const ProfileEditPage(),
+                                //   ), // Переход на экран публикаций
+                                // );
                               },
                               // isLoading: _isLoadingSubmit,
                             ),

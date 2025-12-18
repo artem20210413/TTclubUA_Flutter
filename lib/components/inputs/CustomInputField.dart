@@ -8,6 +8,7 @@ class CustomInputField extends StatelessWidget {
   final String label;
   final String prefixText;
   final bool obscureText;
+  final bool readOnly;
 
   final Widget? suffixIcon;
   final Widget? prefixIcon;
@@ -29,6 +30,7 @@ class CustomInputField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.validator,
     this.onChanged,
+    this.readOnly = false,
   });
 
   @override
@@ -50,46 +52,23 @@ class CustomInputField extends StatelessWidget {
                   // style: const TextStyle(color: TTColors.danger, fontSize: 13),
                 ),
               ),
-
-            // Container(
-            //   constraints: const BoxConstraints(minHeight: 57),
-            //   decoration: BoxDecoration(
-            //     // color: TTColors.input,
-            //     color: TTColors.input,
-            //     border: state.hasError
-            //         ? Border.all(color: TTColors.danger, width: 1)
-            //         : null,
-            //     borderRadius: BorderRadius.circular(30), //state.hasError
-            //     boxShadow: [
-            //       BoxShadow(
-            //         color: Colors.black.withOpacity(0.6),
-            //         offset: const Offset(2, 2),
-            //         blurRadius: 6,
-            //       ),
-            //       BoxShadow(
-            //         color: Colors.white.withOpacity(0.05),
-            //         offset: const Offset(-2, -2),
-            //         blurRadius: 6,
-            //       ),
-            //     ],
-            //   ),
-            //   padding: const EdgeInsets.symmetric(horizontal: 20),
-            //   alignment: Alignment.center,
             TTNeumorphicBox(
             radius: 32,
             padding: const EdgeInsets.only(left: 18, right: 16, top: 0, bottom: 0),
               child: TextFormField(
+                readOnly: readOnly,
                 controller: controller,
                 keyboardType: keyboardType,
                 obscureText: obscureText,
-                style: TextStyle(color: textColor),
+                // style: TextStyle(color: readOnly ? textSecondaryColor : textColor),
+                style: TTTextStyle.subtitle.copyWith(fontSize: 16, color: readOnly ? textSecondaryColor : textColor),
                 decoration: InputDecoration(
                   labelText: label,
                   prefixText: prefixText,
                   labelStyle: TextStyle(color: textSecondaryColor),
+                  // labelStyle: TTTextStyle.subtitle,
                   border: InputBorder.none,
                   errorStyle: const TextStyle(height: 0),
-                  // скрываем стандартный текст под полем
                   suffixIcon: suffixIcon,
                   prefixIcon: prefixIcon
                 ),
