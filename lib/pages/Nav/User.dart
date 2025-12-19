@@ -248,6 +248,7 @@ class _UserState extends State<User> {
                                       left: 0,
                                       bottom: 0,
                                       child: PhotoActionsButton(
+                                        title: 'Фото профілю',
                                         accentColor: accentColorButton,
                                         onChange: _pickAndUploadImage,
                                         onDelete: (userProfileImage !=
@@ -573,6 +574,7 @@ class _UserState extends State<User> {
                                   left: -15,
                                   bottom: 60,
                                   child: PhotoActionsButton(
+                                    title: 'Фото Audi: ' + car.personalizedLicensePlateController.text,
                                     accentColor: accentColorButton,
                                     onChange: () => _pickAndUploadImageCar(car),
                                     onDelete:
