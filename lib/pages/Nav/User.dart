@@ -76,7 +76,6 @@ class _UserState extends State<User> {
     final profileImage = await UserStorage.getProfileImagee();
     final dynamic json = await UserStorage.getUserInfo();
     final isAdmin = await UserStorage.isAdmin();
-    // final isAdmin = await UserStorage.whereInRole([UserRole.admin]);
 
     setState(() {
       _dto = UserUpdateDto.fromJson(json);
@@ -125,22 +124,6 @@ class _UserState extends State<User> {
         curve: Curves.easeInOut,
       );
     });
-  }
-
-  Future<void> _saveUser() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
-      final token = await UserStorage.getToken();
-      final res = await UPLOAD_USER(token, _dto);
-      final isSuccess = await CHECK_API(res, context);
-
-      if (isSuccess) {
-        UserStorage.saveUserInfo(json.decode(res.body)['data']['user']);
-        MessageModule(
-            context, 'Профіль успішно оновлено!', MessageType.success);
-      }
-    }
   }
 
   Future<void> _logout() async {
@@ -223,44 +206,6 @@ class _UserState extends State<User> {
     }
   }
 
-  // Future<String?> _pickAndUploadImageCar(CarDto car) async {
-  //   final File? croppedFile = await pickAndCropImage(
-  //     context: context,
-  //     aspectRatio: 4 / 3,
-  //   );
-  //
-  //   if (croppedFile == null) return null;
-  //
-  //   final token = await UserStorage.getToken();
-  //   final res = await UPLOAD_CAR_BY_ID(token, car);
-  //   // final isSuccess = await CHECK_API(res, context);
-  //   // final json = await jsonDecode(res.body);
-  //   //
-  //   // if (isSuccess) {
-  //   //   return await json['data']['imageUrls'][0]['url'] ?? null;
-  //   // }
-  //   // return null;
-  //
-  //
-  //   final isSuccess = await CHECK_API(res, context);
-  //   if (isSuccess) {
-  //     final newImageUrl =
-  //     jsonDecode(res.body)['data']['imageUrls'].first['url'];
-  //     setState(() {
-  //       customBannerUrl = newImageUrl;
-  //     });
-  //   }
-  // }
-
-  // String _formatDate(String rawDate) {
-  //   if (rawDate.isEmpty) return '—';
-  //   try {
-  //     return DateFormat('dd.MM.yyyy').format(DateTime.parse(rawDate));
-  //   } catch (_) {
-  //     return rawDate;
-  //   }
-  // }
-
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
@@ -338,36 +283,6 @@ class _UserState extends State<User> {
                         ],
                       ),
                       SizedBox(height: 18),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   crossAxisAlignment: CrossAxisAlignment.center,
-                      //   children: [
-                      //     Container(
-                      //       child: Row(
-                      //         children: [
-                      //           SvgPicture.asset(
-                      //             'assets/svg/location.svg',
-                      //             width: 15,
-                      //             colorFilter: ColorFilter.mode(
-                      //               TTColors.text_secondary,
-                      //               BlendMode.srcIn,
-                      //             ),
-                      //           ),
-                      //           const SizedBox(width: 4),
-                      //           Text(
-                      //             _dto.citiesText ?? '',
-                      //             style: TTTextStyle.subtitle,
-                      //             overflow: TextOverflow.ellipsis,
-                      //           ),
-                      //         ],
-                      //       ),
-                      //     ),
-                      //     InstagramLink(
-                      //       username: _dto.instagramNicknameController.text,
-                      //     ),
-                      //   ],
-                      // ),
-
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -380,8 +295,6 @@ class _UserState extends State<User> {
                             ),
                           ),
                           const SizedBox(width: 4),
-
-                          // 👇 ВАЖНО: именно этот Expanded ограничивает ширину текста городов
                           Expanded(
                             child: Text(
                               _dto.citiesText ?? '',
@@ -390,9 +303,7 @@ class _UserState extends State<User> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-
                           const SizedBox(width: 8),
-
                           InstagramLink(
                             username: _dto.instagramNicknameController.text,
                           ),
@@ -455,42 +366,30 @@ class _UserState extends State<User> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 18),
+                      SizedBox(height: 10),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: Form(
-                              key: _formKey,
-                              child: SingleChildScrollView(
-                                child: BigTextInput(
-                                  controller:
-                                      _dto.occupationDescriptionController,
-                                  label: 'Яка твоя сфера діяльності?',
-                                  minHeight: 50,
-                                  minLines: 1,
-                                ),
-                              ),
+                          SvgPicture.asset(
+                            'assets/svg/user.svg',
+                            height: 15,
+                            colorFilter: ColorFilter.mode(
+                              TTColors.text_secondary,
+                              BlendMode.srcIn,
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
-                                child: CircleButton(
-                                  size: 65,
-                                  accentColor: accentColorButton,
-                                  iconAsset: 'assets/svg/check_mark.svg',
-                                  onTap: _saveUser,
-                                ),
-                              )
-                            ],
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              _dto.occupationDescriptionController.text ?? '',
+                              style: TTTextStyle.subtitle,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
+                            ),
                           ),
                         ],
                       ),
+                      SizedBox(height: 18),
                     ],
                   ),
                   // Text('ggg', style: TTTextStyle.title),
@@ -720,7 +619,7 @@ class _UserState extends State<User> {
                           flex: 2,
                           child: GlowingButton(
                             text: 'Вихід',
-                            colorGrowing: accentColorButton,
+                            colorGrowing: TTColors.text_secondary,
                             onPressed: () {
                               ConfirmAndRun(
                                 context: context,
@@ -733,24 +632,6 @@ class _UserState extends State<User> {
                             // isLoading: _isLoadingSubmit,
                           ),
                         ),
-                        if (_isAdmin)
-                          Expanded(
-                            flex: 3,
-                            child: GlowingButton(
-                              margin: EdgeInsets.only(left: 30),
-                              text: 'Для адміна',
-                              colorGrowing: accentColorButton,
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const Admin(),
-                                  ), // Переход на экран публикаций
-                                );
-                              },
-                              // isLoading: _isLoadingSubmit,
-                            ),
-                          ),
                         Expanded(
                           flex: 3,
                           child: GlowingButton(
@@ -779,6 +660,25 @@ class _UserState extends State<User> {
                       ],
                     ),
                   ),
+                  if (_isAdmin)
+                    // Expanded(
+                    //   flex: 3,
+                    //   child:
+                    GlowingButton(
+                      margin: const EdgeInsets.only(top: 20),
+                      text: 'Для адміна',
+                      colorGrowing: accentColorButton,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Admin(),
+                          ), // Переход на экран публикаций
+                        );
+                      },
+                      // isLoading: _isLoadingSubmit,
+                    ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.only(top: 34),
                     child: Center(
