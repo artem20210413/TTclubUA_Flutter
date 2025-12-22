@@ -76,7 +76,19 @@ const URL_EVENT_UPLOAD = '${_HOST}/api/event/{event}';
 const URL_EVENT_ADD_IMAGE = '${_HOST}/api/event/{event}/image';
 const URL_EVENT_DELETE_IMAGE = '${_HOST}/api/event/{event}/image';
 const URL_EVENT_COLLECTIONS_IMAGE = '${_HOST}/api/event/{event}/collections/{mediaId}';
-const url_event_change_active = '${_HOST}/api/event/{event}/active/{active}';
+const URL_EVENT_CHANGE_ACTIVE = '${_HOST}/api/event/{event}/active/{active}';
+
+const URL_PARTNERS_LIST = '${_HOST}/api/partners';
+const URL_PARTNERS_CREATE = '${_HOST}/api/partners';
+const URL_PARTNERS_IMAGE_CREATE = '${_HOST}/api/partners/{partner}/photos';
+const URL_PARTNERS_IMAGE_DELETE = '${_HOST}/api/partners/{partner}/photos/{mediaId}';
+const URL_PARTNERS_UPDATE  = '${_HOST}/api/partners/{partner}';
+
+const URL_PARTNERS_PROMOTIONS_LIST  = '${_HOST}/api/partners/{partner}/promotions';
+const URL_PARTNERS_PROMOTIONS_CREATE = '${_HOST}/api/partners/{partner}/promotions';
+const URL_PARTNERS_PROMOTIONS_UPDATE = '${_HOST}/api/partners/{partner}/promotions/{promotion}';
+const URL_PARTNERS_PROMOTIONS_IMAGE_CREATE = '${_HOST}/api/partners/{partner}/promotions/{promotion}/photos';
+const URL_PARTNERS_PROMOTIONS_IMAGE_DELETE = '${_HOST}/api/partners/{partner}/promotions/{promotion}/photos/{mediaId}';
 
 const URL_EVENT_TYPE_LIST = '${_HOST}/api/event/type';
 

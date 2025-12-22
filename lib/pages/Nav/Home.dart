@@ -132,6 +132,14 @@ class _HomeState extends State<Home> {
                 navState?.setTab(2); // 2 — индекс вкладки Calendar
               },
             ),
+            const SizedBox(height: 20),
+            PromoCard(
+              imagePath: 'assets/ui/banners/partners.webp',
+              title: 'Партнери TTclubUA',
+              onButtonTap: () {
+                // TODO: действие по нажатию
+              },
+            ),
             // const SizedBox(height: 20),
             // PromoCard(
             //   imagePath: 'assets/ui/banners/budget.webp',
@@ -140,19 +148,10 @@ class _HomeState extends State<Home> {
             //     // TODO: действие по нажатию
             //   },
             // ),
-            const SizedBox(height: 20),
+            // const SizedBox(height: 20),
             // PromoCard(
             //   imagePath: 'assets/ui/banners/ttclubua_in_world.webp',
             //   title: 'TTclubUA у світі',
-            //   enabled: false,
-            //   onButtonTap: () {
-            //     // TODO: действие по нажатию
-            //   },
-            // ),
-            // const SizedBox(height: 20),
-            // PromoCard(
-            //   imagePath: 'assets/ui/banners/partners.webp',
-            //   title: 'Партнери TTclubUA',
             //   enabled: false,
             //   onButtonTap: () {
             //     // TODO: действие по нажатию
