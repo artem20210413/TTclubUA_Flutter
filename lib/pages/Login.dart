@@ -311,10 +311,12 @@ class _LoginState extends State<Login> {
                             onPressed: _isLoadingSubmit
                                 ? null
                                 : () => UrlHelper.openExternal(
-                                    context, _tgForgotUri,
-                                    title: 'Перехід до Telegram',
-                                    message:
-                                        'Ви збираєтесь відкрити зовнішній застосунок Telegram. Продовжити?'),
+                                      context,
+                                      _tgForgotUri,
+                                      title: 'Перехід до Telegram',
+                                      message:
+                                          'Ви збираєтесь відкрити зовнішній застосунок Telegram. Продовжити?',
+                                    ),
                             style: TextButton.styleFrom(
                               foregroundColor: TTColors.text_secondary,
                               padding: const EdgeInsets.symmetric(
@@ -334,7 +336,9 @@ class _LoginState extends State<Login> {
                           child: GestureDetector(
                             onTap: _isLoadingSubmit
                                 ? null
-                                : () => UrlHelper.openInternal(_signupUri),
+                                // : () => UrlHelper.openInternal(_signupUri),
+                                : () =>
+                                    UrlHelper.openExternal(context, _signupUri),
                             child: RichText(
                               text: TextSpan(
                                 style: const TextStyle(

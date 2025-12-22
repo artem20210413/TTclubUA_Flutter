@@ -1,13 +1,30 @@
 // const _HOST = 'https://tt.tishchenko.kiev.ua';
+import 'dart:io';
+
 const _HOST = 'https://ttclub.com.ua';
+
+String buildEnvironment() {
+  if (Platform.isAndroid) {
+    return 'android';
+  }
+
+  if (Platform.isIOS) {
+    return 'ios';
+  }
+
+  return 'unknown';
+}
 
 Map<String, String> HEADERS([String? token = null]) {
   return {
     'Content-Type': 'application/json; charset=UTF-8',
     'Accept': 'application/json; charset=UTF-8',
+    'X-Client-Platform': buildEnvironment(),
     if (token != null) 'Authorization': 'Bearer $token',
   };
 }
+
+const URL_SYSTEM_USER_STATS = '${_HOST}/api/system/user-stats';
 
 const URL_LOGIN = '${_HOST}/api/login';
 const URL_LOGIN_TG_VERIFY = '${_HOST}/api/login/tg/verify';
@@ -62,6 +79,8 @@ const URL_EVENT_COLLECTIONS_IMAGE = '${_HOST}/api/event/{event}/collections/{med
 const url_event_change_active = '${_HOST}/api/event/{event}/active/{active}';
 
 const URL_EVENT_TYPE_LIST = '${_HOST}/api/event/type';
+
+const URL_SUGGESTIONS_SEND = '${_HOST}/api/suggestions/send';
 
 const URL_SEARCH_CAR = '${_HOST}/api/car/search';
 const URL_CAR_CREATE = '${_HOST}/api/car/create';

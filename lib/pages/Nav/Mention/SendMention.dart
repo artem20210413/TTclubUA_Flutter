@@ -101,10 +101,12 @@ class _SendMentionScreenState extends State<SendMentionScreen> {
                         ),
                       ),
                       const SizedBox(width: 4),
-                      Text(
-                        widget.dto.user.citiesText ?? '',
-                        style: TTTextStyle.subtitle,
-                        overflow: TextOverflow.ellipsis,
+                      Expanded(
+                        child: Text(
+                          widget.dto.user.citiesText ?? '',
+                          style: TTTextStyle.subtitle,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),
@@ -147,7 +149,8 @@ class _SendMentionScreenState extends State<SendMentionScreen> {
                   children: [
                     BigTextInput(
                       controller: _descriptionController,
-                      hint: 'Текст привітання...',
+                      label: 'Текст привітання',
+                      hint: 'Знйшов тебе!',
                       minHeight: 50,
                       minLines: 2,
                     ),

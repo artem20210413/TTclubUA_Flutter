@@ -18,6 +18,10 @@ void MessageModule(BuildContext context, String text, MessageType type) {
     _ => TTColors.text,
   };
 
+  // ScaffoldMessenger.of(context).showSnackBar(
+  //   const SnackBar(content: Text(text)),
+  // );
+
   ScaffoldMessenger.of(context).clearSnackBars();
   final bottom = MediaQuery.of(context).padding.bottom;
 

@@ -15,6 +15,7 @@ import '../../utils/url_launcher.dart';
 import '../Nav.dart';
 import 'Calendar.dart';
 import 'Home/AnnualFeePage.dart';
+import 'Home/SuggestionsPage.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -45,8 +46,8 @@ class _HomeState extends State<Home> {
             Padding(
               padding: const EdgeInsets.only(left: 5, right: 5),
               child: Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   TopActionCard(
                     iconAsset: 'assets/svg/money.svg',
@@ -62,7 +63,7 @@ class _HomeState extends State<Home> {
                     },
                   ),
 
-                  const SizedBox(width: 20),
+                  // const SizedBox(width: 20),
                   TopActionCard(
                     iconAsset: 'assets/svg/telegram.svg',
                     iconSize: 30,
@@ -78,7 +79,7 @@ class _HomeState extends State<Home> {
                       //     mode: LaunchMode.externalApplication);
                     },
                   ),
-                  const SizedBox(width: 20),
+                  // const SizedBox(width: 20),
                   TopActionCard(
                     iconAsset: 'assets/svg/instagram.svg',
                     iconSize: 30,
@@ -92,12 +93,19 @@ class _HomeState extends State<Home> {
                       //     mode: LaunchMode.externalApplication);
                     },
                   ),
-                  // TopActionCard(
-                  //   iconAsset: 'assets/svg/question-mark.svg',
-                  //   iconSize: 30,
-                  //   iconColor: Colors.white.withOpacity(0.4),
-                  //   onTap: () {},
-                  // ),
+                  TopActionCard(
+                    iconAsset: 'assets/svg/lightbulb-filament.svg',
+                    iconSize: 30,
+                    iconColor: accentColor,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                SuggestionsPage()), // Переход на экран публикаций
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

@@ -16,7 +16,7 @@ class TileButton extends StatefulWidget {
     required this.title,
     required this.icon,
     required this.onTap,
-    this.iconColor = Colors.black,
+    this.iconColor = Colors.white,
     this.newCount,
     this.isLoading = false,
   }) : super(key: key);

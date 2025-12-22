@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/Event/EventsScreen.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/Merch/MerchScreen.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/Publication/PublicationsScreen.dart';
+import 'package:tt_club_ua/pages/Nav/Admin/System/SystemPage.dart';
 
 import '../../Storage/UserStorage.dart';
 import '../../api/routs/registaion.dart';
@@ -154,14 +155,20 @@ class _AdminState extends State<Admin> {
               icon: Icons.local_mall,
               title: 'Мерч',
               iconColor: Colors.white,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          MerchScreen()), // Переход на экран публикаций
-                );
-              },
+              onTap: () {},
+            ),
+            TileButton(
+              icon: Icons.show_chart,
+              title: 'Статистика',
+              iconColor: Colors.white,
+              isLoading: isLoadingExcel,
+              // onTap: () => {_export_users()},
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        SystemPage()), // Переход на экран публикаций
+              ),
             ),
             TileButton(
               icon: Icons.download_sharp,
@@ -173,7 +180,8 @@ class _AdminState extends State<Admin> {
                 context: context,
                 action: _export_users,
                 dialogTitle: 'Експорт Excel',
-                dialogMessage: 'Ви дійсно хочете відправити Excel-файл до Telegram?',
+                dialogMessage:
+                    'Ви дійсно хочете відправити Excel-файл до Telegram?',
               ),
             ),
 

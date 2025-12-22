@@ -37,7 +37,6 @@ class TTScaffold extends StatelessWidget {
           backgroundColor: Colors.transparent,
           elevation: 0,
           toolbarHeight: 32,
-          // 🔥 высота AppBar
           centerTitle: true,
           scrolledUnderElevation: 0,
           surfaceTintColor: Colors.transparent,

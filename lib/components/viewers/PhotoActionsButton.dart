@@ -8,10 +8,12 @@ class PhotoActionsButton extends StatelessWidget {
   final VoidCallback? onChange;
   final VoidCallback? onDelete;
   final Color accentColor;
+  final String title;
 
   const PhotoActionsButton({
     super.key,
     required this.accentColor,
+    required this.title,
     this.onChange,
     this.onDelete,
   });
@@ -57,7 +59,7 @@ class PhotoActionsButton extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Фото профілю',
+                  title,
                   style: TTTextStyle.title18,
                 ),
                 const SizedBox(height: 12),
