@@ -85,8 +85,10 @@ class _HomeState extends State<Home> {
                     iconSize: 30,
                     iconColor: accentColor,
                     onTap: () async {
-                      UrlHelper.openExternal(context,
-                          Uri.parse('https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ=='));
+                      UrlHelper.openExternal(
+                          context,
+                          Uri.parse(
+                              'https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ=='));
                       // final Uri url = Uri.parse(
                       //     'https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ==');
                       // await launchUrl(url,
@@ -136,6 +138,7 @@ class _HomeState extends State<Home> {
             PromoCard(
               imagePath: 'assets/ui/banners/partners.webp',
               title: 'Партнери TTclubUA',
+              enabled: false,
               onButtonTap: () {
                 // TODO: действие по нажатию
               },
