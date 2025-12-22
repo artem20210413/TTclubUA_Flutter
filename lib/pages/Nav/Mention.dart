@@ -220,8 +220,11 @@ class _MentionState extends State<Mention> {
             children: [
               Expanded(
                 child: CustomInputField(
+                  textInputAction: TextInputAction.search,
+                  onSubmitted: (_) => fetchSearchResults(),
                   controller: _searchController,
                   label: 'Пошук',
+
                   prefixIcon: GestureDetector(
                     onTap: _openFilterModal,
                     child: ClipOval(

@@ -14,6 +14,8 @@ class CustomInputField extends StatelessWidget {
   final Widget? prefixIcon;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onSubmitted;
 
   final textColor = TTColors.text;
   final textSecondaryColor = TTColors.text_secondary;
@@ -31,6 +33,8 @@ class CustomInputField extends StatelessWidget {
     this.validator,
     this.onChanged,
     this.readOnly = false,
+    this.textInputAction,
+    this.onSubmitted,
   });
 
   @override
@@ -53,25 +57,30 @@ class CustomInputField extends StatelessWidget {
                 ),
               ),
             TTNeumorphicBox(
-            radius: 32,
-            padding: const EdgeInsets.only(left: 18, right: 16, top: 0, bottom: 0),
+              radius: 32,
+              padding:
+                  const EdgeInsets.only(left: 18, right: 16, top: 0, bottom: 0),
               child: TextFormField(
                 readOnly: readOnly,
                 controller: controller,
                 keyboardType: keyboardType,
                 obscureText: obscureText,
+                textInputAction: textInputAction ?? TextInputAction.done,
+                onFieldSubmitted: onSubmitted,
+
                 // style: TextStyle(color: readOnly ? textSecondaryColor : textColor),
-                style: TTTextStyle.subtitle.copyWith(fontSize: 16, color: readOnly ? textSecondaryColor : textColor),
+                style: TTTextStyle.subtitle.copyWith(
+                    fontSize: 16,
+                    color: readOnly ? textSecondaryColor : textColor),
                 decoration: InputDecoration(
-                  labelText: label,
-                  prefixText: prefixText,
-                  labelStyle: TextStyle(color: textSecondaryColor),
-                  // labelStyle: TTTextStyle.subtitle,
-                  border: InputBorder.none,
-                  errorStyle: const TextStyle(height: 0),
-                  suffixIcon: suffixIcon,
-                  prefixIcon: prefixIcon
-                ),
+                    labelText: label,
+                    prefixText: prefixText,
+                    labelStyle: TextStyle(color: textSecondaryColor),
+                    // labelStyle: TTTextStyle.subtitle,
+                    border: InputBorder.none,
+                    errorStyle: const TextStyle(height: 0),
+                    suffixIcon: suffixIcon,
+                    prefixIcon: prefixIcon),
                 onChanged: (value) {
                   state.didChange(value); // ✅ для валидации FormField
                   onChanged?.call(value); // ✅ внешний колбэк
