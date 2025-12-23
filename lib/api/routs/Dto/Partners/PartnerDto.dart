@@ -12,6 +12,8 @@ class PartnerDto {
   final TextEditingController instagramUrlController;
   final TextEditingController googleMapsUrlController;
   final TextEditingController priorityController;
+  final bool hasPromotions;
+  final int promotionsCount;
 
   // Dates
   DateTime? startDate;
@@ -32,6 +34,8 @@ class PartnerDto {
     String? googleMapsUrl,
     String? priority,
     required bool active,
+    this.hasPromotions = false,
+    this.promotionsCount = 0,
     required this.images,
     required this.startDate,
     required this.endDate,
@@ -40,11 +44,10 @@ class PartnerDto {
         descriptionController = TextEditingController(text: description ?? ''),
         websiteUrlController = TextEditingController(text: websiteUrl ?? ''),
         instagramUrlController =
-        TextEditingController(text: instagramUrl ?? ''),
+            TextEditingController(text: instagramUrl ?? ''),
         googleMapsUrlController =
-        TextEditingController(text: googleMapsUrl ?? ''),
-        priorityController =
-        TextEditingController(text: priority ?? '0'),
+            TextEditingController(text: googleMapsUrl ?? ''),
+        priorityController = TextEditingController(text: priority ?? '0'),
         activeNotifier = ValueNotifier<bool>(active);
 
   /// ---------- FROM JSON ----------
@@ -57,13 +60,14 @@ class PartnerDto {
       instagramUrl: json['instagram_url'],
       googleMapsUrl: json['google_maps_url'],
       priority: json['priority']?.toString(),
+      hasPromotions: json['has_promotions'],
+      promotionsCount: json['promotions_count'],
       active: json['is_active'] == true || json['is_active'] == 1,
       startDate: json['start_date'] != null
           ? DateTime.tryParse(json['start_date'])
           : null,
-      endDate: json['end_date'] != null
-          ? DateTime.tryParse(json['end_date'])
-          : null,
+      endDate:
+          json['end_date'] != null ? DateTime.tryParse(json['end_date']) : null,
       images: (json["photos"] as List)
           .map((img) => ImageUrlDto.fromJson(img))
           .toList(),

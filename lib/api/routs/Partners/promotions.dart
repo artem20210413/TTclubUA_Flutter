@@ -11,13 +11,15 @@ import '../../../Storage/Search/ImageUrlDto.dart';
 import '../Dto/Partners/PromotionDto.dart';
 
 Future<http.Response> PARTNERS_PROMOTIONS_LIST(
-  String? token, {
+  String? token,
+  PartnerDto dto,{
   String? search,
   int page = 1,
   bool? onlyActive = null,
   bool? activeNow = null,
 }) async {
-  final uri = Uri.parse(URL_PARTNERS_PROMOTIONS_LIST).replace(queryParameters: {
+  final uri = Uri.parse(URL_PARTNERS_PROMOTIONS_LIST.replaceAll(
+      '{partner}', dto.id.toString())).replace(queryParameters: {
     'page': page.toString(),
     if (onlyActive != null) 'is_active': onlyActive ? '1' : '0',
     if (activeNow != null) 'active_now': activeNow ? '1' : '0',
@@ -25,6 +27,7 @@ Future<http.Response> PARTNERS_PROMOTIONS_LIST(
   });
   final response = await http.get(uri, headers: HEADERS(token));
 
+  // print('uri: ${uri}');
   // print('Response status: ${response.statusCode}');
   // print('Response body: ${jsonDecode(response.body)}');
 

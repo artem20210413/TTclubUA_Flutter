@@ -15,6 +15,7 @@ import '../../utils/url_launcher.dart';
 import '../Nav.dart';
 import 'Calendar.dart';
 import 'Home/AnnualFeePage.dart';
+import 'Home/Partners/PartnersPage.dart';
 import 'Home/SuggestionsPage.dart';
 
 class Home extends StatefulWidget {
@@ -138,9 +139,14 @@ class _HomeState extends State<Home> {
             PromoCard(
               imagePath: 'assets/ui/banners/partners.webp',
               title: 'Партнери TTclubUA',
-              enabled: false,
+              // enabled: false,
               onButtonTap: () {
-                // TODO: действие по нажатию
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          PartnersPage()), // Переход на экран публикаций
+                );
               },
             ),
             // const SizedBox(height: 20),
