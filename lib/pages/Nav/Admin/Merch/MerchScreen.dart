@@ -15,7 +15,7 @@ import '../../../../api/routs/root.dart';
 import '../../../../components/CustomAppBar.dart';
 import '../../../../components/Selects/TTSelect.dart';
 import '../../../../components/TTLoading.dart';
-import '../../../../components/card/GoodsCard.dart';
+import '../../Home/Merch/GoodsCard.dart';
 import 'GoodsCardForAdmin.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/interface/SearchBarWidgetState.dart';

@@ -13,7 +13,7 @@ import '../../../../api/routs/root.dart';
 import '../../../../components/TTLoading.dart';
 import '../../../../components/TTNeumorphicBox.dart';
 import '../../../../components/buttons/GlowingButton.dart';
-import '../../../../components/card/GoodsCard.dart';
+import 'GoodsCard.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/interface/SearchBarWidgetState.dart';
 import '../../../../components/layout/TTScaffold.dart';

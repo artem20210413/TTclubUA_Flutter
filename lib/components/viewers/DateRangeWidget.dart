@@ -30,14 +30,14 @@ class DateRangeWidget extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.calendar_today,
-            size: iconSize,
-            color: displayColor,
-          ),
-          const SizedBox(width: 6),
+          // Icon(
+          //   Icons.calendar_today,
+          //   size: iconSize,
+          //   color: displayColor,
+          // ),
+          // const SizedBox(width: 6),
           Text(
-            "${startDate != null ? TTFormatter.formatDateUI(startDate!) : '...'} — ${endDate != null ? TTFormatter.formatDateUI(endDate!) : '∞'}",
+            "${startDate != null ? 'З ' + TTFormatter.formatDateUI(startDate!) : ''}  ${endDate != null ? 'до ' + TTFormatter.formatDateUI(endDate!) : ''}",
             style: TTTextStyle.subtitle.copyWith(
               fontSize: fontSize,
               color: displayColor,

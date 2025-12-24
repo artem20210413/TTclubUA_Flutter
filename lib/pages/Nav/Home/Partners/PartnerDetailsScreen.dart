@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../Helpers/UrlFormatter.dart';
 import '../../../../Storage/Cache/AccentColorCache.dart';
 import '../../../../api/routs/Dto/Partners/PartnerDto.dart';
 import '../../../../components/TTNeumorphicBox.dart';
@@ -8,6 +9,7 @@ import '../../../../components/buttons/GlowingButton.dart';
 import '../../../../components/layout/TTScaffold.dart';
 import '../../../../components/viewers/DateRangeWidget.dart';
 import '../../../../components/viewers/ImagesCarousel.dart';
+import '../../../../components/viewers/PlaceLink.dart';
 import '../../../../config/default.dart';
 import 'Promotions/PromotionsPage.dart';
 
@@ -37,87 +39,95 @@ class PartnerDetailsScreen extends StatelessWidget {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // --- Слайдер изображений ---
               ImagesCarousel(
                 images: item.images,
                 height: MediaQuery.of(context).size.width * 0.7,
-                borderRadius: 0,
                 // На детальной странице можно сделать на весь верх
                 showDots: true,
               ),
 
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 8),
+              DateRangeWidget(
+                startDate: item.startDate,
+                endDate: item.endDate,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (item.instagramUrlController.text.isNotEmpty)
+                    PlaceLink(
+                      iconPosition: IconPosition.left,
+                      text: ' instagram',
+                      iconPath: 'assets/svg/instagram.svg',
+                      url: item.instagramUrlController.text,
+                      color: accentColor,
+                      dialogTitle: 'Перехід до Instagram',
+                      dialogMessage:
+                          'Відкрити сторінку партнера в застосунку Instagram?',
+                    ),
+                  if (item.instagramUrlController.text.isNotEmpty &&
+                      item.websiteUrlController.text.isNotEmpty)
+                    const SizedBox(width: 8),
+                  if (item.websiteUrlController.text.isNotEmpty)
+                    PlaceLink(
+                      iconPosition: item.instagramUrlController.text.isNotEmpty
+                          ? IconPosition.right
+                          : IconPosition.left,
+                      text: UrlFormatter.getInstagramHandle(
+                          item.instagramUrlController.text),
+                      iconPath: 'assets/svg/globe.svg',
+                      url: item.websiteUrlController.text,
+                      color: accentColor,
+                      dialogTitle: 'Перехід до Instagram',
+                      dialogMessage:
+                          'Відкрити сторінку партнера в застосунку Instagram?',
+                    )
+                ],
+              ),
+              const SizedBox(height: 8),
+              if (item.googleMapsUrlController.text.isNotEmpty)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    DateRangeWidget(
-                      startDate: item.startDate,
-                      endDate: item.endDate,
+                    PlaceLink(
+                      iconPosition: IconPosition.left,
+                      text: 'google maps',
+                      iconPath: 'assets/svg/location.svg',
+                      url: item.googleMapsUrlController.text,
+                      color: accentColor,
+                      dialogTitle: 'Перехід до Instagram',
+                      dialogMessage:
+                          'Відкрити сторінку партнера в застосунку Instagram?',
                     ),
-                    // --- Заголовок ---
-                    Text(
-                      item.titleController.text,
-                      style: TTTextStyle.title,
-                    ),
-                    const SizedBox(height: 12),
-
-                    // --- Описание ---
-                    Text(
-                      item.descriptionController.text.isNotEmpty
-                          ? item.descriptionController.text
-                          : 'Опис відсутній',
-                      style: TTTextStyle.subtitle,
-                    ),
-                    const SizedBox(height: 24),
-
-                    // --- Блок контактов/ссылок ---
-                    Text("Контакти та локація", style: TTTextStyle.title18),
-                    const SizedBox(height: 12),
-
-                    if (item.instagramUrlController.text.isNotEmpty)
-                      _buildLinkTile(
-                        icon: 'assets/svg/instagram.svg',
-                        label: 'Instagram',
-                        onTap: () =>
-                            _launchUrl(item.instagramUrlController.text),
-                      ),
-
-                    if (item.websiteUrlController.text.isNotEmpty)
-                      _buildLinkTile(
-                        icon: 'assets/svg/globe.svg',
-                        label: 'Веб-сайт',
-                        onTap: () => _launchUrl(item.websiteUrlController.text),
-                      ),
-
-                    if (item.googleMapsUrlController.text.isNotEmpty)
-                      _buildLinkTile(
-                        icon: 'assets/svg/location.svg',
-                        label: 'Ми на карті',
-                        onTap: () =>
-                            _launchUrl(item.googleMapsUrlController.text),
-                      ),
-                    const SizedBox(height: 24),
-                    if (item.hasPromotions)
-                      GlowingButton(
-                        text: 'Акції партнера',
-                        colorGrowing: accentColor,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => PromotionsPage(
-                                  partner: item), // item — это твой PartnerDto
-                            ),
-                          );
-                        },
-                      ),
-                    const SizedBox(height: 40),
                   ],
                 ),
+              const SizedBox(height: 16),
+              Text(
+                item.descriptionController.text.isNotEmpty
+                    ? item.descriptionController.text
+                    : 'Опис відсутній',
+                style: TTTextStyle.subtitle,
               ),
+              const SizedBox(height: 24),
+
+              if (item.hasPromotions)
+                GlowingButton(
+                  text: 'Акції партнера',
+                  colorGrowing: accentColor,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PromotionsPage(
+                            partner: item), // item — это твой PartnerDto
+                      ),
+                    );
+                  },
+                ),
             ],
           ),
         ),

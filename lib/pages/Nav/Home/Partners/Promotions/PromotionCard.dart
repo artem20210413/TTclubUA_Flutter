@@ -76,15 +76,11 @@ class PromotionCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.black.withOpacity(0.7),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.white24),
+                          border: Border.all(color: accentColor.withOpacity(0.24)),
                         ),
                         child: Text(
                           promotion.discountValueController.text,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                          style:TTTextStyle.title.copyWith(fontSize: 16, color: accentColor),
                         ),
                       ),
                     ),

@@ -16,7 +16,7 @@ import '../../../../components/CustomAppBar.dart';
 import '../../../../components/TTCheckbox.dart';
 import '../../../../components/TTLoading.dart';
 import '../../../../components/buttons/GlowingButton.dart';
-import '../../../../components/card/GoodsCard.dart';
+import '../../Home/Merch/GoodsCard.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/inputs/BigTextInput.dart';
 import '../../../../components/inputs/CustomInputField.dart';

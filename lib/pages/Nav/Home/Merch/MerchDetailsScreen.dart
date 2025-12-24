@@ -59,43 +59,47 @@ class _MerchDetailsScreenState extends State<MerchDetailsScreen> {
                   children: [
                     Padding(
                       padding: EdgeInsets.all(8),
-                      child: ImagesCarousel(
-                        images: item.images,
-                        height: MediaQuery.of(context).size.width * 0.6,
-                        borderRadius: 32,
+                      child: Column(
+                        children: [
+                          ImagesCarousel(
+                            images: item.images,
+                            height: MediaQuery.of(context).size.width * 0.6,
+                            borderRadius: 32,
+                          ),
+
+                          const SizedBox(height: 18),
+                          // описание
+                          Text(
+                            item.descriptionController.text,
+                            textAlign: TextAlign.start,
+                            style:
+                            TTTextStyle.subtitle,//.copyWith(color: TTColors.text),
+                          ),
+                          const SizedBox(height: 24),
+                          Row(
+                            children: [
+                              Text(
+                                '${item.priceController.text} грн',
+                                style: TTTextStyle.title.copyWith(fontSize: 22),
+                              ),
+                              // const Spacer(),
+                              const SizedBox(width: 24),
+                              // Expanded(
+                              //   flex: 2,
+                              //   child: GlowingButton(
+                              //     text: 'Купити',
+                              //     colorGrowing: accentColor,
+                              //     onPressed: () {
+                              //       // TODO: логика покупки / переход в Telegram / са
+                              //     },
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
 
-                    const SizedBox(height: 18),
-                    // описание
-                    Text(
-                      item.descriptionController.text,
-                      textAlign: TextAlign.center,
-                      style:
-                          TTTextStyle.subtitle.copyWith(color: TTColors.text),
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        const SizedBox(width: 12),
-                        Text(
-                          '${item.priceController.text} грн',
-                          style: TTTextStyle.title.copyWith(fontSize: 22),
-                        ),
-                        // const Spacer(),
-                        const SizedBox(width: 24),
-                        // Expanded(
-                        //   flex: 2,
-                        //   child: GlowingButton(
-                        //     text: 'Купити',
-                        //     colorGrowing: accentColor,
-                        //     onPressed: () {
-                        //       // TODO: логика покупки / переход в Telegram / са
-                        //     },
-                        //   ),
-                        // ),
-                      ],
-                    ),
                   ],
                 ),
               ),

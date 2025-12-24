@@ -45,9 +45,45 @@ class PartnerCard extends StatelessWidget {
               borderRadius: 24,
             ),
             const SizedBox(height: 16),
-            DateRangeWidget(
-              startDate: partner.startDate,
-              endDate: partner.endDate,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: DateRangeWidget(
+                    startDate: partner.startDate,
+                    endDate: partner.endDate,
+                  ),
+                ),
+                if (partner.hasPromotions)
+                  Expanded(
+                    child:Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: accentColor.withOpacity(0.15), // Легкий фон в цвет акцента
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: accentColor.withOpacity(0.5), width: 1),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.local_offer_outlined, size: 12, color: accentColor),
+                            const SizedBox(width: 4),
+                            Text(
+                              'АКЦІЯ',
+                              style: TTTextStyle.subtitle.copyWith(
+                                color: accentColor,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(height: 8),
             Text(
@@ -62,59 +98,57 @@ class PartnerCard extends StatelessWidget {
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (partner.instagramUrlController.text.isNotEmpty)
-                  PlaceLink(
-                    iconPosition: IconPosition.left,
-                    text: ' instagram',
-                    iconPath: 'assets/svg/instagram.svg',
-                    url: partner.instagramUrlController.text,
-                    color: accentColor,
-                    dialogTitle: 'Перехід до Instagram',
-                    dialogMessage:
-                        'Відкрити сторінку партнера в застосунку Instagram?',
-                  ),
-                if (partner.instagramUrlController.text.isNotEmpty &&
-                    partner.websiteUrlController.text.isNotEmpty)
-                  const SizedBox(width: 8),
-                if (partner.websiteUrlController.text.isNotEmpty)
-                  PlaceLink(
-                    iconPosition: partner.instagramUrlController.text.isNotEmpty
-                        ? IconPosition.right
-                        : IconPosition.left,
-                    text: UrlFormatter.getInstagramHandle(
-                        partner.instagramUrlController.text),
-                    iconPath: 'assets/svg/globe.svg',
-                    url: partner.websiteUrlController.text,
-                    color: accentColor,
-                    dialogTitle: 'Перехід до Instagram',
-                    dialogMessage:
-                        'Відкрити сторінку партнера в застосунку Instagram?',
-                  )
-              ],
-            ),
-            const SizedBox(height: 8),
-            if (partner.googleMapsUrlController.text.isNotEmpty)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  PlaceLink(
-                    iconPosition: IconPosition.left,
-                    text: 'google maps',
-                    iconPath: 'assets/svg/location.svg',
-                    url: partner.googleMapsUrlController.text,
-                    color: accentColor,
-                    dialogTitle: 'Перехід до Instagram',
-                    dialogMessage:
-                        'Відкрити сторінку партнера в застосунку Instagram?',
-                  ),
-                ],
-              ),
-
-
+            // const SizedBox(height: 8),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     if (partner.instagramUrlController.text.isNotEmpty)
+            //       PlaceLink(
+            //         iconPosition: IconPosition.left,
+            //         text: ' instagram',
+            //         iconPath: 'assets/svg/instagram.svg',
+            //         url: partner.instagramUrlController.text,
+            //         color: accentColor,
+            //         dialogTitle: 'Перехід до Instagram',
+            //         dialogMessage:
+            //             'Відкрити сторінку партнера в застосунку Instagram?',
+            //       ),
+            //     if (partner.instagramUrlController.text.isNotEmpty &&
+            //         partner.websiteUrlController.text.isNotEmpty)
+            //       const SizedBox(width: 8),
+            //     if (partner.websiteUrlController.text.isNotEmpty)
+            //       PlaceLink(
+            //         iconPosition: partner.instagramUrlController.text.isNotEmpty
+            //             ? IconPosition.right
+            //             : IconPosition.left,
+            //         text: UrlFormatter.getInstagramHandle(
+            //             partner.instagramUrlController.text),
+            //         iconPath: 'assets/svg/globe.svg',
+            //         url: partner.websiteUrlController.text,
+            //         color: accentColor,
+            //         dialogTitle: 'Перехід до Instagram',
+            //         dialogMessage:
+            //             'Відкрити сторінку партнера в застосунку Instagram?',
+            //       )
+            //   ],
+            // ),
+            // const SizedBox(height: 8),
+            // if (partner.googleMapsUrlController.text.isNotEmpty)
+            //   Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       PlaceLink(
+            //         iconPosition: IconPosition.left,
+            //         text: 'google maps',
+            //         iconPath: 'assets/svg/location.svg',
+            //         url: partner.googleMapsUrlController.text,
+            //         color: accentColor,
+            //         dialogTitle: 'Перехід до Instagram',
+            //         dialogMessage:
+            //             'Відкрити сторінку партнера в застосунку Instagram?',
+            //       ),
+            //     ],
+            //   ),
           ],
         ),
       ),
