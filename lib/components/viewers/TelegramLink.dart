@@ -3,12 +3,16 @@ import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../../utils/url_launcher.dart';
+
 class TelegramLink extends StatelessWidget {
   final String? username;
   final Color color;
+  final BuildContext context;
 
   const TelegramLink({
     super.key,
+    required this.context,
     this.username,
     this.color = TTColors.text,
   });
@@ -19,7 +23,12 @@ class TelegramLink extends StatelessWidget {
         : handle; // убираем @ если есть
 
     final Uri url = Uri.parse('https://t.me/$normalizedHandle');
-    await launchUrl(url, mode: LaunchMode.externalApplication);
+    // await launchUrl(url, mode: LaunchMode.externalApplication);
+
+    await UrlHelper.openExternal(context, url,
+        title: 'Перехід до Telegram',
+        message:
+            'Ви збираєтесь відкрити зовнішній застосунок Telegram. Продовжити?');
   }
 
   @override
@@ -44,7 +53,8 @@ class TelegramLink extends StatelessWidget {
           ),
           const SizedBox(width: 4),
           SvgPicture.asset(
-            'assets/svg/telegram.svg', // добавь иконку telegram.svg в assets/svg/
+            'assets/svg/telegram.svg',
+            // добавь иконку telegram.svg в assets/svg/
             width: 18,
             colorFilter: ColorFilter.mode(
               color,

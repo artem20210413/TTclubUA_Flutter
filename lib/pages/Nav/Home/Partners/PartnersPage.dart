@@ -37,7 +37,7 @@ class _PartnersPageState extends State<PartnersPage> {
     _fetchPartners();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 200 &&
+              _scrollController.position.maxScrollExtent - 200 &&
           !_isLoadingMore &&
           _hasMore) {
         _loadMore();
@@ -68,7 +68,8 @@ class _PartnersPageState extends State<PartnersPage> {
         } else {
           partners = newItems;
           if (partners.isEmpty) {
-            MessageModule(context, 'Партнерів не знайдено', MessageType.information);
+            MessageModule(
+                context, 'Партнерів не знайдено', MessageType.information);
           }
         }
         _hasMore = newItems.isNotEmpty;
@@ -93,6 +94,7 @@ class _PartnersPageState extends State<PartnersPage> {
   @override
   Widget build(BuildContext context) {
     return TTScaffold(
+      title: 'Партнери',
       body: Column(
         children: [
           // Поиск (используем твой CustomInputField)
@@ -122,27 +124,31 @@ class _PartnersPageState extends State<PartnersPage> {
             child: isLoading
                 ? const TTLoading()
                 : RefreshIndicator(
-              onRefresh: () => _fetchPartners(),
-              child: ListView.builder(
-                controller: _scrollController,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                itemCount: partners.length + (_isLoadingMore ? 1 : 0),
-                itemBuilder: (context, index) {
-                  if (index == partners.length) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
-                  return PartnerCard(
-                    partner: partners[index],
-                    accentColor: accentColor,
-                  );
-                },
-              ),
-            ),
+                    onRefresh: () => _fetchPartners(),
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      itemCount: partners.length + (_isLoadingMore ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (index == partners.length) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                        return Container(
+                          padding: const EdgeInsets.only(
+                              left: 16, right: 8, bottom: 12),
+                          child: PartnerCard(
+                            partner: partners[index],
+                            accentColor: accentColor,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
           ),
         ],
       ),

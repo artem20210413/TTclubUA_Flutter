@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../../../../../Storage/Cache/AccentColorCache.dart';
 import '../../../../../Storage/UserStorage.dart';
+import '../../../../../api/routs/Dto/Partners/PartnerDto.dart';
+import '../../../../../api/routs/Dto/Partners/PromotionDto.dart';
+import '../../../../../api/routs/Partners/promotions.dart';
+import '../../../../../api/routs/root.dart';
 import '../../../../../components/TTLoading.dart';
 import '../../../../../components/layout/TTScaffold.dart';
 import '../../../../../config/default.dart';
-import '../../../Partners/promotions.dart';
-import '../../../root.dart';
-import '../PartnerDto.dart';
-import '../PromotionDto.dart';
 import 'PromotionCard.dart';
 
 class PromotionsPage extends StatefulWidget {

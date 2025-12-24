@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../../../api/routs/Dto/Partners/PromotionDto.dart';
 import '../../../../../components/TTNeumorphicBox.dart';
 import '../../../../../components/generalModule.dart';
+import '../../../../../components/viewers/DateRangeWidget.dart';
 import '../../../../../components/viewers/ImagesCarousel.dart';
 import '../../../../../config/default.dart';
-import '../PromotionDto.dart';
 
 class PromotionCard extends StatelessWidget {
   final PromotionDto promotion;
@@ -16,11 +17,6 @@ class PromotionCard extends StatelessWidget {
     required this.promotion,
     required this.accentColor,
   });
-
-  // Вспомогательный метод для форматирования даты (DD.MM.YYYY)
-  String _formatDate(DateTime date) {
-    return "${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}";
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,23 +97,14 @@ class PromotionCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // --- Период действия акции ---
-                  if (promotion.startDate != null || promotion.endDate != null)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Row(
-                        children: [
-                          Icon(Icons.calendar_today, size: 14, color: accentColor.withOpacity(0.8)),
-                          const SizedBox(width: 6),
-                          Text(
-                            "${promotion.startDate != null ? _formatDate(promotion.startDate!) : '...'} — ${promotion.endDate != null ? _formatDate(promotion.endDate!) : '∞'}",
-                            style: TTTextStyle.subtitle.copyWith(
-                              fontSize: 12,
-                              color: accentColor.withOpacity(0.9),
-                            ),
-                          ),
-                        ],
-                      ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: DateRangeWidget(
+                      startDate: promotion.startDate,
+                      endDate: promotion.endDate,
                     ),
+                  ),
 
                   Text(
                     promotion.titleController.text,

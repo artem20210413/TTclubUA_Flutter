@@ -102,6 +102,7 @@ class _MerchPageState extends State<MerchPage> {
   @override
   Widget build(BuildContext context) {
     return TTScaffold(
+      title: 'Мерч',
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

@@ -87,9 +87,13 @@ class _HomeState extends State<Home> {
                     iconColor: accentColor,
                     onTap: () async {
                       UrlHelper.openExternal(
-                          context,
-                          Uri.parse(
-                              'https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ=='));
+                        context,
+                        Uri.parse(
+                            'https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ=='),
+                        title: 'Перехід до Instagram',
+                        message:
+                            'Ви збираєтесь відкрити зовнішній застосунок Instagram. Продовжити?',
+                      );
                       // final Uri url = Uri.parse(
                       //     'https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ==');
                       // await launchUrl(url,

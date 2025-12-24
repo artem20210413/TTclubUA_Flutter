@@ -3,12 +3,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../Storage/Cache/AccentColorCache.dart';
 import '../../../../api/routs/Dto/Partners/PartnerDto.dart';
-import '../../../../api/routs/Dto/Partners/Promotions/PromotionsPage.dart';
 import '../../../../components/TTNeumorphicBox.dart';
 import '../../../../components/buttons/GlowingButton.dart';
 import '../../../../components/layout/TTScaffold.dart';
+import '../../../../components/viewers/DateRangeWidget.dart';
 import '../../../../components/viewers/ImagesCarousel.dart';
 import '../../../../config/default.dart';
+import 'Promotions/PromotionsPage.dart';
 
 class PartnerDetailsScreen extends StatelessWidget {
   final PartnerDto item;
@@ -52,10 +53,14 @@ class PartnerDetailsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    DateRangeWidget(
+                      startDate: item.startDate,
+                      endDate: item.endDate,
+                    ),
                     // --- Заголовок ---
                     Text(
                       item.titleController.text,
-                      style: TTTextStyle.title.copyWith(fontSize: 28),
+                      style: TTTextStyle.title,
                     ),
                     const SizedBox(height: 12),
 

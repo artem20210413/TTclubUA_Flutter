@@ -306,6 +306,7 @@ class _UserState extends State<User> {
                           ),
                           const SizedBox(width: 8),
                           InstagramLink(
+                            context: context,
                             username: _dto.instagramNicknameController.text,
                           ),
                         ],
@@ -336,6 +337,7 @@ class _UserState extends State<User> {
                             ),
                           ),
                           TelegramLink(
+                            context: context,
                             username: _dto.telegramNicknameController.text,
                           ),
                         ],
