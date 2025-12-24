@@ -13,7 +13,7 @@ class PartnerDto {
   final TextEditingController googleMapsUrlController;
   final TextEditingController priorityController;
   final bool hasPromotions;
-  final int promotionsCount;
+  final bool hasPromotionsActual;
 
   // Dates
   DateTime? startDate;
@@ -35,7 +35,7 @@ class PartnerDto {
     String? priority,
     required bool active,
     this.hasPromotions = false,
-    this.promotionsCount = 0,
+    this.hasPromotionsActual = false,
     required this.images,
     required this.startDate,
     required this.endDate,
@@ -61,7 +61,7 @@ class PartnerDto {
       googleMapsUrl: json['google_maps_url'],
       priority: json['priority']?.toString(),
       hasPromotions: json['has_promotions'],
-      promotionsCount: json['promotions_count'],
+      hasPromotionsActual: json['has_promotions_actual'],
       active: json['is_active'] == true || json['is_active'] == 1,
       startDate: json['start_date'] != null
           ? DateTime.tryParse(json['start_date'])

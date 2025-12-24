@@ -114,7 +114,7 @@ class PartnerDetailsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              if (item.hasPromotions)
+              if (item.hasPromotionsActual)
                 GlowingButton(
                   text: 'Акції партнера',
                   colorGrowing: accentColor,

@@ -54,7 +54,7 @@ class PartnerCard extends StatelessWidget {
                     endDate: partner.endDate,
                   ),
                 ),
-                if (partner.hasPromotions)
+                if (partner.hasPromotionsActual)
                   Expanded(
                     child:Align(
                       alignment: Alignment.centerRight,
