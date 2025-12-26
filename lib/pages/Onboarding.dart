@@ -2,11 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/Storage/UserStorage.dart';
-import 'package:tt_club_ua/components/generalModule.dart';
 import 'package:tt_club_ua/config/default.dart';
 
 import '../components/TTLoading.dart';
-import '../components/buttons/GlowingButton.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -67,7 +65,6 @@ class _OnboardingState extends State<Onboarding> {
       });
       return;
     }
-
     Navigator.pushReplacementNamed(context, '/nav');
   }
 

@@ -14,6 +14,7 @@ import 'package:tt_club_ua/pages/Nav/User.dart';
 
 import '../Storage/Cache/DeviceInsetsCache.dart';
 import '../components/buttons/NavCircleButton.dart';
+import 'AppUpdateService.dart';
 import 'Nav/Calendar.dart';
 
 class Nav extends StatefulWidget {
@@ -35,6 +36,12 @@ class NavState extends State<Nav> {
   void initState() {
     super.initState();
     _loadUser();
+
+    Future.microtask(() {
+      if (mounted) {
+        AppUpdateService.check(context);
+      }
+    });
   }
 
   @override
