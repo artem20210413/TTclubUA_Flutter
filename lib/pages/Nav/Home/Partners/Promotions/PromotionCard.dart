@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../../../../api/routs/Dto/Partners/PromotionDto.dart';
 import '../../../../../components/TTNeumorphicBox.dart';
 import '../../../../../components/generalModule.dart';
+import '../../../../../components/labels/TTLabel.dart';
 import '../../../../../components/viewers/DateRangeWidget.dart';
 import '../../../../../components/viewers/ImagesCarousel.dart';
 import '../../../../../config/default.dart';
@@ -31,61 +32,45 @@ class PromotionCard extends StatelessWidget {
           children: [
             // --- Изображение (показываем только если есть список картинок) ---
             if (hasImages)
-              Stack(
-                children: [
-                  ImagesCarousel(
-                    images: promotion.images,
-                    height: 180,
-                    borderRadius: 24,
-                  ),
-                  // Бейдж эксклюзивности
-                  if (promotion.exclusiveNotifier.value)
-                    Positioned(
-                      top: 12,
-                      right: 12,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: accentColor,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: accentColor.withOpacity(0.5),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            )
-                          ],
-                        ),
-                        child: const Text(
-                          'EXCLUSIVE',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10,
+              Padding(
+                  padding: const EdgeInsets.only(left: 8, top: 8, right: 16),
+                  child: Column(
+                    children: [
+                      Stack(
+                        children: [
+                          ImagesCarousel(
+                            images: promotion.images,
+                            height: MediaQuery.of(context).size.width * 0.5,
+                            borderRadius: 40,
                           ),
-                        ),
+                          // Размер скидки
+                          if (promotion.discountValueController.text.isNotEmpty)
+                            Positioned(
+                              bottom: 12,
+                              left: -4,
+                              child: TTLabel(
+                                text: promotion.discountValueController.text,
+                                background: Colors.black.withOpacity(0.7),
+                                accentColor: accentColor,
+                                margin: const EdgeInsets.only(left: 15),
+                              ),
+                            ),
+
+                          if (promotion.exclusiveNotifier.value)
+                            Positioned(
+                              top: 12,
+                              right: 12,
+                              child: TTLabel(
+                                text: 'TT Only',
+                                background: Colors.black.withOpacity(0.7),
+                                accentColor: accentColor,
+                                margin: const EdgeInsets.only(left: 15),
+                              ),
+                            ),
+                        ],
                       ),
-                    ),
-                  // Размер скидки
-                  if (promotion.discountValueController.text.isNotEmpty)
-                    Positioned(
-                      bottom: 12,
-                      left: 12,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.7),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: accentColor.withOpacity(0.24)),
-                        ),
-                        child: Text(
-                          promotion.discountValueController.text,
-                          style:TTTextStyle.title.copyWith(fontSize: 16, color: accentColor),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
+                    ],
+                  )),
 
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -96,9 +81,30 @@ class PromotionCard extends StatelessWidget {
 
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
-                    child: DateRangeWidget(
-                      startDate: promotion.startDate,
-                      endDate: promotion.endDate,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: DateRangeWidget(
+                            startDate: promotion.startDate,
+                            endDate: promotion.endDate,
+                          ),
+                        ),
+                        if (!hasImages &&
+                            promotion.discountValueController.text.isNotEmpty)
+                          TTLabel(
+                            text: promotion.discountValueController.text,
+                            accentColor: accentColor,
+                            margin: const EdgeInsets.only(left: 15),
+                          ),
+                        if (!hasImages && promotion.exclusiveNotifier.value)
+                          TTLabel(
+                            text: 'TT Only',
+                            accentColor: accentColor,
+                            margin: const EdgeInsets.only(left: 15),
+                          ),
+                      ],
                     ),
                   ),
 
@@ -130,8 +136,10 @@ class PromotionCard extends StatelessWidget {
   Widget _buildPromoCodeAction(BuildContext context) {
     return InkWell(
       onTap: () {
-        Clipboard.setData(ClipboardData(text: promotion.promoCodeController.text));
-        MessageModule(context, 'Промокод скопійовано!', MessageType.information);
+        Clipboard.setData(
+            ClipboardData(text: promotion.promoCodeController.text));
+        MessageModule(
+            context, 'Промокод скопійовано!', MessageType.information);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -148,7 +156,10 @@ class PromotionCard extends StatelessWidget {
               children: [
                 const Text(
                   'ПРОМОКОД',
-                  style: TextStyle(fontSize: 9, color: TTColors.text_secondary, letterSpacing: 1),
+                  style: TextStyle(
+                      fontSize: 9,
+                      color: TTColors.text_secondary,
+                      letterSpacing: 1),
                 ),
                 Text(
                   promotion.promoCodeController.text,
