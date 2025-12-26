@@ -3,13 +3,17 @@ import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../../utils/url_launcher.dart';
+
 class InstagramLink extends StatelessWidget {
   final String? username;
   final Color color;
+  final BuildContext context;
 
   const InstagramLink({
     super.key,
     this.username,
+    required this.context,
     this.color = TTColors.text,
   });
 
@@ -17,6 +21,14 @@ class InstagramLink extends StatelessWidget {
     final Uri url = Uri.parse('https://instagram.com/$handle');
 
     await launchUrl(url, mode: LaunchMode.externalApplication);
+
+    await UrlHelper.openExternal(
+      context,
+      url,
+      title: 'Перехід до Instagram',
+      message:
+          'Ви збираєтесь відкрити зовнішній застосунок Instagram. Продовжити?',
+    );
   }
 
   @override

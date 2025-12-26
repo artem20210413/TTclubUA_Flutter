@@ -78,6 +78,7 @@ class ApproveUserCard extends StatelessWidget {
                           ],
                         ),
                         InstagramLink(
+                          context: context,
                           username: item.json['json']['instagram_nickname'],
                         ),
                       ],
@@ -105,6 +106,7 @@ class ApproveUserCard extends StatelessWidget {
                           ],
                         ),
                         TelegramLink(
+                          context: context,
                           username:
                               item.json['json']['telegram_nickname'] ?? null,
                         )

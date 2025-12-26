@@ -235,6 +235,7 @@ class _ProfileState extends State<Profile> {
                                 const SizedBox(width: 8),
 
                                 InstagramLink(
+                                  context: context,
                                   username: _dto.instagramNicknameController.text,
                                 ),
                               ],

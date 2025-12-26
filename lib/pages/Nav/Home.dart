@@ -15,6 +15,7 @@ import '../../utils/url_launcher.dart';
 import '../Nav.dart';
 import 'Calendar.dart';
 import 'Home/AnnualFeePage.dart';
+import 'Home/Partners/PartnersPage.dart';
 import 'Home/SuggestionsPage.dart';
 
 class Home extends StatefulWidget {
@@ -85,8 +86,14 @@ class _HomeState extends State<Home> {
                     iconSize: 30,
                     iconColor: accentColor,
                     onTap: () async {
-                      UrlHelper.openExternal(context,
-                          Uri.parse('https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ=='));
+                      UrlHelper.openExternal(
+                        context,
+                        Uri.parse(
+                            'https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ=='),
+                        title: 'Перехід до Instagram',
+                        message:
+                            'Ви збираєтесь відкрити зовнішній застосунок Instagram. Продовжити?',
+                      );
                       // final Uri url = Uri.parse(
                       //     'https://www.instagram.com/ttclub_ua?igsh=MTEwaHFieXBsdmZxZQ==');
                       // await launchUrl(url,
@@ -132,6 +139,20 @@ class _HomeState extends State<Home> {
                 navState?.setTab(2); // 2 — индекс вкладки Calendar
               },
             ),
+            const SizedBox(height: 20),
+            PromoCard(
+              imagePath: 'assets/ui/banners/partners.webp',
+              title: 'Партнери TTclubUA',
+              // enabled: false,
+              onButtonTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          PartnersPage()), // Переход на экран публикаций
+                );
+              },
+            ),
             // const SizedBox(height: 20),
             // PromoCard(
             //   imagePath: 'assets/ui/banners/budget.webp',
@@ -140,19 +161,10 @@ class _HomeState extends State<Home> {
             //     // TODO: действие по нажатию
             //   },
             // ),
-            const SizedBox(height: 20),
+            // const SizedBox(height: 20),
             // PromoCard(
             //   imagePath: 'assets/ui/banners/ttclubua_in_world.webp',
             //   title: 'TTclubUA у світі',
-            //   enabled: false,
-            //   onButtonTap: () {
-            //     // TODO: действие по нажатию
-            //   },
-            // ),
-            // const SizedBox(height: 20),
-            // PromoCard(
-            //   imagePath: 'assets/ui/banners/partners.webp',
-            //   title: 'Партнери TTclubUA',
             //   enabled: false,
             //   onButtonTap: () {
             //     // TODO: действие по нажатию
