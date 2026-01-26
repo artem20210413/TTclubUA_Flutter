@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/Event/EventsScreen.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/Merch/MerchScreen.dart';
+import 'package:tt_club_ua/pages/Nav/Admin/Partners/PartnersAdminScreen.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/Publication/PublicationsScreen.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/System/SystemPage.dart';
 
@@ -148,6 +149,19 @@ class _AdminState extends State<Admin> {
                   MaterialPageRoute(
                       builder: (context) =>
                           EventsScreen()), // Переход на экран публикаций
+                );
+              },
+            ),
+            TileButton(
+              icon: Icons.front_hand_outlined,
+              title: 'Партнери',
+              iconColor: Colors.white,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          PartnersAdminScreen()), // Переход на экран публикаций
                 );
               },
             ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tt_club_ua/Storage/UserStorage.dart';
 import 'package:tt_club_ua/components/card/UserAvatar.dart';
+import 'package:tt_club_ua/components/viewers/TelegramLink.dart';
 import 'package:tt_club_ua/config/default.dart';
 
 import '../../../api/routs/Dto/User/UserUpdateDto.dart';
@@ -236,8 +237,27 @@ class _ProfileState extends State<Profile> {
 
                                 InstagramLink(
                                   context: context,
-                                  username: _dto.instagramNicknameController.text,
+                                  username:
+                                      _dto.instagramNicknameController.text,
                                 ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(width: 4),
+
+                                // 👇 ВАЖНО: именно этот Expanded ограничивает ширину текста городов
+                                Expanded(
+                                  child: Text(''),
+                                ),
+
+                                const SizedBox(width: 8),
+                                TelegramLink(
+                                    context: context,
+                                    username:
+                                        _dto.telegramNicknameController.text),
                               ],
                             ),
                             SizedBox(height: 18),
