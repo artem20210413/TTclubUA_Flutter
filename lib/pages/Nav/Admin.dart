@@ -169,7 +169,12 @@ class _AdminState extends State<Admin> {
               icon: Icons.local_mall,
               title: 'Мерч',
               iconColor: Colors.white,
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MerchScreen()),
+                );
+              },
             ),
             TileButton(
               icon: Icons.show_chart,
