@@ -3,6 +3,7 @@ import 'package:tt_club_ua/Storage/Search/ImageUrlDto.dart';
 class CalendarItemDto {
   final String type;        // "birthday" или "event_ttclubua"
   final String id;
+  final int model_id;
 
   final String title;
   final String description;
@@ -20,6 +21,7 @@ class CalendarItemDto {
   CalendarItemDto({
     required this.type,
     required this.id,
+    required this.model_id,
     required this.title,
     required this.description,
     required this.date,
@@ -50,6 +52,7 @@ class CalendarItemDto {
     return CalendarItemDto(
       type: json['type'] ?? '',
       id: json['id'] ?? '',
+      model_id: json['model_id'] ?? 0,
       title: json['title'] ?? '',
       description: json['description'] ?? '',
       date: parsedDate,
@@ -69,6 +72,7 @@ class CalendarItemDto {
     return CalendarItemDto(
       type: '',
       id: '',
+      model_id: 0,
       title: '',
       description: '',
       date: null,

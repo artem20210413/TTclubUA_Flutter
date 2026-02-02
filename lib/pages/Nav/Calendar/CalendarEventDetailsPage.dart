@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:tt_club_ua/config/default.dart';
 import 'package:tt_club_ua/components/layout/TTScaffold.dart';
 import 'package:tt_club_ua/components/TTNeumorphicBox.dart';
@@ -8,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../api/routs/Dto/Event/CalendarItemDto.dart';
 import '../../../components/viewers/ImagesCarousel.dart';
 import '../../../components/viewers/PlaceLink.dart';
+import 'ShareEventButton.dart';
 
 class CalendarEventDetailsPage extends StatelessWidget {
   final CalendarItemDto item;
@@ -33,10 +35,11 @@ class CalendarEventDetailsPage extends StatelessWidget {
   }
 
   Widget buildPlaceRow(CalendarItemDto item) {
+    print(item.id);
     final hasMap = item.googleMaps != null && item.googleMaps!.isNotEmpty;
 
     if (item.place == null || item.place!.isEmpty) {
-      return const SizedBox.shrink(); // 🔥 Правильно, а не null
+      return const SizedBox.shrink();
     }
     return GestureDetector(
       onTap: hasMap ? () => _openUrl(item.googleMaps!) : null,
@@ -44,10 +47,13 @@ class CalendarEventDetailsPage extends StatelessWidget {
       child: Row(
         children: [
           // Левый блок — иконка + место
-          Icon(
-            Icons.place,
-            size: 18,
-            color: TTColors.text_secondary,
+          SvgPicture.asset(
+            'assets/svg/map-pin.svg',
+            width: 20,
+            colorFilter: ColorFilter.mode(
+              TTColors.text_secondary,
+              BlendMode.srcIn,
+            ),
           ),
           const SizedBox(width: 8),
 
@@ -62,11 +68,16 @@ class CalendarEventDetailsPage extends StatelessWidget {
 
           // Правый блок — иконка карты (только если есть ссылка)
           if (hasMap)
-            Icon(
-              Icons.map,
-              size: 20,
-              color: TTColors.text_secondary,
+            SvgPicture.asset(
+              'assets/svg/map-trifold.svg',
+              width: 20,
+              colorFilter: ColorFilter.mode(
+                TTColors.text_secondary,
+                BlendMode.srcIn,
+              ),
             ),
+           const SizedBox(width: 8), //if (item.type == 'event_ttclubua')
+           ShareEventButton(item: item),
         ],
       ),
     );
@@ -117,46 +128,6 @@ class CalendarEventDetailsPage extends StatelessWidget {
 
                   // PLACE + GOOGLE MAPS (одной логикой)
                   buildPlaceRow(item),
-
-                  // if (item.place != null)
-                  //   Row(
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: [
-                  //       Icon(
-                  //         Icons.place,
-                  //         size: 18,
-                  //         color: TTColors.text_secondary,
-                  //       ),
-                  //       const SizedBox(width: 8),
-                  //       Expanded(
-                  //         child: Text(
-                  //           item.place!,
-                  //           style: TTTextStyle.subtitle,
-                  //           maxLines: 1,
-                  //           overflow: TextOverflow.ellipsis,
-                  //           textAlign: TextAlign.start,
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // if (item.googleMaps != null) const SizedBox(height: 8),
-                  // if (item.googleMaps != null)
-                  //   Row(
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: [
-                  //       Icon(
-                  //         Icons.map,
-                  //         size: 18,
-                  //         color: TTColors.text_secondary,
-                  //       ),
-                  //       const SizedBox(width: 8),
-                  //       Expanded(
-                  //         child: PlaceLink(
-                  //           text: item.googleMaps,
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
 
                   const SizedBox(height: 16),
 

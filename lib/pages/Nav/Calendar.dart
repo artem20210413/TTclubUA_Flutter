@@ -134,8 +134,7 @@ class _CalendarState extends State<Calendar> {
         return;
       }
       final body = jsonDecode(res.body);
-
-      final List data = body['data'] as List; // или просто body, если API = []
+      final List data = body['data'] as List;
 
       // 1) JSON → DTO
       _items = data
@@ -567,7 +566,7 @@ class _CalendarState extends State<Calendar> {
         for (final e in events) ...[
           CalendarEventCard(
             event: e,
-            dateLabel: _formatDayMonth(e.date), // уже есть в твоём коде
+            dateLabel: _formatDayMonth(e.date),
           ),
           const SizedBox(height: 12),
         ]
