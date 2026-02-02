@@ -35,7 +35,6 @@ class CalendarEventDetailsPage extends StatelessWidget {
   }
 
   Widget buildPlaceRow(CalendarItemDto item) {
-    print(item.id);
     final hasMap = item.googleMaps != null && item.googleMaps!.isNotEmpty;
 
     if (item.place == null || item.place!.isEmpty) {
