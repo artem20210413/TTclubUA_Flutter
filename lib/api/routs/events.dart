@@ -45,6 +45,13 @@ Future<http.Response> CALENDAR_LIST(String? token,
   return response;
 }
 
+Future<http.Response> CALENDAR_DESCRIPTION(String? token, String event) async {
+  final uri = Uri.parse(URL_CALENDAR_DESCRIPTION.replaceAll('{event}', event));
+  final response = await http.get(uri, headers: HEADERS(token));
+
+  return response;
+}
+
 Future<http.Response> EVENT_LIST(
   String? token,
   String search, {

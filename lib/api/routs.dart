@@ -71,6 +71,7 @@ const URL_GOODS_IMAGE_CREATE = '${_HOST}/api/goods/{goods}/images';
 
 
 const URL_CALENDAR_LIST = '${_HOST}/api/calendar';
+const URL_CALENDAR_DESCRIPTION = '${_HOST}/api/calendar/{event}/description';
 const URL_EVENT_LIST = '${_HOST}/api/event';
 const URL_EVENT_CREATE = '${_HOST}/api/event';
 const URL_EVENT_UPLOAD = '${_HOST}/api/event/{event}';

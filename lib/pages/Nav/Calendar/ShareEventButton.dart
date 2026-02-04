@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:share_plus/share_plus.dart';
@@ -7,8 +9,13 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
+import '../../../Storage/UserStorage.dart';
+import '../../../api/routs/events.dart';
+import '../../../api/routs/root.dart';
+import '../../../components/generalModule.dart';
+
 class ShareEventButton extends StatelessWidget {
-  final dynamic item; // Твой EventDto или NewsDto
+  final dynamic item;
   final Color? color;
 
   const ShareEventButton({
@@ -61,29 +68,19 @@ class ShareEventButton extends StatelessWidget {
   //   }
   // }
   void _onShare(BuildContext context) async {
-    // 1. Формуємо текст
-    final String title = item.title;
-    final String description = item.description;
+    final token = await UserStorage.getToken();
 
-    String dateInfo = '';
-    if (item.date != null) {
-      dateInfo = "📅 Дата: ${item.date.toString().split(' ').first}";
-      if (item.time != null && item.time!.isNotEmpty) {
-        dateInfo += " о ${item.time}";
-      }
+    final res = await CALENDAR_DESCRIPTION(token, item.id);
+
+    final isSuccess = await CHECK_API(res, context);
+    if (!isSuccess) {
+      MessageModule(
+          context, 'Не вдалося... Спробуйте пізніше.', MessageType.error);
+      return;
     }
 
-    String locationInfo = '';
-    // ПЕРЕВІР: чи точно поля називаються place та googleMaps?
-    if (item.place != null && item.place!.isNotEmpty) {
-      locationInfo = "📍 Локація: ${item.place}";
-      if (item.googleMaps != null && item.googleMaps!.isNotEmpty) {
-        locationInfo += "\n🗺 Карта: ${item.googleMaps}";
-      }
-    }
-
-    final String url = "https://ttclub.com.ua/events/${item.model_id}";
-    final String message = "$title\n\n$dateInfo\n$locationInfo\n\n$description\n\nДетальніше у додатку TT Club UA: $url";
+    final String message = jsonDecode(res.body)['data']['message'];
+    final String title = jsonDecode(res.body)['data']['title'] ?? null;
 
     try {
       if (item.images.isNotEmpty) {
@@ -92,7 +89,9 @@ class ShareEventButton extends StatelessWidget {
         final path = "${temp.path}/share_tmp.webp";
 
         // Завантажуємо фото
-        final response = await http.get(Uri.parse(item.images.first)).timeout(const Duration(seconds: 5));
+        final response = await http
+            .get(Uri.parse(item.images.first))
+            .timeout(const Duration(seconds: 5));
 
         if (response.statusCode == 200) {
           final file = File(path);
@@ -107,9 +106,8 @@ class ShareEventButton extends StatelessWidget {
         await Share.share(message, subject: title);
       }
     } catch (e) {
-      // Якщо сталась помилка (немає інету і т.д.) — відправляємо просто текст, щоб не "ламати" досвід юзеру
       debugPrint("Share error: $e");
-      await Share.share(message, subject: title);
+      await Share.share(message);
     }
   }
 
