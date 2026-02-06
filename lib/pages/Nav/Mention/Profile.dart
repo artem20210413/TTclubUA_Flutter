@@ -105,7 +105,7 @@ class _ProfileState extends State<Profile> {
       body: Column(
         children: [
           TTNeumorphicBox(
-            margin: EdgeInsets.only(top: 0, bottom: 16, left: 20, right: 12),
+            margin: EdgeInsets.only(top: 16, bottom: 16, left: 20, right: 12),
             padding: EdgeInsets.only(top: 0, bottom: 4, left: 0, right: 8),
             child: _isLoading
                 ? const TTLoading()

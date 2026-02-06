@@ -24,49 +24,6 @@ class ShareEventButton extends StatelessWidget {
     this.color,
   });
 
-  // void _onShare(BuildContext context) async {
-  //   // 1. Формируем текстовые блоки
-  //   final String title = item.title;
-  //   final String description = item.description;
-  //
-  //   // Форматируем дату (используем твою логику из основного экрана)
-  //   String dateInfo = '';
-  //   if (item.date != null) {
-  //     // Предполагаем, что у тебя есть доступ к методу _formatDate
-  //     dateInfo = "📅 Дата: ${item.date.toString().split(' ').first}";
-  //     if (item.time != null && item.time!.isNotEmpty)
-  //       dateInfo += " о ${item.time}";
-  //   }
-  //
-  //   // Локация и Google Maps
-  //   String locationInfo = '';
-  //   if (item.place != null && item.place!.isNotEmpty) {
-  //     locationInfo = "📍 Локація: ${item.place}";
-  //     if (item.googleMaps != null && item.googleMaps!.isNotEmpty) {
-  //       locationInfo += "\n🗺 Карта: ${item.googleMaps}";
-  //     }
-  //   }
-  //
-  //   final String url = "https://ttclub.com.ua/events/${item.id}";
-  //
-  //   // Итоговый текст
-  //   final String message =
-  //       "$title\n\n$dateInfo\n$locationInfo\n\n$description\n\nДетальніше у додатку TT Club UA: $url";
-  //
-  //   if (item.images.isNotEmpty) {
-  //     final temp = await getTemporaryDirectory();
-  //     final path = "${temp.path}/share_tmp.webp";
-  //
-  //     final response = await http.get(Uri.parse(item.images.first.url));
-  //     await File(path).writeAsBytes(response.bodyBytes);
-  //
-  //     // 3. Шаримо файл
-  //     await Share.shareXFiles([XFile(path)], text: message, subject: title);
-  //   } else {
-  //     // Якщо фото немає — просто текст
-  //     await Share.share(message, subject: title);
-  //   }
-  // }
   void _onShare(BuildContext context) async {
     final token = await UserStorage.getToken();
 
@@ -80,7 +37,7 @@ class ShareEventButton extends StatelessWidget {
     }
 
     final String message = jsonDecode(res.body)['data']['message'];
-    final String title = jsonDecode(res.body)['data']['title'] ?? null;
+    final String? title = jsonDecode(res.body)['data']['title'] ?? null;
 
     try {
       if (item.images.isNotEmpty) {

@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../api/routs/Dto/Event/CalendarItemDto.dart';
 import '../../../components/viewers/ImagesCarousel.dart';
 import '../../../components/viewers/PlaceLink.dart';
+import '../Mention/Profile.dart';
 import 'ShareEventButton.dart';
 
 class CalendarEventDetailsPage extends StatelessWidget {
@@ -75,10 +76,39 @@ class CalendarEventDetailsPage extends StatelessWidget {
                 BlendMode.srcIn,
               ),
             ),
-           const SizedBox(width: 8), //if (item.type == 'event_ttclubua')
-           ShareEventButton(item: item),
+          const SizedBox(width: 8), //if (item.type == 'event_ttclubua')
+          ShareEventButton(item: item),
         ],
       ),
+    );
+  }
+
+  Widget showProfile(CalendarItemDto item, context) {
+    if (item.type != 'birthday') return SizedBox();
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Левый блок — иконка + место
+        GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Profile(id: item.model_id),
+            ),
+          ),
+          child: SvgPicture.asset(
+            'assets/svg/user.svg',
+            width: 20,
+            colorFilter: ColorFilter.mode(
+              TTColors.text_secondary,
+              BlendMode.srcIn,
+            ),
+          ),
+        ),
+
+        ShareEventButton(item: item),
+      ],
     );
   }
 
@@ -127,9 +157,8 @@ class CalendarEventDetailsPage extends StatelessWidget {
 
                   // PLACE + GOOGLE MAPS (одной логикой)
                   buildPlaceRow(item),
-
+                  showProfile(item, context),
                   const SizedBox(height: 16),
-
                   Text(
                     item.title,
                     style: TTTextStyle.title18,

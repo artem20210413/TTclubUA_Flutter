@@ -33,6 +33,7 @@ class SearchBarWidget extends StatelessWidget {
           Expanded(
             child: CustomInputField(
               controller: controller,
+              onSubmitted: (_) => onSearch(),
               label: 'Пошук',
             ),
           ),

@@ -20,7 +20,7 @@ class InstagramLink extends StatelessWidget {
   Future<void> _launchInstagram(String handle) async {
     final Uri url = Uri.parse('https://instagram.com/$handle');
 
-    await launchUrl(url, mode: LaunchMode.externalApplication);
+    // await launchUrl(url, mode: LaunchMode.externalApplication);
 
     await UrlHelper.openExternal(
       context,
