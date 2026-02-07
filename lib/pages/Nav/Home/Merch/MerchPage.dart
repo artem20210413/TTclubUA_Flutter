@@ -12,7 +12,9 @@ import '../../../../api/routs/goods.dart';
 import '../../../../api/routs/root.dart';
 import '../../../../components/TTLoading.dart';
 import '../../../../components/TTNeumorphicBox.dart';
+import '../../../../components/buttons/GlassFabFloatingButton.dart';
 import '../../../../components/buttons/GlowingButton.dart';
+import '../../Admin/Merch/MerchUploadScreen.dart';
 import 'GoodsCard.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/interface/SearchBarWidgetState.dart';
@@ -31,6 +33,7 @@ class _MerchPageState extends State<MerchPage> {
   final TextEditingController _searchController = TextEditingController();
   List<GoodsDto> goods = [];
   bool isLoading = false;
+  bool _isAdmin = false;
   int _currentPage = 1;
   bool _isLoadingMore = false;
   bool _hasMore = true;
@@ -41,6 +44,7 @@ class _MerchPageState extends State<MerchPage> {
   void initState() {
     super.initState();
     fetchSearchResults();
+    fetchUser();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
               _scrollController.position.maxScrollExtent - 200 &&
@@ -81,6 +85,13 @@ class _MerchPageState extends State<MerchPage> {
     }
   }
 
+  Future<void> fetchUser() async {
+    final isAdmin = await UserStorage.isAdmin();
+    setState(() {
+      _isAdmin = isAdmin;
+    });
+  }
+
   void _onSearch() {
     setState(() {
       isLoading = true;
@@ -103,6 +114,20 @@ class _MerchPageState extends State<MerchPage> {
   Widget build(BuildContext context) {
     return TTScaffold(
       title: 'Мерч',
+      floatingActionButton: _isAdmin
+          ? GlassFabFloatingButton(
+              accentColor: accentColor, // Передаєте ваш колір
+              iconPath: 'assets/svg/plus.svg',
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => MerchUploadScreen()),
+                );
+                if (result == true) _onSearch();
+              },
+              // onPressed: _onSearch,       // Передаєте функцію оновлення
+            )
+          : null,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

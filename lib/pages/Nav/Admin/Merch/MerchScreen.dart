@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/api/routs/Dto/Goods/GoodsDto.dart';
 import 'package:tt_club_ua/api/routs/goods.dart';
+import 'package:tt_club_ua/components/buttons/GlassFabFloatingButton.dart';
 import 'package:tt_club_ua/config/default.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/Merch/MerchUploadScreen.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/Publication/CreatePostScreen.dart';
@@ -151,32 +152,43 @@ class _MerchScreenState extends State<MerchScreen> {
   Widget build(BuildContext context) {
     return TTScaffold(
       // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: ClipRRect(
-        borderRadius: BorderRadius.circular(40),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            width: 64,
-            height: 64,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.12),
-              shape: BoxShape.circle,
-              border:
-                  Border.all(color: accentColor.withOpacity(0.5), width: 1.5),
-            ),
-            child: IconButton(
-              icon: Icon(Icons.add, color: accentColor, size: 30),
-              onPressed: () async {
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => MerchUploadScreen()),
-                );
-                if (result == true) _onSearch();
-              },
-            ),
-          ),
-        ),
+      floatingActionButton: GlassFabFloatingButton(
+        accentColor: accentColor, // Передаєте ваш колір
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => MerchUploadScreen()),
+          );
+          if (result == true) _onSearch();
+        },
+        // onPressed: _onSearch,       // Передаєте функцію оновлення
       ),
+      // floatingActionButton: ClipRRect(
+      //   borderRadius: BorderRadius.circular(40),
+      //   child: BackdropFilter(
+      //     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+      //     child: Container(
+      //       width: 64,
+      //       height: 64,
+      //       decoration: BoxDecoration(
+      //         color: Colors.white.withOpacity(0.12),
+      //         shape: BoxShape.circle,
+      //         border:
+      //             Border.all(color: accentColor.withOpacity(0.5), width: 1.5),
+      //       ),
+      //       child: IconButton(
+      //         icon: Icon(Icons.add, color: accentColor, size: 30),
+      //         onPressed: () async {
+      //           final result = await Navigator.push(
+      //             context,
+      //             MaterialPageRoute(builder: (_) => MerchUploadScreen()),
+      //           );
+      //           if (result == true) _onSearch();
+      //         },
+      //       ),
+      //     ),
+      //   ),
+      // ),
       body: Column(
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
