@@ -7,10 +7,12 @@ import '../../../../api/routs/Partners/partners.dart';
 import '../../../../api/routs/root.dart';
 import '../../../../components/TTLoading.dart';
 import '../../../../components/buttons/CircleButton.dart';
+import '../../../../components/buttons/GlassFabFloatingButton.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/inputs/CustomInputField.dart';
 import '../../../../components/layout/TTScaffold.dart';
 import '../../../../config/default.dart';
+import '../../Admin/Partners/PartnerUploadScreen.dart';
 import 'PartnerCard.dart';
 
 class PartnersPage extends StatefulWidget {
@@ -26,6 +28,7 @@ class _PartnersPageState extends State<PartnersPage> {
 
   List<PartnerDto> partners = [];
   bool isLoading = true;
+  bool _isAdmin = false;
   bool _isLoadingMore = false;
   bool _hasMore = true;
   int _currentPage = 1;
@@ -35,6 +38,7 @@ class _PartnersPageState extends State<PartnersPage> {
   void initState() {
     super.initState();
     _fetchPartners();
+    _fetchUser();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
               _scrollController.position.maxScrollExtent - 200 &&
@@ -42,6 +46,13 @@ class _PartnersPageState extends State<PartnersPage> {
           _hasMore) {
         _loadMore();
       }
+    });
+  }
+
+  Future<void> _fetchUser() async {
+    final isAdmin = await UserStorage.isAdmin();
+    setState(() {
+      _isAdmin = isAdmin;
     });
   }
 
@@ -95,6 +106,19 @@ class _PartnersPageState extends State<PartnersPage> {
   Widget build(BuildContext context) {
     return TTScaffold(
       title: 'Партнери',
+      floatingActionButton: _isAdmin
+          ? GlassFabFloatingButton(
+              accentColor: accentColor,
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => PartnerUploadScreen()),
+                );
+                if (result == true) _onSearch();
+              },
+              // onPressed: _onSearch,       // Передаєте функцію оновлення
+            )
+          : null,
       body: Column(
         children: [
           // Поиск (используем твой CustomInputField)

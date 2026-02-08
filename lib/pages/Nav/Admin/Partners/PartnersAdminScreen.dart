@@ -10,6 +10,7 @@ import '../../../../api/routs/Partners/partners.dart';
 import '../../../../api/routs/root.dart';
 import '../../../../components/Selects/TTSelect.dart';
 import '../../../../components/TTLoading.dart';
+import '../../../../components/buttons/GlassFabFloatingButton.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/interface/SearchBarWidgetState.dart';
 import '../../../../components/layout/TTScaffold.dart';
@@ -137,8 +138,16 @@ class _PartnersAdminScreenState extends State<PartnersAdminScreen> {
     return TTScaffold(
       backgroundColor: TTColors.background,
       title: 'Партнери',
-      // Використовуємо FAB як у івентах
-      floatingActionButton: _buildFab(context),
+      floatingActionButton: GlassFabFloatingButton(
+        accentColor: accentColor,
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => PartnerUploadScreen()),
+          );
+          if (result == true) _onSearch();
+        }, // Передаєте функцію оновлення
+      ),
       body: Column(
         children: [
           SearchBarWidget(
@@ -220,39 +229,6 @@ class _PartnersAdminScreenState extends State<PartnersAdminScreen> {
                   ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildFab(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(40),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.12),
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: accentColor.withOpacity(0.5),
-              width: 1.5,
-            ),
-          ),
-          child: IconButton(
-            icon: Icon(Icons.add, color: accentColor, size: 30),
-            onPressed: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const PartnerUploadScreen(),
-                ),
-              );
-              if (result == true) _onSearch();
-            },
-          ),
-        ),
       ),
     );
   }

@@ -116,8 +116,7 @@ class _MerchPageState extends State<MerchPage> {
       title: 'Мерч',
       floatingActionButton: _isAdmin
           ? GlassFabFloatingButton(
-              accentColor: accentColor, // Передаєте ваш колір
-              iconPath: 'assets/svg/plus.svg',
+              accentColor: accentColor,
               onPressed: () async {
                 final result = await Navigator.push(
                   context,

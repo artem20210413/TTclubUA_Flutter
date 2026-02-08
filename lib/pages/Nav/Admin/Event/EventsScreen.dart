@@ -12,6 +12,7 @@ import '../../../../api/routs/events.dart';
 import '../../../../api/routs/root.dart';
 import '../../../../components/Selects/TTSelect.dart';
 import '../../../../components/TTLoading.dart';
+import '../../../../components/buttons/GlassFabFloatingButton.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/interface/SearchBarWidgetState.dart';
 import '../../../../components/layout/TTScaffold.dart';
@@ -30,6 +31,7 @@ enum EventTypeFilter {
   world(2);
 
   final int? value;
+
   const EventTypeFilter(this.value);
 }
 
@@ -39,6 +41,7 @@ enum EventActiveFilter {
   inactive(false);
 
   final bool? value;
+
   const EventActiveFilter(this.value);
 }
 
@@ -56,8 +59,6 @@ class _EventsScreenState extends State<EventsScreen> {
   EventTypeFilter _typeFilter = EventTypeFilter.all;
   EventActiveFilter _activeFilter = EventActiveFilter.all;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -65,7 +66,7 @@ class _EventsScreenState extends State<EventsScreen> {
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 200 &&
+              _scrollController.position.maxScrollExtent - 200 &&
           !_isLoadingMore &&
           _hasMore) {
         _loadMore();
@@ -199,7 +200,16 @@ class _EventsScreenState extends State<EventsScreen> {
   Widget build(BuildContext context) {
     return TTScaffold(
       title: 'Події',
-      floatingActionButton: _buildFab(context),
+      floatingActionButton: GlassFabFloatingButton(
+        accentColor: accentColor,
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => EventUploadScreen()),
+          );
+          if (result == true) _onSearch();
+        }, // Передаєте функцію оновлення
+      ),
       body: Column(
         children: [
           _buildFiltersRow(),
@@ -211,81 +221,48 @@ class _EventsScreenState extends State<EventsScreen> {
           _isLoading
               ? const TTLoading()
               : _events.isEmpty
-              ? const SizedBox.shrink()
-              : Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: _events.length + (_isLoadingMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == _events.length) {
-                  return const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(
-                      child: CircularProgressIndicator(),
+                  ? const SizedBox.shrink()
+                  : Expanded(
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        itemCount: _events.length + (_isLoadingMore ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          if (index == _events.length) {
+                            return const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          }
+
+                          final event = _events[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                              left: 16,
+                              right: 8,
+                              top: 12,
+                            ),
+                            child: EventAdminCard(
+                              accentColor: accentColor,
+                              event: event,
+                              onEdit: () async {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => EventUploadScreen(
+                                      item: event, // 👉 создаём новую подію
+                                    ),
+                                  ),
+                                );
+                                if (result == true) _onSearch();
+                              },
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  );
-                }
-
-                final event = _events[index];
-                return Padding(
-                  padding: const EdgeInsets.only(
-                    left: 16,
-                    right: 8,
-                    top: 12,
-                  ),
-                  child: EventAdminCard(
-                    accentColor: accentColor,
-                    event: event,
-                    onEdit: () async {
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => EventUploadScreen(
-                            item: event,               // 👉 создаём новую подію
-                          ),
-                        ),
-                      );
-                      if (result == true) _onSearch();
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildFab(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(40),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.12),
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: accentColor.withOpacity(0.5),
-              width: 1.5,
-            ),
-          ),
-          child: IconButton(
-            icon: Icon(Icons.add, color: accentColor, size: 30),
-            onPressed: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const EventUploadScreen(),
-                ),
-              );
-              if (result == true) _onSearch();
-            },
-          ),
-        ),
       ),
     );
   }
