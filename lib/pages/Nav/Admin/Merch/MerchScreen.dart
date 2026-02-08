@@ -232,7 +232,7 @@ class _MerchScreenState extends State<MerchScreen> {
                                   ),
                                 );
 
-                                if (result == true) {
+                                if (result != null) {
                                   _onSearch();
                                 }
                               },

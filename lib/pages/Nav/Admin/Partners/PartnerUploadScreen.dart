@@ -1,11 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/config/default.dart';
 import 'package:tt_club_ua/components/buttons/GlowingButton.dart';
 
+import '../../../../Storage/UserStorage.dart';
 import '../../../../api/routs/Dto/Partners/PartnerDto.dart';
+import '../../../../api/routs/Partners/partners.dart';
+import '../../../../api/routs/root.dart';
+import '../../../../components/generalModule.dart';
+import '../../../../components/layout/TTScaffold.dart';
 
 class PartnerUploadScreen extends StatefulWidget {
-  final PartnerDto? partner; // Если null — создание, если есть — редактирование
+  final PartnerDto? partner;
 
   const PartnerUploadScreen({super.key, this.partner});
 
@@ -15,6 +22,7 @@ class PartnerUploadScreen extends StatefulWidget {
 
 class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
   final _formKey = GlobalKey<FormState>();
+  late PartnerDto item;
 
   late TextEditingController _nameController;
   late TextEditingController _descController;
@@ -27,31 +35,57 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
         TextEditingController(text: widget.partner?.titleController.text ?? '');
     _descController = TextEditingController(
         text: widget.partner?.descriptionController.text ?? '');
+    setState(() {
+      item = widget.partner ?? PartnerDto.empty(); // 👈 если не передали — пустой
+    });
   }
 
   Future<void> _savePartner() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
-    // Логика вызова API (создание или обновление)
-    // await UPDATE_PARTNER(...) или CREATE_PARTNER(...)
+
+    final token = await UserStorage.getToken();
+    final bool isEdit = item.id != null;
+    final res = isEdit
+        ? await PARTNERS_UPLOAD(token, item) // обновление
+        : await PARTNERS_CREATE(token, item); // создание
+
+    final isSuccess = await CHECK_API(res, context);
+
+    if (isSuccess) {
+      final body = jsonDecode(res.body);
+      // если бэк возвращает объект товара в data — можно обновить локальный dto
+      if (body['data'] != null) {
+        setState(() {
+          item = PartnerDto.fromJson(body['data']);
+        });
+      }
+
+      MessageModule(
+        context,
+        isEdit ? 'Партнер успішно оновлено!' : 'Партнер успішно створено!',
+        MessageType.success,
+      );
+    } else {
+      MessageModule(
+        context,
+        'Щось пішло не так...',
+        MessageType.error,
+      );
+    }
 
     setState(() => _isLoading = false);
-    Navigator.pop(context);
+    Navigator.pop(context, item);
   }
 
   @override
   Widget build(BuildContext context) {
     final bool isEdit = widget.partner != null;
 
-    return Scaffold(
-      backgroundColor: TTColors.background,
-      appBar: AppBar(
-        title: Text(isEdit ? 'Редагувати партнера' : 'Новий партнер',
-            style: TTTextStyle.title18),
-        backgroundColor: TTColors.background,
-      ),
-      body: SingleChildScrollView(
+    return TTScaffold(
+    title: item.id != null ? 'Редагувати партнера' : 'Новий партнер',
+    body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Form(
           key: _formKey,

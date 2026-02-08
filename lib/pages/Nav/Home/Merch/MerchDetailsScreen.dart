@@ -3,10 +3,13 @@ import 'package:tt_club_ua/config/default.dart';
 import 'package:tt_club_ua/api/routs/Dto/Goods/GoodsDto.dart';
 
 import '../../../../Storage/Cache/AccentColorCache.dart';
+import '../../../../Storage/UserStorage.dart';
 import '../../../../components/TTNeumorphicBox.dart';
+import '../../../../components/buttons/GlassFabFloatingButton.dart';
 import '../../../../components/layout/TTScaffold.dart';
 import '../../../../components/buttons/GlowingButton.dart';
 import '../../../../components/viewers/ImagesCarousel.dart';
+import '../../Admin/Merch/MerchUploadScreen.dart';
 
 class MerchDetailsScreen extends StatefulWidget {
   final GoodsDto item;
@@ -23,6 +26,15 @@ class MerchDetailsScreen extends StatefulWidget {
 class _MerchDetailsScreenState extends State<MerchDetailsScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  bool _isAdmin = false;
+  late GoodsDto currentItem = new GoodsDto.empty();
+
+  @override
+  void initState() {
+    super.initState();
+    currentItem = widget.item;
+    fetchUser();
+  }
 
   Color accentColor = AccentColorCache.accentColor;
 
@@ -32,12 +44,37 @@ class _MerchDetailsScreenState extends State<MerchDetailsScreen> {
     super.dispose();
   }
 
+  Future<void> fetchUser() async {
+    final isAdmin = await UserStorage.isAdmin();
+    setState(() {
+      _isAdmin = isAdmin;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final item = widget.item;
-
     return TTScaffold(
-      title: item.titleController.text,
+      title: currentItem.titleController.text,
+      floatingActionButton: _isAdmin
+          ? GlassFabFloatingButton(
+              accentColor: accentColor,
+              iconPath: 'assets/svg/pencil.svg',
+              onPressed: () async {
+                // Чекаємо на результат
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => MerchUploadScreen(item: currentItem)),
+                );
+
+                // Перевіряємо, чи повернувся об'єкт (користувач міг просто натиснути "назад")
+                if (result != null && result is GoodsDto) {
+                  setState(() => currentItem = result);
+                }
+              },
+              // onPressed: _onSearch,       // Передаєте функцію оновлення
+            )
+          : null,
       body: SafeArea(
         child: SingleChildScrollView(
           padding:
@@ -62,7 +99,7 @@ class _MerchDetailsScreenState extends State<MerchDetailsScreen> {
                       child: Column(
                         children: [
                           ImagesCarousel(
-                            images: item.images,
+                            images: currentItem.images,
                             height: MediaQuery.of(context).size.width * 0.6,
                             borderRadius: 32,
                           ),
@@ -70,16 +107,16 @@ class _MerchDetailsScreenState extends State<MerchDetailsScreen> {
                           const SizedBox(height: 18),
                           // описание
                           Text(
-                            item.descriptionController.text,
+                            currentItem.descriptionController.text,
                             textAlign: TextAlign.start,
-                            style:
-                            TTTextStyle.subtitle,//.copyWith(color: TTColors.text),
+                            style: TTTextStyle
+                                .subtitle, //.copyWith(color: TTColors.text),
                           ),
                           const SizedBox(height: 24),
                           Row(
                             children: [
                               Text(
-                                '${item.priceController.text} грн',
+                                '${currentItem.priceController.text} грн',
                                 style: TTTextStyle.title.copyWith(fontSize: 22),
                               ),
                               // const Spacer(),
@@ -99,7 +136,6 @@ class _MerchDetailsScreenState extends State<MerchDetailsScreen> {
                         ],
                       ),
                     ),
-
                   ],
                 ),
               ),

@@ -85,7 +85,7 @@ class _MerchUploadScreenState extends State<MerchUploadScreen> {
     }
 
     setState(() => isLoading = false);
-    Navigator.pop(context, true);
+    Navigator.pop(context, item);
   }
 
   void _addImage() async {
