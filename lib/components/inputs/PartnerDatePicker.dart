@@ -8,6 +8,7 @@ class PartnerDatePicker extends StatelessWidget {
   final DateTime? value;
   final Function(DateTime?) onChanged;
   final Color accentColor;
+  final bool showTime; // 👈 Новий параметр
 
   const PartnerDatePicker({
     super.key,
@@ -15,6 +16,7 @@ class PartnerDatePicker extends StatelessWidget {
     required this.value,
     required this.onChanged,
     this.accentColor = const Color(0xFFE5B80B),
+    this.showTime = true,
   });
 
   Future<void> _selectDateTime(BuildContext context) async {
@@ -33,6 +35,11 @@ class PartnerDatePicker extends StatelessWidget {
     );
 
     if (date == null) return;
+    // Якщо час не потрібен — повертаємо тільки дату
+    if (!showTime) {
+      onChanged(DateTime(date.year, date.month, date.day));
+      return;
+    }
 
     // 2. Вибір часу (24-годинний формат)
     if (!context.mounted) return;

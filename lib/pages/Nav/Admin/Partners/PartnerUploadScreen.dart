@@ -9,6 +9,7 @@ import '../../../../Storage/UserStorage.dart';
 import '../../../../api/routs/Dto/Partners/PartnerDto.dart';
 import '../../../../api/routs/Partners/partners.dart';
 import '../../../../api/routs/root.dart';
+import '../../../../components/TTCheckbox.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/inputs/BigTextInput.dart';
 import '../../../../components/inputs/CustomInputField.dart';
@@ -74,6 +75,7 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
         MessageType.success,
       );
     } else {
+      print(jsonDecode(res.body));
       MessageModule(
         context,
         'Щось пішло не так...',
@@ -83,38 +85,6 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
 
     setState(() => _isLoading = false);
     Navigator.pop(context, item);
-  }
-  Future<void> _selectDateTime(bool isStart) async {
-    // 1. Вибір дати
-    final DateTime? date = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2025),
-      lastDate: DateTime(2030),
-    );
-
-    if (date == null) return;
-
-    // 2. Вибір часу
-    final TimeOfDay? time = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-
-    if (time == null) return;
-
-    // 3. Об'єднання в один DateTime
-    setState(() {
-      final finalDateTime = DateTime(
-        date.year, date.month, date.day, time.hour, time.minute,
-      );
-
-      if (isStart) {
-        item.startDate = finalDateTime;
-      } else {
-        item.endDate = finalDateTime;
-      }
-    });
   }
 
   @override
@@ -137,6 +107,7 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
                       label: "Дата початку",
                       value: item.startDate,
                       accentColor: accentColor,
+                      showTime: false,
                       onChanged: (val) => setState(() => item.startDate = val),
                     ),
                   ),
@@ -146,6 +117,7 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
                       label: "Дата завершення",
                       value: item.endDate,
                       accentColor: accentColor,
+                      showTime: false,
                       onChanged: (val) => setState(() => item.endDate = val),
                     ),
                   ),
@@ -200,6 +172,12 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
                 //     : null,
               ),
 
+              const SizedBox(height: 12),
+              TTCheckbox(
+                label: 'Доступний для всіх',
+                activeNotifier: item.activeNotifier,
+                accentColor: accentColor,
+              ),
               const SizedBox(height: 32),
               // Ваша кнопка збереження
               GlowingButton(

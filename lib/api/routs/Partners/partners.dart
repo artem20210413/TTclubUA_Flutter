@@ -41,7 +41,7 @@ Future<http.Response> PARTNERS_CREATE(String? token, PartnerDto dto) async {
 }
 
 Future<http.Response> PARTNERS_UPLOAD(String? token, PartnerDto dto) async {
-  final response = await http.put(
+  final response = await http.post(
     Uri.parse(URL_PARTNERS_UPDATE.replaceAll('{partner}', dto.id.toString())),
     headers: HEADERS(token),
     body: jsonEncode(dto.toJson()),
