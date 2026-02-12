@@ -12,6 +12,7 @@ import '../../../../api/routs/root.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/inputs/BigTextInput.dart';
 import '../../../../components/inputs/CustomInputField.dart';
+import '../../../../components/inputs/PartnerDatePicker.dart';
 import '../../../../components/layout/TTScaffold.dart';
 
 class PartnerUploadScreen extends StatefulWidget {
@@ -115,46 +116,7 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
       }
     });
   }
-  Widget _buildSimplePicker(String label, DateTime? value, bool isStart) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(color: Colors.white60)),
-        const SizedBox(height: 5),
-        InkWell(
-          onTap: () => _selectDateTime(isStart),
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white12,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    value != null
-                        ? "${value.day}.${value.month} ${value.hour}:${value.minute}"
-                        : "Обрати",
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-                if (value != null)
-                  GestureDetector(
-                    onTap: () => setState(() {
-                      if (isStart) item.startDate = null; else item.endDate = null;
-                    }),
-                    child: const Icon(Icons.close, color: Colors.red, size: 18),
-                  )
-                else
-                  const Icon(Icons.calendar_month, color: Colors.white54, size: 18),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+
   @override
   Widget build(BuildContext context) {
     final bool isEdit = widget.partner != null;
@@ -167,6 +129,28 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
           key: _formKey,
           child: Column(
             children: [
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: PartnerDatePicker(
+                      label: "Дата початку",
+                      value: item.startDate,
+                      accentColor: accentColor,
+                      onChanged: (val) => setState(() => item.startDate = val),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: PartnerDatePicker(
+                      label: "Дата завершення",
+                      value: item.endDate,
+                      accentColor: accentColor,
+                      onChanged: (val) => setState(() => item.endDate = val),
+                    ),
+                  ),
+                ],
+              ),
               // Здесь можно добавить ImagePicker для логотипа, как в EventUploadScreen
               const SizedBox(height: 20),
               CustomInputField(
@@ -214,15 +198,6 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
                 // validator: (v) => (v == null || v.trim().isEmpty)
                 //     ? 'Вкажіть назву'
                 //     : null,
-              ),
-
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(child: _buildSimplePicker("Початок", item.startDate, true)),
-                  const SizedBox(width: 12),
-                  Expanded(child: _buildSimplePicker("Кінець", item.endDate, false)),
-                ],
               ),
 
               const SizedBox(height: 32),
