@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:tt_club_ua/config/default.dart';
 import 'package:tt_club_ua/components/buttons/GlowingButton.dart';
 
+import '../../../../Storage/Cache/AccentColorCache.dart';
 import '../../../../Storage/UserStorage.dart';
 import '../../../../api/routs/Dto/Partners/PartnerDto.dart';
 import '../../../../api/routs/Partners/partners.dart';
 import '../../../../api/routs/root.dart';
 import '../../../../components/generalModule.dart';
+import '../../../../components/inputs/BigTextInput.dart';
+import '../../../../components/inputs/CustomInputField.dart';
 import '../../../../components/layout/TTScaffold.dart';
 
 class PartnerUploadScreen extends StatefulWidget {
@@ -23,6 +26,7 @@ class PartnerUploadScreen extends StatefulWidget {
 class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
   final _formKey = GlobalKey<FormState>();
   late PartnerDto item;
+  Color accentColor = AccentColorCache.accentColor;
 
   late TextEditingController _nameController;
   late TextEditingController _descController;
@@ -36,7 +40,8 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
     _descController = TextEditingController(
         text: widget.partner?.descriptionController.text ?? '');
     setState(() {
-      item = widget.partner ?? PartnerDto.empty(); // 👈 если не передали — пустой
+      item =
+          widget.partner ?? PartnerDto.empty(); // 👈 если не передали — пустой
     });
   }
 
@@ -78,14 +83,85 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
     setState(() => _isLoading = false);
     Navigator.pop(context, item);
   }
+  Future<void> _selectDateTime(bool isStart) async {
+    // 1. Вибір дати
+    final DateTime? date = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2030),
+    );
 
+    if (date == null) return;
+
+    // 2. Вибір часу
+    final TimeOfDay? time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (time == null) return;
+
+    // 3. Об'єднання в один DateTime
+    setState(() {
+      final finalDateTime = DateTime(
+        date.year, date.month, date.day, time.hour, time.minute,
+      );
+
+      if (isStart) {
+        item.startDate = finalDateTime;
+      } else {
+        item.endDate = finalDateTime;
+      }
+    });
+  }
+  Widget _buildSimplePicker(String label, DateTime? value, bool isStart) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(color: Colors.white60)),
+        const SizedBox(height: 5),
+        InkWell(
+          onTap: () => _selectDateTime(isStart),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white12,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    value != null
+                        ? "${value.day}.${value.month} ${value.hour}:${value.minute}"
+                        : "Обрати",
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+                if (value != null)
+                  GestureDetector(
+                    onTap: () => setState(() {
+                      if (isStart) item.startDate = null; else item.endDate = null;
+                    }),
+                    child: const Icon(Icons.close, color: Colors.red, size: 18),
+                  )
+                else
+                  const Icon(Icons.calendar_month, color: Colors.white54, size: 18),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
   @override
   Widget build(BuildContext context) {
     final bool isEdit = widget.partner != null;
 
     return TTScaffold(
-    title: item.id != null ? 'Редагувати партнера' : 'Новий партнер',
-    body: SingleChildScrollView(
+      title: item.id != null ? 'Редагувати партнера' : 'Новий партнер',
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Form(
           key: _formKey,
@@ -93,20 +169,70 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
             children: [
               // Здесь можно добавить ImagePicker для логотипа, как в EventUploadScreen
               const SizedBox(height: 20),
-              // CustomInput(
-              //   controller: _nameController,
-              //   label: 'Назва партнера',
-              //   placeholder: 'Введіть назву...',
-              // ),
-              // const SizedBox(height: 16),
-              // CustomInput(
-              //   controller: _descController,
-              //   label: 'Опис',
-              //   placeholder: 'Опис діяльності...',
-              //   maxLines: 4,
-              // ),
-              const SizedBox(height: 32),
+              CustomInputField(
+                controller: item.titleController,
+                label: 'Назва',
+                // validator: (v) => (v == null || v.trim().isEmpty)
+                //     ? 'Вкажіть назву'
+                //     : null,
+              ),
+              const SizedBox(height: 12),
+              BigTextInput(
+                controller: item.descriptionController,
+                hint: 'Опис',
+                minHeight: 50,
+                minLines: 1,
+              ),
+              const SizedBox(height: 12),
+              CustomInputField(
+                controller: item.websiteUrlController,
+                label: 'Сайт',
+                // validator: (v) => (v == null || v.trim().isEmpty)
+                //     ? 'Вкажіть назву'
+                //     : null,
+              ),
+              const SizedBox(height: 12),
+              CustomInputField(
+                controller: item.instagramUrlController,
+                label: 'Посилання на instagram',
+                // validator: (v) => (v == null || v.trim().isEmpty)
+                //     ? 'Вкажіть назву'
+                //     : null,
+              ),
+              const SizedBox(height: 12),
+              CustomInputField(
+                controller: item.googleMapsUrlController,
+                label: 'Google Maps',
+                // validator: (v) => (v == null || v.trim().isEmpty)
+                //     ? 'Вкажіть назву'
+                //     : null,
+              ),
+              const SizedBox(height: 12),
+              CustomInputField(
+                controller: item.priorityController,
+                label: 'Пріорітет',
+                // validator: (v) => (v == null || v.trim().isEmpty)
+                //     ? 'Вкажіть назву'
+                //     : null,
+              ),
 
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(child: _buildSimplePicker("Початок", item.startDate, true)),
+                  const SizedBox(width: 12),
+                  Expanded(child: _buildSimplePicker("Кінець", item.endDate, false)),
+                ],
+              ),
+
+              const SizedBox(height: 32),
+              // Ваша кнопка збереження
+              GlowingButton(
+                text: _isLoading ? 'Зберігання...' : 'Зберегти зміни',
+                onPressed: _isLoading ? () => {} : _savePartner,
+              ),
+
+              const SizedBox(height: 32),
               if (isEdit) ...[
                 GlowingButton(
                   text: 'Перейти до акцій',
