@@ -60,8 +60,8 @@ class PartnerDto {
       instagramUrl: json['instagram_url'],
       googleMapsUrl: json['google_maps_url'],
       priority: json['priority']?.toString(),
-      hasPromotions: json['has_promotions'],
-      hasPromotionsActual: json['has_promotions_actual'],
+      hasPromotions: json['has_promotions'] ?? false,
+      hasPromotionsActual: json['has_promotions_actual'] ?? false,
       active: json['is_active'] == true || json['is_active'] == 1,
       startDate: json['start_date'] != null
           ? DateTime.tryParse(json['start_date'])

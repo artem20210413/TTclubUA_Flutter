@@ -37,7 +37,8 @@ Future<http.Response> PARTNERS_PROMOTIONS_LIST(
 Future<http.Response> PARTNERS_PROMOTIONS_CREATE(
     String? token, PromotionDto dto) async {
   final response = await http.post(
-    Uri.parse(URL_PARTNERS_PROMOTIONS_CREATE),
+    Uri.parse(URL_PARTNERS_PROMOTIONS_CREATE
+        .replaceAll('{partner}', dto.partnerId.toString())),
     headers: HEADERS(token),
     body: jsonEncode(dto.toJson()),
   );
@@ -45,11 +46,26 @@ Future<http.Response> PARTNERS_PROMOTIONS_CREATE(
   return response;
 }
 
+Future<http.Response> partners_promotions_destroy(
+    String? token, PromotionDto dto) async {
+  final response = await http.delete(
+    Uri.parse(URL_PARTNERS_PROMOTIONS_DESTROY
+        .replaceAll('{partner}', dto.partnerId.toString())
+        .replaceAll('{promotion}', dto.id.toString())
+    ),
+    headers: HEADERS(token)
+  );
+
+  return response;
+}
+
 Future<http.Response> PARTNERS_PROMOTIONS_UPLOAD(
     String? token, PromotionDto dto) async {
-  final response = await http.put(
-    Uri.parse(URL_PARTNERS_PROMOTIONS_UPDATE.replaceAll(
-        '{promotion}', dto.id.toString())),
+  final response = await http.post(
+    Uri.parse(URL_PARTNERS_PROMOTIONS_UPDATE
+        .replaceAll('{partner}', dto.partnerId.toString())
+        .replaceAll('{promotion}', dto.id.toString())
+    ),
     headers: HEADERS(token),
     body: jsonEncode(dto.toJson()),
   );

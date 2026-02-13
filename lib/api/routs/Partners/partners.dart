@@ -57,7 +57,7 @@ Future<http.Response> PARTNERS_IMAGE_ADD(
     Uri.parse(URL_PARTNERS_IMAGE_CREATE.replaceAll('{partner}', itemId.toString())),
   );
 
-  request.files.add(await http.MultipartFile.fromPath('file', path));
+  request.files.add(await http.MultipartFile.fromPath('photos[]', path));
   request.headers['Authorization'] = 'Bearer $token';
 
   var streamedResponse = await request.send();

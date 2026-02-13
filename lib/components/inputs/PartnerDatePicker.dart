@@ -94,8 +94,9 @@ class PartnerDatePicker extends StatelessWidget {
                 Expanded(
                   child: Text(
                     value != null
-                    // Форматуємо вивід: додаємо "0" якщо хвилини < 10
-                        ? "${value!.day.toString().padLeft(2, '0')}.${value!.month.toString().padLeft(2, '0')}.${value!.year.toString().padLeft(4, '0')} ${value!.hour.toString().padLeft(2, '0')}:${value!.minute.toString().padLeft(2, '0')}"
+                        // Форматуємо вивід: додаємо "0" якщо хвилини < 10
+                        ? "${value!.day.toString().padLeft(2, '0')}.${value!.month.toString().padLeft(2, '0')}.${value!.year.toString().padLeft(4, '0')} " +
+                            "${value!.hour.toString().padLeft(2, '0')}:${value!.minute.toString().padLeft(2, '0')}"
                         : "Обрати",
                     style: TTTextStyle.subtitle.copyWith(color: TTColors.text),
                   ),
@@ -103,8 +104,7 @@ class PartnerDatePicker extends StatelessWidget {
                 if (value != null)
                   GestureDetector(
                     onTap: () => onChanged(null),
-                    child:
-                    SvgPicture.asset(
+                    child: SvgPicture.asset(
                       'assets/svg/trash.svg',
                       width: 18,
                       colorFilter: ColorFilter.mode(

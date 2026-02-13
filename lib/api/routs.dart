@@ -89,6 +89,7 @@ const URL_PARTNERS_UPDATE  = '${_HOST}/api/partners/{partner}';
 const URL_PARTNERS_PROMOTIONS_LIST  = '${_HOST}/api/partners/{partner}/promotions';
 const URL_PARTNERS_PROMOTIONS_CREATE = '${_HOST}/api/partners/{partner}/promotions';
 const URL_PARTNERS_PROMOTIONS_UPDATE = '${_HOST}/api/partners/{partner}/promotions/{promotion}';
+const URL_PARTNERS_PROMOTIONS_DESTROY = '${_HOST}/api/partners/{partner}/promotions/{promotion}';
 const URL_PARTNERS_PROMOTIONS_IMAGE_CREATE = '${_HOST}/api/partners/{partner}/promotions/{promotion}/photos';
 const URL_PARTNERS_PROMOTIONS_IMAGE_DELETE = '${_HOST}/api/partners/{partner}/promotions/{promotion}/photos/{mediaId}';
 
