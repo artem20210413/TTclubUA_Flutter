@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../Storage/Cache/AccentColorCache.dart';
 import '../../../../api/routs/Dto/Partners/PromotionDto.dart';
 import '../../../../config/default.dart';
 
@@ -20,6 +21,8 @@ class PromotionAdminCard extends StatelessWidget {
     final bool hasDate =
         promotion.startDate != null || promotion.endDate != null;
 
+    Color accentColor = AccentColorCache.accentColor;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -27,7 +30,7 @@ class PromotionAdminCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: promotion.activeNotifier.value
-              ? const Color(0xFFE5B80B).withOpacity(0.5)
+              ? accentColor.withOpacity(0.5)
               : Colors.white10,
           width: 1.5,
         ),
@@ -51,7 +54,7 @@ class PromotionAdminCard extends StatelessWidget {
                     ),
                     if (promotion.exclusiveNotifier.value) ...[
                       const SizedBox(width: 8),
-                      _buildBadge("EXCLUSIVE", const Color(0xFFE5B80B)),
+                      _buildBadge("EXCLUSIVE", accentColor),
                     ],
                   ],
                 ),
@@ -87,15 +90,19 @@ class PromotionAdminCard extends StatelessWidget {
                 // Сітка з деталями (Знижка, Промокод)
                 Row(
                   children: [
-                    _buildInfoBlock("Знижка",
-                        promotion.discountValueController.text, Icons.percent),
+                    _buildInfoBlock(
+                        "Знижка",
+                        promotion.discountValueController.text,
+                        Icons.percent,
+                        accentColor),
                     const SizedBox(width: 20),
                     _buildInfoBlock(
                         "Промокод",
                         promotion.promoCodeController.text.isEmpty
                             ? "—"
                             : promotion.promoCodeController.text,
-                        Icons.qr_code),
+                        Icons.qr_code,
+                        accentColor),
                   ],
                 ),
 
@@ -115,14 +122,15 @@ class PromotionAdminCard extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.white24),
+                      side: BorderSide(color: TTColors.text.withOpacity(0.24)),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                     ),
                     onPressed: onEdit,
-                    icon: const Icon(Icons.edit, size: 18, color: Colors.white),
-                    label: const Text("Редагувати",
-                        style: TextStyle(color: Colors.white)),
+                    icon: Icon(Icons.edit, size: 18, color: TTColors.text),
+                    label: Text("Редагувати",
+                        style: TTTextStyle.subtitle
+                            .copyWith(color: TTColors.text, fontSize: 16)),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -160,14 +168,15 @@ class PromotionAdminCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoBlock(String label, String value, IconData icon) {
+  Widget _buildInfoBlock(
+      String label, String value, IconData icon, Color color) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, size: 14, color: const Color(0xFFE5B80B)),
+              Icon(icon, size: 14, color: color),
               const SizedBox(width: 4),
               Text(label,
                   style: const TextStyle(color: Colors.white38, fontSize: 12)),

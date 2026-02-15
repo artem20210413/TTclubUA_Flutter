@@ -201,7 +201,8 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
               CustomInputField(
                 controller: item.titleController,
                 label: 'Назва',
-                validator: (v) => TTValidators.required(item.titleController.text),
+                validator: (v) =>
+                    TTValidators.required(item.titleController.text),
               ),
               const SizedBox(height: 12),
               BigTextInput(
@@ -209,25 +210,29 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
                 hint: 'Опис',
                 minHeight: 50,
                 minLines: 1,
-                validator: (v) => TTValidators.required(item.descriptionController.text),
+                validator: (v) =>
+                    TTValidators.required(item.descriptionController.text),
               ),
               const SizedBox(height: 12),
               CustomInputField(
                 controller: item.websiteUrlController,
                 label: 'Сайт',
-                validator: (v) => TTValidators.url(item.instagramUrlController.text),
+                validator: (v) =>
+                    TTValidators.url(item.instagramUrlController.text),
               ),
               const SizedBox(height: 12),
               CustomInputField(
                 controller: item.instagramUrlController,
                 label: 'Посилання на instagram',
-                validator: (v) => TTValidators.instagram(item.instagramUrlController.text),
+                validator: (v) =>
+                    TTValidators.instagram(item.instagramUrlController.text),
               ),
               const SizedBox(height: 12),
               CustomInputField(
                 controller: item.googleMapsUrlController,
                 label: 'Google Maps',
-                validator: (v) => TTValidators.googleMaps(item.googleMapsUrlController.text),
+                validator: (v) =>
+                    TTValidators.googleMaps(item.googleMapsUrlController.text),
               ),
               const SizedBox(height: 12),
               CustomInputField(
@@ -244,18 +249,22 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
               const SizedBox(height: 32),
               // Ваша кнопка збереження
               GlowingButton(
-                text: _isLoading ? 'Зберігання...' : 'Зберегти зміни',
-                onPressed: _isLoading ? () => {} : _savePartner,
-              ),
+                  text: _isLoading ? 'Зберігання...' : 'Зберегти зміни',
+                  onPressed: _isLoading ? () => {} : _savePartner,
+                  colorGrowing: accentColor),
 
               const SizedBox(height: 32),
               if (isEdit) ...[
                 GlowingButton(
-                  text: 'Перейти до акцій',
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => PartnerPromotionsList(partner: widget.partner!)));
-                  },
-                ),
+                    text: 'Перейти до акцій',
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => PartnerPromotionsList(
+                                  partner: widget.partner!)));
+                    },
+                    colorGrowing: accentColor),
                 const SizedBox(height: 12),
               ],
 

@@ -75,13 +75,6 @@ class _PartnersAdminScreenState extends State<PartnersAdminScreen> {
     super.dispose();
   }
 
-  // Логіка пошуку з затримкою (debounce)
-  void _onSearchChanged(String query) {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      _onSearch();
-    });
-  }
 
   void _onSearch() {
     setState(() {

@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../../../../Storage/Cache/AccentColorCache.dart';
 import '../../../../Storage/UserStorage.dart';
 import '../../../../api/routs/Dto/Partners/PartnerDto.dart';
 import '../../../../api/routs/Dto/Partners/PromotionDto.dart';
 import '../../../../api/routs/Partners/promotions.dart';
 import '../../../../api/routs/root.dart';
+import '../../../../components/buttons/GlassFabFloatingButton.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/layout/TTScaffold.dart';
 import '../../../../config/default.dart';
@@ -27,6 +29,7 @@ class PartnerPromotionsList extends StatefulWidget {
 
 class _PartnerPromotionsListState extends State<PartnerPromotionsList> {
   late List<PromotionDto> _promotions = [];
+  Color accentColor = AccentColorCache.accentColor;
   bool _isLoading = true;
 
   @override
@@ -123,81 +126,79 @@ class _PartnerPromotionsListState extends State<PartnerPromotionsList> {
   Widget build(BuildContext context) {
     return TTScaffold(
       title: widget.partner.titleController.text,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок секції з кнопкою "Додати"
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Акції партнера (${_promotions.length})",
-                style: TTTextStyle.title.copyWith(fontSize: 18),
+      floatingActionButton: GlassFabFloatingButton(
+        accentColor: accentColor,
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => PromotionUploadScreen(
+                partner: widget.partner,
               ),
-              TextButton.icon(
-                onPressed: () async {
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => PromotionUploadScreen(
-                        partner: widget.partner,
-                      ),
-                    ),
-                  );
-
-                  // Якщо акцію успішно створено, оновлюємо список
-                  if (result != null) {
-                    _fetchPromotions();
-                  }
-                },
-                icon: const Icon(Icons.add, color: Color(0xFFE5B80B), size: 18),
-                label: const Text(
-                  "Додати",
-                  style: TextStyle(color: Color(0xFFE5B80B)),
-                ),
+            ),
+          );
+          if (result != null) _fetchPromotions();
+        },
+        // onPressed: _onSearch,       // Передаєте функцію оновлення
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              // Основна частина зі списком або завантаженням
+              Expanded(
+                child: _isLoading
+                    ? const Center(
+                        child:
+                            CircularProgressIndicator(color: Color(0xFFE5B80B)))
+                    : _promotions.isEmpty
+                        ? _buildEmptyState()
+                        : ListView.builder(
+                            // Прибираємо shrinkWrap: true, бо Expanded сам контролює розмір
+                            padding: const EdgeInsets.only(bottom: 24),
+                            itemCount: _promotions.length,
+                            itemBuilder: (context, index) {
+                              final promo = _promotions[index];
+                              return PromotionAdminCard(
+                                promotion: promo,
+                                onEdit: () => onAdd(promo),
+                                onDelete: () => onDeletePromotion(promo),
+                              );
+                            },
+                          ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+        ),
+      ),
+    );
+  }
 
-          // Перевірка на порожній список
-          if (_promotions.isEmpty)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white10),
-              ),
-              child: Column(
-                children: [
-                  Icon(Icons.percent, size: 40, color: Colors.white24),
-                  const SizedBox(height: 12),
-                  Text(
-                    "У цього партнера ще немає акцій",
-                    style: TTTextStyle.subtitle.copyWith(color: Colors.white38),
-                  ),
-                ],
-              ),
-            )
-          else
-            // Сам список акцій
-            ListView.builder(
-              shrinkWrap: true,
-              // Важливо, якщо список всередині SingleChildScrollView
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: _promotions.length,
-              itemBuilder: (context, index) {
-                final promo = _promotions[index];
-                return PromotionAdminCard(
-                  promotion: promo,
-                  onEdit: () => {onAdd(promo)}, //promo
-                  onDelete: () => {onDeletePromotion(promo)},
-                );
-              },
+  // Виніс пустий стан в окремий метод для чистоти коду
+  Widget _buildEmptyState() {
+    return Center(
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(32),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white10),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.percent, size: 40, color: Colors.white24),
+            const SizedBox(height: 12),
+            Text(
+              "У цього партнера ще немає акцій",
+              style: TTTextStyle.subtitle.copyWith(color: Colors.white38),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
