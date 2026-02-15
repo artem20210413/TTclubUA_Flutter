@@ -10,6 +10,8 @@ Future<void> ConfirmAndRun({
   required Future<void> Function() action,
   String dialogTitle = 'Підтвердження',
   String dialogMessage = 'Ви впевнені, що хочете виконати дію?',
+  Text? buttonClose = null,
+  Text? buttonSuccess = null,
 }) async {
   final bool? ok = await showDialog<bool>(
     context: context,
@@ -25,12 +27,14 @@ Future<void> ConfirmAndRun({
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Скасувати', style: TTTextStyle.subtitle),
+            child: buttonClose ??
+                const Text('Скасувати', style: TTTextStyle.subtitle),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text('Так',
-                style: TTTextStyle.subtitle.copyWith(color: TTColors.text)),
+            child: buttonSuccess ??
+                Text('Так',
+                    style: TTTextStyle.subtitle.copyWith(color: TTColors.text)),
           ),
         ],
       );

@@ -46,7 +46,7 @@ Future<http.Response> PARTNERS_PROMOTIONS_CREATE(
   return response;
 }
 
-Future<http.Response> partners_promotions_destroy(
+Future<http.Response> PARTNERS_PROMOTIONS_DESTROY(
     String? token, PromotionDto dto) async {
   final response = await http.delete(
     Uri.parse(URL_PARTNERS_PROMOTIONS_DESTROY

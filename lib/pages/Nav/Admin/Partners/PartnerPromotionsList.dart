@@ -11,6 +11,7 @@ import '../../../../api/routs/root.dart';
 import '../../../../components/buttons/GlassFabFloatingButton.dart';
 import '../../../../components/generalModule.dart';
 import '../../../../components/layout/TTScaffold.dart';
+import '../../../../components/viewers/ConfirmAndRun.dart';
 import '../../../../config/default.dart';
 import 'PromotionAdminCard.dart';
 import 'PromotionUploadScreen.dart';
@@ -77,38 +78,10 @@ class _PartnerPromotionsListState extends State<PartnerPromotionsList> {
     }
   }
 
-  void onDeletePromotion(PromotionDto promo) async {
-    // 1. Показуємо діалог підтвердження
-    bool? confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: TTColors.background,
-        title: const Text("Видалити акцію?",
-            style: TextStyle(color: Colors.white)),
-        content: Text(
-          "Ви впевнені, що хочете видалити акцію '${promo.titleController.text}'? Цю дію неможливо скасувати.",
-          style: const TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text("Скасувати",
-                style: TextStyle(color: Colors.white38)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text("Видалити",
-                style: TextStyle(color: TTColors.danger)),
-          ),
-        ],
-      ),
-    );
+  Future<void> onDeletePromotion(PromotionDto promo) async {
 
-    if (confirm != true) return;
-
-    // 2. Виконуємо видалення
     final token = await UserStorage.getToken();
-    final res = await partners_promotions_destroy(token, promo);
+    final res = await PARTNERS_PROMOTIONS_DESTROY(token, promo);
 
     if (await CHECK_API(res, context)) {
       setState(() {
@@ -118,6 +91,7 @@ class _PartnerPromotionsListState extends State<PartnerPromotionsList> {
 
       MessageModule(context, 'Акцію успішно видалено', MessageType.success);
     } else {
+      print(jsonDecode(res.body));
       MessageModule(context, 'Помилка при видаленні', MessageType.error);
     }
   }
@@ -165,7 +139,19 @@ class _PartnerPromotionsListState extends State<PartnerPromotionsList> {
                               return PromotionAdminCard(
                                 promotion: promo,
                                 onEdit: () => onAdd(promo),
-                                onDelete: () => onDeletePromotion(promo),
+                                // onDelete: () => onDeletePromotion(promo),
+                                onDelete: () =>
+                                    ConfirmAndRun(
+                                      context: context,
+                                      dialogTitle: "Видалити акцію?",
+                                      dialogMessage:
+                                      "Ви впевнені, що хочете видалити акцію '${promo.titleController.text}'? Цю дію неможливо скасувати.",
+                                      buttonClose: Text('Скасувати',
+                                          style: TTTextStyle.subtitle),
+                                      buttonSuccess: Text('Видалити',
+                                          style: TTTextStyle.subtitle.copyWith(color: TTColors.text)),
+                                      action: () => onDeletePromotion(promo),
+                                    ),
                               );
                             },
                           ),
