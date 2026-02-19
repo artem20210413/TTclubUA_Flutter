@@ -142,7 +142,7 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 20),
             PromoCard(
-              imagePath: 'assets/ui/banners/partners.webp',
+              imagePath: 'assets/ui/banners/promotions_from_partners.webp',
               title: 'Партнери TTclubUA',
               // enabled: false,
               onButtonTap: () {
@@ -151,6 +151,20 @@ class _HomeState extends State<Home> {
                   MaterialPageRoute(
                       builder: (context) =>
                           PartnersPage()), // Переход на экран публикаций
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            PromoCard(
+              imagePath: 'assets/ui/banners/budget.webp',
+              title: 'Підтримати клуб',
+              // enabled: false,
+              onButtonTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          AnnualFeePage()), // Переход на экран публикаций
                 );
               },
             ),
