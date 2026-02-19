@@ -203,7 +203,7 @@ class _PromotionUploadScreenState extends State<PromotionUploadScreen> {
               TTCheckbox(
                 label: 'Тільки для клубу (Exclusive)',
                 activeNotifier: item.exclusiveNotifier,
-                accentColor: Colors.amber,
+                accentColor: accentColor,
               ),
               const SizedBox(height: 32),
               GlowingButton(

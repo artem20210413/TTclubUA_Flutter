@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../Storage/Search/ImageUrlDto.dart';
 import 'PrizeDto.dart';
 
 class DrawDto {
@@ -13,12 +14,14 @@ class DrawDto {
   final ValueNotifier<bool> allowMultipleWinsNotifier;
   final ValueNotifier<bool> isPublicNotifier;
   final ValueNotifier<bool> isParticipatingNotifier;
+  List<ImageUrlDto> images;
 
   // Dates
   DateTime? registrationUntil;
 
   // Relations
   List<PrizeDto> prizes;
+
   // Можна додати учасників, якщо потрібно відображати їх в адмінці
   // List<ParticipantDto> participants;
 
@@ -31,10 +34,11 @@ class DrawDto {
     required bool isPublic,
     required bool isParticipating,
     required this.registrationUntil,
+    required this.images,
     required this.prizes,
   })  : titleController = TextEditingController(text: title ?? ''),
         descriptionController = TextEditingController(text: description ?? ''),
-        statusController = TextEditingController(text: status ?? 'draft'),
+        statusController = TextEditingController(text: status ?? null),
         allowMultipleWinsNotifier = ValueNotifier<bool>(allowMultipleWins),
         isPublicNotifier = ValueNotifier<bool>(isPublic),
         isParticipatingNotifier = ValueNotifier<bool>(isParticipating);
@@ -45,7 +49,8 @@ class DrawDto {
       title: json['title'],
       description: json['description'],
       status: json['status'],
-      allowMultipleWins: json['allow_multiple_wins'] == true || json['allow_multiple_wins'] == 1,
+      allowMultipleWins: json['allow_multiple_wins'] == true ||
+          json['allow_multiple_wins'] == 1,
       isPublic: json['is_public'] == true || json['is_public'] == 1,
       isParticipating: json['is_participating'] ?? false,
       registrationUntil: json['registration_until'] != null
@@ -53,6 +58,9 @@ class DrawDto {
           : null,
       prizes: (json['prizes'] as List? ?? [])
           .map((p) => PrizeDto.fromJson(p))
+          .toList(),
+      images: (json['images'] as List? ?? [])
+          .map((img) => ImageUrlDto.fromJson(img))
           .toList(),
     );
   }
@@ -62,12 +70,13 @@ class DrawDto {
       id: null,
       title: '',
       description: '',
-      status: 'draft',
+      status: null,
       allowMultipleWins: false,
       isPublic: true,
       isParticipating: false,
       registrationUntil: null,
       prizes: [],
+      images: [],
     );
   }
 
@@ -76,7 +85,7 @@ class DrawDto {
       'id': id,
       'title': titleController.text,
       'description': descriptionController.text,
-      'status': statusController.text,
+      // 'status': statusController.text == '' ? null : statusController.text,
       'allow_multiple_wins': allowMultipleWinsNotifier.value ? 1 : 0,
       'is_public': isPublicNotifier.value ? 1 : 0,
       'registration_until': registrationUntil?.toIso8601String(),

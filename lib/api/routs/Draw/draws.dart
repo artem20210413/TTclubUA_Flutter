@@ -53,62 +53,47 @@ Future<http.Response> DRAW_RESET(
 
 Future<http.Response> DRAW_CREATE(
     String? token, DrawDto dto, String? path) async {
-  var request = http.MultipartRequest(
-    'POST',
+  final response = await http.post(
     Uri.parse(URL_DRAWS_CREATE),
+    headers: HEADERS(token),
+    body: jsonEncode(dto.toJson()),
   );
 
-  // 1. Додаємо файл
-  if (path != null && path.isNotEmpty && File(path).existsSync()) {
-    request.files.add(await http.MultipartFile.fromPath('file', path));
-  }
-
-  // 2. Додаємо заголовки
-  request.headers['Authorization'] = 'Bearer $token';
-  // Важливо: MultipartRequest сам ставить Content-Type: multipart/form-data
-
-  // 3. Додаємо поля з DTO
-  final Map<String, dynamic> data = dto.toJson();
-  data.forEach((key, value) {
-    if (value != null) {
-      request.fields[key] = value.toString();
-    }
-  });
-
-  // 4. Надсилаємо запит
-  var streamedResponse = await request.send();
-
-  // 5. Перетворюємо стрім у звичайну відповідь
-  return await http.Response.fromStream(streamedResponse);
+  return response;
 }
 
 Future<http.Response> DRAW_UPLOAD(
     String? token, DrawDto dto, String? path) async {
-  var request = http.MultipartRequest(
-    'PUT',
+  final response = await http.put(
     Uri.parse(URL_DRAWS_UPDATE.replaceAll('{draw}', dto.id.toString())),
+    headers: HEADERS(token),
+    body: jsonEncode(dto.toJson()),
   );
 
-  if (path != null && path.isNotEmpty && File(path).existsSync()) {
-    request.files.add(await http.MultipartFile.fromPath('file', path));
-  }
-
-  request.headers['Authorization'] = 'Bearer $token';
-
-  final Map<String, dynamic> data = dto.toJson();
-  data.forEach((key, value) {
-    if (value != null) {
-      request.fields[key] = value.toString();
-    }
-  });
-
-  var streamedResponse = await request.send();
-
-  return await http.Response.fromStream(streamedResponse);
+  return response;
 }
 
-Future<http.Response> DRAW_IMAGE_DELETE(String? token, int itemId) async {
-  final url = URL_DRAWS_IMAGE_DELETE.replaceAll('{draw}', itemId.toString());
+Future<http.Response> DRAW_IMAGE_ADD(
+    String? token, int drawId, String path) async {
+  var request = http.MultipartRequest(
+    'POST',
+    Uri.parse(URL_DRAWS_IMAGE_ADD.replaceAll('{draw}', drawId.toString())),
+  );
+
+  request.files.add(await http.MultipartFile.fromPath('file', path));
+  request.headers['Authorization'] = 'Bearer $token';
+
+  var streamedResponse = await request.send();
+  var response = await http.Response.fromStream(streamedResponse);
+
+  return response;
+}
+
+Future<http.Response> DRAW_IMAGE_DELETE(
+    String? token, int itemId, ImageUrlDto img_dto) async {
+  final url = URL_DRAWS_IMAGE_DELETE
+      .replaceAll('{draw}', itemId.toString())
+      .replaceAll('{mediaId}', img_dto.id.toString());
 
   final response = await http.delete(
     Uri.parse(url),

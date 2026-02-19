@@ -51,7 +51,8 @@ Future<http.Response> DRAW_PRIZE_UPLOAD(
     String? token, PrizeDto dto, String? path) async {
   var request = http.MultipartRequest(
     'PUT',
-    Uri.parse(URL_DRAWS_PRIZES_UPDATE.replaceAll('{draw}', dto.drawId.toString())),
+    Uri.parse(
+        URL_DRAWS_PRIZES_UPDATE.replaceAll('{draw}', dto.drawId.toString())),
   );
 
   if (path != null && path.isNotEmpty && File(path).existsSync()) {
@@ -72,7 +73,8 @@ Future<http.Response> DRAW_PRIZE_UPLOAD(
   return await http.Response.fromStream(streamedResponse);
 }
 
-Future<http.Response> DRAW_PRIZE_IMAGE_DELETE(String? token, PrizeDto dto) async {
+Future<http.Response> DRAW_PRIZE_IMAGE_DELETE(
+    String? token, PrizeDto dto) async {
   final url = URL_DRAWS_PRIZES_IMAGE_DELETE
       .replaceAll('{draw}', dto.drawId.toString())
       .replaceAll('{prize}', dto.id.toString());
@@ -85,10 +87,30 @@ Future<http.Response> DRAW_PRIZE_IMAGE_DELETE(String? token, PrizeDto dto) async
   return response;
 }
 
-Future<http.Response> DRAW_PRIZE_DELETE(String? token, PrizeDto dto) async {
+Future<http.Response> DRAW_PRIZE_IMAGE_ADD(
+    String? token, PrizeDto dto, String path) async {
+  var request = http.MultipartRequest(
+    'POST',
+    Uri.parse(URL_DRAWS_PRIZES_IMAGE_ADD
+        .replaceAll('{draw}', dto.drawId.toString())
+        .replaceAll('{prize}', dto.id.toString())),
+  );
+
+  request.files.add(await http.MultipartFile.fromPath('file', path));
+  request.headers['Authorization'] = 'Bearer $token';
+
+  var streamedResponse = await request.send();
+  var response = await http.Response.fromStream(streamedResponse);
+
+  return response;
+}
+
+Future<http.Response> DRAW_PRIZE_DELETE(
+    String? token, PrizeDto dto, ImageUrlDto img_dto) async {
   final url = URL_DRAWS_PRIZES_IMAGE_DELETE
       .replaceAll('{draw}', dto.drawId.toString())
-      .replaceAll('{prize}', dto.id.toString());
+      .replaceAll('{prize}', dto.id.toString())
+      .replaceAll('{mediaId}', img_dto.id.toString());
 
   final response = await http.delete(
     Uri.parse(url),

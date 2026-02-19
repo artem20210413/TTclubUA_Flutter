@@ -16,6 +16,7 @@ import '../../utils/url_launcher.dart';
 import '../Nav.dart';
 import 'Calendar.dart';
 import 'Home/AnnualFeePage.dart';
+import 'Home/Draw/DrawsPage.dart';
 import 'Home/Partners/PartnersPage.dart';
 import 'Home/SuggestionsPage.dart';
 
@@ -60,7 +61,8 @@ class _HomeState extends State<Home> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                AnnualFeePage()), // Переход на экран публикаций
+                                DrawsPage()), // Переход на экран публикаций
+                                // AnnualFeePage()), // Переход на экран публикаций
                       );
                     },
                   ),

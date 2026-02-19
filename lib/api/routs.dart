@@ -118,7 +118,8 @@ const URL_DRAWS_CREATE = '${_HOST}/api/draws';
 const URL_DRAWS_UPDATE  = '${_HOST}/api/draws/{draw}';
 const URL_DRAWS_ROLL  = '${_HOST}/api/draws/{draw}/roll/{prize}';
 const URL_DRAWS_RESET  = '${_HOST}/api/draws/{draw}/reset/{prize}';
-const URL_DRAWS_IMAGE_DELETE = '${_HOST}/api/draws/{draw}/image';
+const URL_DRAWS_IMAGE_DELETE = '${_HOST}/api/draws/{draw}/image/{mediaId}';
+const URL_DRAWS_IMAGE_ADD = '${_HOST}/api/draws/{draw}/image';
 
 const URL_DRAWS_PARTICIPANTS_LIST = '${_HOST}/api/draws/{draw}/participants';
 const URL_DRAWS_PARTICIPANTS_REGISTER = '${_HOST}/api/draws/{draw}/participants/register';
@@ -130,4 +131,5 @@ const URL_DRAWS_PRIZES_LIST = '${_HOST}/api/draws/{draw}/prizes';
 const URL_DRAWS_PRIZES_CREATE = '${_HOST}/api/draws/{draw}/prizes';
 const URL_DRAWS_PRIZES_UPDATE = '${_HOST}/api/draws/{draw}/prizes/{prize}';
 const URL_DRAWS_PRIZES_DELETE = '${_HOST}/api/draws/{draw}/prizes/{prize}';
-const URL_DRAWS_PRIZES_IMAGE_DELETE = '${_HOST}/api/draws/{draw}/prizes/{prize}/image';
+const URL_DRAWS_PRIZES_IMAGE_DELETE = '${_HOST}/api/draws/{draw}/prizes/{prize}/image/{mediaId}';
+const URL_DRAWS_PRIZES_IMAGE_ADD = '${_HOST}/api/draws/{draw}/prizes/{prize}/image';
