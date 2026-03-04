@@ -24,7 +24,6 @@ class DrawsPage extends StatefulWidget {
 }
 
 class _DrawsPageState extends State<DrawsPage> {
-  final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
   List<DrawDto> draws = [];
@@ -112,28 +111,6 @@ class _DrawsPageState extends State<DrawsPage> {
           : null,
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: CustomInputField(
-                    controller: _searchController,
-                    label: 'Пошук розіграшів',
-                    textInputAction: TextInputAction.search,
-                    onSubmitted: (_) => _onSearch(),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                CircleButton(
-                  accentColor: accentColor,
-                  iconAsset: 'assets/svg/search.svg',
-                  onTap: _onSearch,
-                )
-              ],
-            ),
-          ),
-
           Expanded(
             child: isLoading
                 ? const TTLoading()
@@ -183,7 +160,6 @@ class _DrawsPageState extends State<DrawsPage> {
 
   @override
   void dispose() {
-    _searchController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
