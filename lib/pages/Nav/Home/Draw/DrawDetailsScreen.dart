@@ -8,10 +8,13 @@ import '../../../../api/routs/Dto/Draw/DrawDto.dart';
 import '../../../../api/routs/Dto/Draw/PrizeDto.dart';
 import '../../../../api/routs/root.dart';
 import '../../../../components/TTLoading.dart';
+import '../../../../components/TTNeumorphicBox.dart';
 import '../../../../components/buttons/GlassFabFloatingButton.dart';
 import '../../../../components/buttons/GlowingButton.dart';
+import '../../../../components/labels/TTLabel.dart';
 import '../../../../components/layout/TTScaffold.dart';
 import '../../../../components/generalModule.dart';
+import '../../../../components/viewers/ImagesCarousel.dart';
 import '../../Admin/Draw/DrawUploadScreen.dart';
 
 class DrawDetailsScreen extends StatefulWidget {
@@ -78,73 +81,125 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) return const TTScaffold(title: 'Розіграш', body: TTLoading());
+    if (isLoading)
+      return const TTScaffold(title: 'Розіграш', body: TTLoading());
 
     return TTScaffold(
       title: draw!.titleController.text,
       // Кругла кнопка редагування для адміна
       floatingActionButton: _isAdmin
           ? GlassFabFloatingButton(
-        iconPath: 'assets/svg/pencil.svg',
-        accentColor: accentColor,
-        onPressed: () async {
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const DrawUploadScreen()),
-          );
-          if (result != null) _loadData();
-        },
-      )
+              iconPath: 'assets/svg/pencil.svg',
+              accentColor: accentColor,
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => DrawUploadScreen(draw: draw)),
+                );
+                if (result != null) _loadData();
+              },
+            )
           : null,
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Головне зображення
-            if (draw!.images.isNotEmpty)
-              Image.network(draw!.images.first.url, width: double.infinity, height: 250, fit: BoxFit.cover),
+        padding: EdgeInsets.only(top: 16, bottom: 24, left: 16, right: 8),
+        child: TTNeumorphicBox(
+          padding: EdgeInsets.only(top: 12, bottom: 24, left: 8, right: 14),
+          // radius: 32,
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: [
+                if (draw!.images.isNotEmpty)
+                  ImagesCarousel(
+                    images: draw!.images,
+                    height: 320,
+                    borderRadius: 32,
+                  ),
 
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(draw!.titleController.text, style: TTTextStyle.title.copyWith(fontSize: 24)),
-                  const SizedBox(height: 10),
-                  Text(draw!.descriptionController.text, style: TTTextStyle.subtitle),
-                  const SizedBox(height: 25),
+                if (draw!.images.isNotEmpty)
+                  const SizedBox(height: 16),
 
-                  Text("Призи:", style: TTTextStyle.title.copyWith(fontSize: 18)),
-                  const SizedBox(height: 12),
-
-                  // Список карток призів
-                  ...draw!.prizes.map((prize) => _buildPrizeCard(prize)).toList(),
-
-                  const SizedBox(height: 40),
-
-                  // Кнопки дій
-                  if (!_isAdmin && !draw!.isParticipatingNotifier.value)
-                    GlowingButton(
-                      text: isActionLoading ? "Зачекайте..." : "Брати участь",
-                      onPressed: isActionLoading ? () {} : _joinDraw,
-                    ),
-
-                  if (_isAdmin)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          minimumSize: const Size(double.infinity, 50),
-                          side: const BorderSide(color: Colors.redAccent),
-                        ),
-                        onPressed: _reRollDraw,
-                        child: const Text("ПЕРЕГРАТИ РОЗІГРАШ", style: TextStyle(color: Colors.redAccent)),
+                Row(
+                  children: [
+                    const Spacer(),
+                    if (draw!.allowMultipleWinsNotifier.value)
+                      TTLabel(
+                        text: "Мульти-виграш",
+                        accentColor: accentColor,
                       ),
-                    ),
-                  const SizedBox(height: 100),
-                ],
-              ),
+                    if (draw!.isPublicNotifier.value)
+                      TTLabel(
+                          text: "Публічний",
+                          accentColor: accentColor,
+                          margin: EdgeInsets.only(left: 8)),
+                  ],
+                ),
+
+                const SizedBox(height: 16),
+
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(draw!.descriptionController.text,
+                        style: TTTextStyle.subtitle),
+                    const SizedBox(height: 16),
+
+                    Text("Призи:",
+                        style: TTTextStyle.title.copyWith(fontSize: 18)),
+                    const SizedBox(height: 12),
+
+                    // Список карток призів
+                    ...draw!.prizes
+                        .map((prize) => _buildPrizeCard(prize))
+                        .toList(),
+
+                    const SizedBox(height: 40),
+
+                    // Кнопки дій
+                    if (!draw!.isParticipatingNotifier.value)
+                      GlowingButton(
+                        text: isActionLoading ? "Зачекайте..." : "Брати участь",
+                        onPressed: isActionLoading ? () {} : _joinDraw,
+                      ),
+
+                    if (_isAdmin)
+                      GlowingButton(
+                        text: "ПЕРЕГРАТИ ПРИЗ",
+                        onPressed: _reRollDraw,
+                        // isLoading: _isLoading,
+                      ),
+
+                    if (_isAdmin)
+                      GlowingButton(
+                        text: "Розіграти ПРИЗ",
+                        onPressed: _reRollDraw,
+                        // isLoading: _isLoading,
+                      ),
+
+                    if (_isAdmin)
+                      GlowingButton(
+                        text: "Активувати розіграш",
+                        onPressed: () => {},
+                        // isLoading: _isLoading,
+                      ),
+                    if (_isAdmin)
+                      GlowingButton(
+                        text: "Скасувати розіграш",
+                        onPressed: () => {},
+                        // isLoading: _isLoading,
+                      ),
+                    if (_isAdmin)
+                      GlowingButton(
+                        text: "Перевести у запланований",
+                        onPressed: () => {},
+                        // isLoading: _isLoading,
+                      ),
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -155,7 +210,9 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
 
     return GestureDetector(
       onTap: (_isAdmin && hasWinner)
-          ? () { /* Navigator.push до сторінки учасника */ }
+          ? () {
+              /* Navigator.push до сторінки учасника */
+            }
           : null,
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
@@ -163,7 +220,8 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.05),
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: hasWinner ? accentColor.withOpacity(0.5) : Colors.white10),
+          border: Border.all(
+              color: hasWinner ? accentColor.withOpacity(0.5) : Colors.white10),
         ),
         child: Row(
           children: [
@@ -171,31 +229,43 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: prize.images.isNotEmpty
-                  ? Image.network(prize.images.first.url, width: 60, height: 60, fit: BoxFit.cover)
-                  : Container(width: 60, height: 60, color: Colors.white10, child: const Icon(Icons.card_giftcard)),
+                  ? Image.network(prize.images.first.url,
+                      width: 60, height: 60, fit: BoxFit.cover)
+                  : Container(
+                      width: 60,
+                      height: 60,
+                      color: Colors.white10,
+                      child: const Icon(Icons.card_giftcard)),
             ),
             const SizedBox(width: 15),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(prize.titleController.text, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  Text("Кількість: ${prize.quantityController.text}", style: const TextStyle(color: Colors.white60, fontSize: 12)),
-
+                  Text(prize.titleController.text,
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold)),
+                  Text("Кількість: ${prize.quantityController.text}",
+                      style:
+                          const TextStyle(color: Colors.white60, fontSize: 12)),
                   if (hasWinner)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
-                      child: Text(
-                          "Переможець: ID ${prize.winnerParticipantId}",
-                          style: TextStyle(color: accentColor, fontWeight: FontWeight.w600, fontSize: 13)
-                      ),
+                      child: Text("Переможець: ID ${prize.winnerParticipantId}",
+                          style: TextStyle(
+                              color: accentColor,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13)),
                     )
                   else
-                    const Text("Очікує розіграшу", style: TextStyle(color: Colors.white30, fontSize: 12)),
+                    const Text("Очікує розіграшу",
+                        style: TextStyle(color: Colors.white30, fontSize: 12)),
                 ],
               ),
             ),
-            if (_isAdmin && hasWinner) const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white24),
+            if (_isAdmin && hasWinner)
+              const Icon(Icons.arrow_forward_ios,
+                  size: 14, color: Colors.white24),
           ],
         ),
       ),

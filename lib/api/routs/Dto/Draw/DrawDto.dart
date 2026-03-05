@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tt_club_ua/api/routs/Draw/DrawStatus.dart';
 import '../../../../Storage/Search/ImageUrlDto.dart';
 import 'PrizeDto.dart';
 
@@ -71,13 +72,17 @@ class DrawDto {
       title: '',
       description: '',
       status: null,
-      allowMultipleWins: false,
+      allowMultipleWins: true,
       isPublic: true,
       isParticipating: false,
       registrationUntil: null,
       prizes: [],
       images: [],
     );
+  }
+
+  DrawStatus getStatus(){
+    return DrawStatus.fromString(statusController.text);
   }
 
   Map<String, dynamic> toJson() {
@@ -103,4 +108,6 @@ class DrawDto {
       prize.dispose();
     }
   }
+
+
 }

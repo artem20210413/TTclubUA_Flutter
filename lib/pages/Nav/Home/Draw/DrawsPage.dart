@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:tt_club_ua/api/routs/Draw/DrawStatus.dart';
 import '../../../../Storage/Cache/AccentColorCache.dart';
 import '../../../../Storage/UserStorage.dart';
 import '../../../../api/routs/Draw/draws.dart';
@@ -43,8 +44,10 @@ class _DrawsPageState extends State<DrawsPage> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200 &&
-        !_isLoadingMore && _hasMore) {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 200 &&
+        !_isLoadingMore &&
+        _hasMore) {
       _loadMore();
     }
   }
@@ -68,11 +71,15 @@ class _DrawsPageState extends State<DrawsPage> {
       final data = jsonDecode(res.body)['data'] as List;
       final newItems = data.map((e) => DrawDto.fromJson(e)).toList();
 
+      final filteredItems = newItems.where((draw) {
+        return !(!_isAdmin && draw.getStatus() == DrawStatus.planned);
+      }).toList();
+
       setState(() {
         if (append) {
-          draws.addAll(newItems);
+          draws.addAll(filteredItems);
         } else {
-          draws = newItems;
+          draws = filteredItems;
         }
         _hasMore = newItems.isNotEmpty;
         _isLoadingMore = false;
@@ -99,15 +106,15 @@ class _DrawsPageState extends State<DrawsPage> {
       title: 'Розіграші',
       floatingActionButton: _isAdmin
           ? GlassFabFloatingButton(
-        accentColor: accentColor,
-        onPressed: () async {
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const DrawUploadScreen()),
-          );
-          if (result != null) _onSearch();
-        },
-      )
+              accentColor: accentColor,
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const DrawUploadScreen()),
+                );
+                if (result != null) _onSearch();
+              },
+            )
           : null,
       body: Column(
         children: [
@@ -115,43 +122,45 @@ class _DrawsPageState extends State<DrawsPage> {
             child: isLoading
                 ? const TTLoading()
                 : RefreshIndicator(
-              onRefresh: () => _fetchDraws(),
-              child: ListView.builder(
-                controller: _scrollController,
-                padding: const EdgeInsets.all(16),
-                itemCount: draws.length + (_isLoadingMore ? 1 : 0),
-                itemBuilder: (context, index) {
-                  if (index == draws.length) {
-                    return const Center(child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: CircularProgressIndicator(),
-                    ));
-                  }
-                  return Container(
-                    margin: const EdgeInsets.only( bottom: 12),
-                    child:  DrawCard(
-                      draw: draws[index],
-                      accentColor: accentColor,
-                      onTap: () async {
-                        final result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => DrawDetailsScreen(
-                              drawDto: draws[index], // Передаємо існуючий об'єкт
-                            ),
+                    onRefresh: () => _fetchDraws(),
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.all(16),
+                      itemCount: draws.length + (_isLoadingMore ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (index == draws.length) {
+                          return const Center(
+                              child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: CircularProgressIndicator(),
+                          ));
+                        }
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          child: DrawCard(
+                            draw: draws[index],
+                            accentColor: accentColor,
+                            onTap: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => DrawDetailsScreen(
+                                    drawDto: draws[
+                                        index], // Передаємо існуючий об'єкт
+                                  ),
+                                ),
+                              );
+
+                              // Якщо повернулися після успішного збереження — оновлюємо дані
+                              if (result != null) {
+                                _fetchDraws();
+                              }
+                            },
                           ),
                         );
-
-                        // Якщо повернулися після успішного збереження — оновлюємо дані
-                        if (result != null) {
-                          _fetchDraws();
-                        }
                       },
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
           ),
         ],
       ),

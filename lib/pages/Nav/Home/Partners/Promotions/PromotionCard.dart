@@ -96,7 +96,8 @@ class PromotionCard extends StatelessWidget {
                           TTLabel(
                             text: promotion.discountValueController.text,
                             accentColor: accentColor,
-                            margin: const EdgeInsets.only(left: 15),
+                            margin: const EdgeInsets.only(right: 7, top: 2),
+                            fontSize: 14,
                           ),
                         if (!hasImages && promotion.exclusiveNotifier.value)
                           TTLabel(

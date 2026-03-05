@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tt_club_ua/api/routs/Draw/DrawStatus.dart';
 import '../../../../api/routs/Dto/Draw/DrawDto.dart';
 import '../../../../components/TTNeumorphicBox.dart';
+import '../../../../components/labels/TTLabel.dart';
 import '../../../../components/viewers/ImagesCarousel.dart';
 import '../../../../config/default.dart';
 
@@ -33,81 +35,82 @@ class DrawCard extends StatelessWidget {
             ImagesCarousel(
               images: draw.images,
               height: 180,
-              borderRadius: 24,
+              borderRadius: 32,
             ),
             const SizedBox(height: 16),
-            // Хедер картки зі статусом
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.only(bottom: 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildStatusBadge(draw.statusController.text),
+                  if (DrawStatus.active != draw.getStatus())
+                    TTLabel(
+                      text: draw.getStatus().label,
+                      accentColor: draw.getStatus() == DrawStatus.planned
+                          ? accentColor
+                          : draw.getStatus().color,
+                    ),
+                  if (DrawStatus.active == draw.getStatus() &&
+                      draw.registrationUntil != null)
+                    Row(
+                      children: [
+                        Text('Дійсний до: ', style: TTTextStyle.subtitle),
+                        const SizedBox(width: 6),
+                        Text(formattedDate,
+                            style: TTTextStyle.subtitle
+                                .copyWith(color: TTColors.text)),
+                      ],
+                    ),
                   if (draw.isParticipatingNotifier.value)
-                    const Icon(Icons.check_circle, color: Colors.green, size: 20),
+                    TTLabel(
+                        text: "Зареєстровано",
+                        accentColor: Colors.green,
+                        margin: EdgeInsets.only(left: 8)),
                 ],
               ),
             ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    draw.titleController.text,
-                    style: TTTextStyle.title.copyWith(fontSize: 18),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    draw.descriptionController.text,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TTTextStyle.subtitle.copyWith(color: Colors.white60),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Інфо-панель: Призи та Час
-                  Row(
-                    children: [
-                      _buildIconInfo(Icons.emoji_events_outlined, "${draw.prizes.length} призів"),
-                      const SizedBox(width: 16),
-                      _buildIconInfo(Icons.timer_outlined, formattedDate),
-                    ],
-                  ),
-                ],
-              ),
+            const SizedBox(height: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  draw.titleController.text,
+                  style: TTTextStyle.title18,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  draw.descriptionController.text,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TTTextStyle.subtitle.copyWith(color: Colors.white60),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Icon(Icons.emoji_events_outlined,
+                        size: 18, color: accentColor),
+                    const SizedBox(width: 6),
+                    Text("${draw.prizes.length} призів",
+                        style: TTTextStyle.subtitle
+                            .copyWith(color: TTColors.text)),
+                    const Spacer(),
+                    if (draw.allowMultipleWinsNotifier.value)
+                      TTLabel(
+                        text: "Мульти-виграш",
+                        accentColor: accentColor,
+                      ),
+                    if (draw.isPublicNotifier.value)
+                      TTLabel(
+                          text: "Публічний",
+                          accentColor: accentColor,
+                          margin: EdgeInsets.only(left: 8)),
+                  ],
+                )
+              ],
             ),
-            const SizedBox(height: 16),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildStatusBadge(String status) {
-    Color color = status == 'active' ? Colors.green : Colors.orange;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.5)),
-      ),
-      child: Text(
-        status.toUpperCase(),
-        style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-
-  Widget _buildIconInfo(IconData icon, String text) {
-    return Row(
-      children: [
-        Icon(icon, size: 16, color: const Color(0xFFE5B80B)),
-        const SizedBox(width: 6),
-        Text(text, style: const TextStyle(color: Colors.white70, fontSize: 12)),
-      ],
     );
   }
 }
