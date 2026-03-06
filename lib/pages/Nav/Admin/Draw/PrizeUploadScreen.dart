@@ -49,9 +49,8 @@ class _PrizeUploadScreenState extends State<PrizeUploadScreen> {
 
     // Для MultipartRequest завантаження файлів при створенні
     final res = isEdit
-        ? await DRAW_PRIZE_UPLOAD(token, item, null)
+        ? await DRAW_PRIZE_UPLOAD(token, item)
         : await DRAW_PRIZE_CREATE(token, item, null);
-
     if (await CHECK_API(res, context)) {
       MessageModule(context, isEdit ? 'Оновлено!' : 'Створено!', MessageType.success);
       Navigator.pop(context, true);

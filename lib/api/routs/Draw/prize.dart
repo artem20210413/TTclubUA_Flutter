@@ -47,30 +47,43 @@ Future<http.Response> DRAW_PRIZE_CREATE(
   return await http.Response.fromStream(streamedResponse);
 }
 
+// Future<http.Response> DRAW_PRIZE_UPLOAD(
+//     String? token, PrizeDto dto, String? path) async {
+//   var request = http.MultipartRequest(
+//     'PUT',
+//     Uri.parse(
+//         URL_DRAWS_PRIZES_UPDATE.replaceAll('{draw}', dto.drawId.toString())),
+//   );
+//
+//   if (path != null && path.isNotEmpty && File(path).existsSync()) {
+//     request.files.add(await http.MultipartFile.fromPath('file', path));
+//   }
+//
+//   request.headers['Authorization'] = 'Bearer $token';
+//
+//   final Map<String, dynamic> data = dto.toJson();
+//   data.forEach((key, value) {
+//     if (value != null) {
+//       request.fields[key] = value.toString();
+//     }
+//   });
+//
+//   var streamedResponse = await request.send();
+//
+//   return await http.Response.fromStream(streamedResponse);
+// }
+
+
+
 Future<http.Response> DRAW_PRIZE_UPLOAD(
-    String? token, PrizeDto dto, String? path) async {
-  var request = http.MultipartRequest(
-    'PUT',
-    Uri.parse(
-        URL_DRAWS_PRIZES_UPDATE.replaceAll('{draw}', dto.drawId.toString())),
+    String? token, PrizeDto dto) async {
+  final response = await http.put(
+    Uri.parse(URL_DRAWS_PRIZES_UPDATE.replaceAll('{draw}', dto.drawId.toString()).replaceAll('{prize}', dto.id.toString())),
+    headers: HEADERS(token),
+    body: jsonEncode(dto.toJson()),
   );
 
-  if (path != null && path.isNotEmpty && File(path).existsSync()) {
-    request.files.add(await http.MultipartFile.fromPath('file', path));
-  }
-
-  request.headers['Authorization'] = 'Bearer $token';
-
-  final Map<String, dynamic> data = dto.toJson();
-  data.forEach((key, value) {
-    if (value != null) {
-      request.fields[key] = value.toString();
-    }
-  });
-
-  var streamedResponse = await request.send();
-
-  return await http.Response.fromStream(streamedResponse);
+  return response;
 }
 
 Future<http.Response> DRAW_PRIZE_IMAGE_DELETE(

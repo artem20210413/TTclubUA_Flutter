@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/api/routs/Draw/DrawStatus.dart';
+import 'package:tt_club_ua/api/routs/Dto/Draw/ParticipantDto.dart';
 import '../../../../Storage/Search/ImageUrlDto.dart';
 import 'PrizeDto.dart';
 
@@ -22,6 +23,7 @@ class DrawDto {
 
   // Relations
   List<PrizeDto> prizes;
+  List<ParticipantDto> participants;
 
   // Можна додати учасників, якщо потрібно відображати їх в адмінці
   // List<ParticipantDto> participants;
@@ -37,6 +39,7 @@ class DrawDto {
     required this.registrationUntil,
     required this.images,
     required this.prizes,
+    required this.participants,
   })  : titleController = TextEditingController(text: title ?? ''),
         descriptionController = TextEditingController(text: description ?? ''),
         statusController = TextEditingController(text: status ?? null),
@@ -60,6 +63,9 @@ class DrawDto {
       prizes: (json['prizes'] as List? ?? [])
           .map((p) => PrizeDto.fromJson(p))
           .toList(),
+      participants: (json['participants'] as List? ?? [])
+          .map((p) => ParticipantDto.fromJson(p))
+          .toList(),
       images: (json['images'] as List? ?? [])
           .map((img) => ImageUrlDto.fromJson(img))
           .toList(),
@@ -77,6 +83,7 @@ class DrawDto {
       isParticipating: false,
       registrationUntil: null,
       prizes: [],
+      participants: [],
       images: [],
     );
   }

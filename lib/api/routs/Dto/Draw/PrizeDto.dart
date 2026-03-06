@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../Storage/Search/ImageUrlDto.dart';
+import 'ParticipantDto.dart';
 
 class PrizeDto {
   final int? id;
@@ -11,6 +12,7 @@ class PrizeDto {
   final TextEditingController sortOrderController;
 
   final int? winnerParticipantId;
+  final ParticipantDto? winner;
   List<ImageUrlDto> images;
 
   PrizeDto({
@@ -20,6 +22,7 @@ class PrizeDto {
     String? quantity,
     String? sortOrder,
     this.winnerParticipantId,
+    this.winner,
     required this.images,
   })  : titleController = TextEditingController(text: title ?? ''),
         quantityController = TextEditingController(text: quantity ?? '1'),
@@ -36,6 +39,7 @@ class PrizeDto {
       images: (json['images'] as List? ?? [])
           .map((img) => ImageUrlDto.fromJson(img))
           .toList(),
+      winner: json['winner'] != null ? ParticipantDto.fromJson(json['winner']) : null,
     );
   }
 

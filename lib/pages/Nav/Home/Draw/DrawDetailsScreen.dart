@@ -6,18 +6,23 @@ import 'package:tt_club_ua/config/default.dart';
 import '../../../../Storage/Cache/AccentColorCache.dart';
 import '../../../../Storage/UserStorage.dart';
 import '../../../../api/routs/Draw/DrawStatus.dart';
+import '../../../../api/routs/Draw/participants.dart';
 import '../../../../api/routs/Dto/Draw/DrawDto.dart';
 import '../../../../api/routs/Dto/Draw/PrizeDto.dart';
 import '../../../../api/routs/root.dart';
 import '../../../../components/TTLoading.dart';
 import '../../../../components/TTNeumorphicBox.dart';
+import '../../../../components/buttons/CircleButton.dart';
 import '../../../../components/buttons/GlassFabFloatingButton.dart';
 import '../../../../components/buttons/GlowingButton.dart';
 import '../../../../components/labels/TTLabel.dart';
 import '../../../../components/layout/TTScaffold.dart';
 import '../../../../components/generalModule.dart';
+import '../../../../components/viewers/ConfirmAndRun.dart';
 import '../../../../components/viewers/ImagesCarousel.dart';
+import '../../../../components/viewers/LittleImageThumbnail.dart';
 import '../../Admin/Draw/DrawUploadScreen.dart';
+import '../../Mention/Profile.dart';
 
 class DrawDetailsScreen extends StatefulWidget {
   final DrawDto drawDto;
@@ -60,25 +65,36 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
   // Логіка участі
   Future<void> _joinDraw() async {
     setState(() => isActionLoading = true);
-    // final token = await UserStorage.getToken();
-    // final res = await DRAWS_PARTICIPATE(token, draw!.id!);
-    //
-    // if (await CHECK_API(res, context)) {
-    //   MessageModule(context, "Ви успішно зареєстровані!", MessageType.success);
-    //   _loadData();
-    // }
+    final token = await UserStorage.getToken();
+    final res = await DRAWS_PARTICIPANTS_REGISTER(token, draw!.id!);
+
+    if (await CHECK_API(res, context)) {
+      MessageModule(context, "Ви успішно зареєстровані!", MessageType.success);
+      _loadData();
+    }
     setState(() => isActionLoading = false);
   }
 
   // Логіка перегравання (тільки адмін)
-  Future<void> _reRollDraw() async {
-    // final token = await UserStorage.getToken();
-    // final res = await DRAWS_REROLL(token, draw!.id!); // Твій API метод для рандому
-    //
-    // if (await CHECK_API(res, context)) {
-    //   MessageModule(context, "Результати оновлено!", MessageType.success);
-    //   _loadData();
-    // }
+  Future<void> _RollDraw(PrizeDto prize) async {
+    final token = await UserStorage.getToken();
+    final res = await DRAW_ROLL(token, draw!.id!, prize.id!);
+
+    if (await CHECK_API(res, context)) {
+      MessageModule(context, "Переможця визначено!", MessageType.success);
+      _loadData();
+    }
+  }
+
+  // Логіка перегравання (тільки адмін)
+  Future<void> _reRollDraw(PrizeDto prize) async {
+    final token = await UserStorage.getToken();
+    final res = await DRAW_RESET(token, draw!.id!, prize.id!);
+
+    if (await CHECK_API(res, context)) {
+      MessageModule(context, "Результати скасовано!", MessageType.success);
+      _loadData();
+    }
   }
 
   @override
@@ -151,23 +167,30 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                     ],
                   ),
                 ),
-                if (draw!.registrationUntil != null)
-                  Column(
-                    children: [
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Text('Дійсний до: ', style: TTTextStyle.subtitle),
-                          const SizedBox(width: 6),
-                          Text(
-                              DateFormat('dd.MM.yyyy HH:mm')
-                                  .format(draw!.registrationUntil!),
-                              style: TTTextStyle.subtitle
-                                  .copyWith(color: TTColors.text)),
-                        ],
-                      ),
-                    ],
-                  ),
+                Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Text('Дійсний до: ', style: TTTextStyle.subtitle),
+                        const SizedBox(width: 6),
+                        Text(
+                            draw!.registrationUntil != null
+                                ? DateFormat('dd.MM.yyyy HH:mm')
+                                    .format(draw!.registrationUntil!)
+                                : '-',
+                            style: TTTextStyle.subtitle
+                                .copyWith(color: TTColors.text)),
+                        const Spacer(),
+                        Text("Учасників: ", style: TTTextStyle.subtitle),
+                        const SizedBox(width: 6),
+                        Text(draw!.participants.length.toString(),
+                            style: TTTextStyle.subtitle
+                                .copyWith(color: TTColors.text)),
+                      ],
+                    ),
+                  ],
+                ),
 
                 const SizedBox(height: 16),
 
@@ -190,7 +213,9 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                     const SizedBox(height: 40),
 
                     // Кнопки дій
-                    if (!draw!.isParticipatingNotifier.value && draw!.getStatus() == DrawStatus.active && draw!.isPublicNotifier.value)
+                    if (!draw!.isParticipatingNotifier.value &&
+                        draw!.getStatus() == DrawStatus.active &&
+                        draw!.isPublicNotifier.value)
                       GlowingButton(
                         text: isActionLoading ? "Зачекайте..." : "Брати участь",
                         onPressed: isActionLoading ? () {} : _joinDraw,
@@ -198,26 +223,12 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                         margin: EdgeInsets.symmetric(horizontal: 20),
                       ),
 
-                    if (_isAdmin)
-                      GlowingButton(
-                        text: "ПЕРЕГРАТИ ПРИЗ",
-                        onPressed: _reRollDraw,
-                        // isLoading: _isLoading,
-                      ),
-
-                    if (_isAdmin)
-                      GlowingButton(
-                        text: "Розіграти ПРИЗ",
-                        onPressed: _reRollDraw,
-                        // isLoading: _isLoading,
-                      ),
-
-                    if (_isAdmin)
-                      GlowingButton(
-                        text: "Активувати розіграш",
-                        onPressed: () => {},
-                        // isLoading: _isLoading,
-                      ),
+                    const SizedBox(height: 40),
+                    GlowingButton(
+                      text: "Активувати розіграш",
+                      onPressed: () => {},
+                      // isLoading: _isLoading,
+                    ),
                     if (_isAdmin)
                       GlowingButton(
                         text: "Скасувати розіграш",
@@ -250,34 +261,27 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
     bool hasWinner = prize.winnerParticipantId != null;
 
     return GestureDetector(
-      onTap: (_isAdmin && hasWinner)
+      onTap: (hasWinner && prize.winner!.userId != null)
           ? () {
-              /* Navigator.push до сторінки учасника */
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Profile(id: prize.winner!.userId),
+                ),
+              );
             }
           : null,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.05),
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(
-              color: hasWinner ? accentColor.withOpacity(0.5) : Colors.white10),
-        ),
+      child: TTNeumorphicBox(
+        padding: EdgeInsets.only(left: 14, right: 16),
+        radius: 12,
         child: Row(
           children: [
-            // Фото призу
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: prize.images.isNotEmpty
-                  ? Image.network(prize.images.first.url,
-                      width: 60, height: 60, fit: BoxFit.cover)
-                  : Container(
-                      width: 60,
-                      height: 60,
-                      color: Colors.white10,
-                      child: const Icon(Icons.card_giftcard)),
-            ),
+            if (prize!.images.isNotEmpty)
+              LittleImageThumbnail(
+                images: prize.images, // Передаем весь список List<ImageUrlDto>
+                size: 60,
+                radius: 12,
+              ),
             const SizedBox(width: 15),
             Expanded(
               child: Column(
@@ -286,15 +290,13 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                   Text(prize.titleController.text,
                       style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold)),
-
                   if (hasWinner)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
-                      child: Text("Переможець: ID ${prize.winnerParticipantId}",
-                          style: TextStyle(
-                              color: accentColor,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13)),
+                      child: Text(
+                          "Переможець: ${prize.winner!.userNameController.text}",
+                          style: TTTextStyle.subtitle
+                              .copyWith(color: TTColors.text)),
                     )
                   else
                     const Text("Очікує розіграшу",
@@ -302,13 +304,38 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                 ],
               ),
             ),
+            if (_isAdmin && !hasWinner)
+              CircleButton(
+                accentColor: accentColor,
+                iconAsset: 'assets/svg/dice.svg',
+                sizeIcon: 40,
+                // isLoading: _isLoading,
+                onTap: () => ConfirmAndRun(
+                  context: context,
+                  dialogTitle: 'Провести розіграш?',
+                  dialogMessage:
+                      'Ви готові обрати щасливчика, який отримає ${prize.titleController.text}?',
+                  action: () => _RollDraw(prize),
+                ),
+              ),
             if (_isAdmin && hasWinner)
-              const Icon(Icons.arrow_forward_ios,
-                  size: 14, color: Colors.white24),
+              CircleButton(
+                accentColor: accentColor,
+                // iconAsset: 'assets/svg/arrow-counter-clockwise.svg',
+                iconAsset: 'assets/svg/trash.svg',
+                // sizeIcon: 40,
+                // isLoading: _isLoading,
+                onTap: () => ConfirmAndRun(
+                  context: context,
+                  dialogTitle: 'Скасувати результат?',
+                  dialogMessage:
+                      'Ви впевнені, що хочете обрати нового переможця для призу "${prize.titleController.text}"? Поточний результат буде видалено.',
+                  action: () => _reRollDraw(prize),
+                ),
+              ),
           ],
         ),
       ),
     );
   }
-
 }
