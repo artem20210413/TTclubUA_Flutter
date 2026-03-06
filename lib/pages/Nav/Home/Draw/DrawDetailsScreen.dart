@@ -272,6 +272,7 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
             }
           : null,
       child: TTNeumorphicBox(
+        margin: EdgeInsetsGeometry.only(bottom: 16),
         padding: EdgeInsets.only(left: 14, right: 16),
         radius: 12,
         child: Row(
