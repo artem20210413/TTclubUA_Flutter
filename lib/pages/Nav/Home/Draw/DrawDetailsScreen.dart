@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tt_club_ua/api/routs/Draw/draws.dart';
 import 'package:tt_club_ua/config/default.dart';
 import '../../../../Storage/Cache/AccentColorCache.dart';
 import '../../../../Storage/UserStorage.dart';
+import '../../../../api/routs/Draw/DrawStatus.dart';
 import '../../../../api/routs/Dto/Draw/DrawDto.dart';
 import '../../../../api/routs/Dto/Draw/PrizeDto.dart';
 import '../../../../api/routs/root.dart';
@@ -117,24 +119,55 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                     borderRadius: 32,
                   ),
 
-                if (draw!.images.isNotEmpty)
-                  const SizedBox(height: 16),
-
-                Row(
-                  children: [
-                    const Spacer(),
-                    if (draw!.allowMultipleWinsNotifier.value)
+                if (draw!.images.isNotEmpty) const SizedBox(height: 16),
+// Використовуємо Align або інший спосіб притиснути до правого краю,
+// бо Spacer() не працює всередині Wrap
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Wrap(
+                    alignment: WrapAlignment.start,
+                    // Вирівнювання елементів по правому краю
+                    spacing: 8.0,
+                    // Відступ між лейблами по горизонталі
+                    runSpacing: 8.0,
+                    // Відступ між рядками по вертикалі
+                    children: [
                       TTLabel(
-                        text: "Мульти-виграш",
-                        accentColor: accentColor,
-                      ),
-                    if (draw!.isPublicNotifier.value)
-                      TTLabel(
-                          text: "Публічний",
+                          text: draw!.getStatus().label,
+                          accentColor: draw!.getStatus().color),
+                      if (draw!.isParticipatingNotifier.value)
+                        TTLabel(
+                            text: "Зареєстровано",
+                            accentColor: DrawStatus.active == draw!.getStatus()
+                                ? TTColors.success
+                                : TTColors.text_secondary),
+                      if (draw!.allowMultipleWinsNotifier.value)
+                        TTLabel(
+                          text: "Мульти-виграш",
                           accentColor: accentColor,
-                          margin: EdgeInsets.only(left: 8)),
-                  ],
+                        ),
+                      if (draw!.isPublicNotifier.value)
+                        TTLabel(text: "Публічний", accentColor: accentColor),
+                    ],
+                  ),
                 ),
+                if (draw!.registrationUntil != null)
+                  Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Text('Дійсний до: ', style: TTTextStyle.subtitle),
+                          const SizedBox(width: 6),
+                          Text(
+                              DateFormat('dd.MM.yyyy HH:mm')
+                                  .format(draw!.registrationUntil!),
+                              style: TTTextStyle.subtitle
+                                  .copyWith(color: TTColors.text)),
+                        ],
+                      ),
+                    ],
+                  ),
 
                 const SizedBox(height: 16),
 
@@ -157,10 +190,12 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                     const SizedBox(height: 40),
 
                     // Кнопки дій
-                    if (!draw!.isParticipatingNotifier.value)
+                    if (!draw!.isParticipatingNotifier.value && draw!.getStatus() == DrawStatus.active && draw!.isPublicNotifier.value)
                       GlowingButton(
                         text: isActionLoading ? "Зачекайте..." : "Брати участь",
                         onPressed: isActionLoading ? () {} : _joinDraw,
+                        colorGrowing: accentColor,
+                        margin: EdgeInsets.symmetric(horizontal: 20),
                       ),
 
                     if (_isAdmin)
@@ -192,6 +227,12 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                     if (_isAdmin)
                       GlowingButton(
                         text: "Перевести у запланований",
+                        onPressed: () => {},
+                        // isLoading: _isLoading,
+                      ),
+                    if (_isAdmin)
+                      GlowingButton(
+                        text: "Видалити",
                         onPressed: () => {},
                         // isLoading: _isLoading,
                       ),
@@ -245,9 +286,7 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                   Text(prize.titleController.text,
                       style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold)),
-                  Text("Кількість: ${prize.quantityController.text}",
-                      style:
-                          const TextStyle(color: Colors.white60, fontSize: 12)),
+
                   if (hasWinner)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
@@ -271,4 +310,5 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
       ),
     );
   }
+
 }

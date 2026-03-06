@@ -18,6 +18,8 @@ import '../../../../components/layout/TTScaffold.dart';
 import '../../../../components/viewers/GoodsImagesEditor.dart';
 import '../../../../components/viewers/PickAndCropImage.dart';
 import '../../../../components/buttons/GlowingButton.dart';
+import 'ParticipantsListScreen.dart';
+import 'PrizesListScreen.dart';
 
 class DrawUploadScreen extends StatefulWidget {
   final DrawDto? draw;
@@ -174,10 +176,30 @@ print(res.body);
                     side: BorderSide(color: accentColor),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))
                   ),
-                  onPressed: () {
-                    // Navigator.push до PrizeListScreen(drawId: item.id)
-                  },
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => PrizesListScreen(drawId: item.id!)),
+                  ),
                   child: Text("Керувати призами (${item.prizes.length})", style: TextStyle(color: accentColor)),
+                ),
+              ],
+              if (item.id != null) ...[
+                const SizedBox(height: 16),
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                      side: BorderSide(color: accentColor),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ParticipantsListScreen(draw: item),
+                      ),
+                    );
+                  },
+                  child: Text("Керувати учасниками", style: TextStyle(color: accentColor)),
                 ),
               ],
             ],

@@ -7,7 +7,7 @@ enum DrawStatus {
   planned('planned', 'Заплановано', Colors.lightBlue),
   active('active', 'Активний', Colors.green),
   finished('finished', 'Завершено', TTColors.text_secondary),
-  cancelled('cancelled', 'Скасовано', TTColors.danger);
+  cancelled('cancelled', 'Скасовано', TTColors.text_secondary);
 
   // Поля енаму
   final String value;
