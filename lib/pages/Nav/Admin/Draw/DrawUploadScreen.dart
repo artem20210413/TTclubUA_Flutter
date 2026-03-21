@@ -15,6 +15,7 @@ import '../../../../components/inputs/BigTextInput.dart';
 import '../../../../components/inputs/CustomInputField.dart';
 import '../../../../components/inputs/PartnerDatePicker.dart';
 import '../../../../components/layout/TTScaffold.dart';
+import '../../../../components/viewers/ConfirmAndRun.dart';
 import '../../../../components/viewers/GoodsImagesEditor.dart';
 import '../../../../components/viewers/PickAndCropImage.dart';
 import '../../../../components/buttons/GlowingButton.dart';
@@ -100,6 +101,18 @@ print(res.body);
       setState(() => item.images.removeAt(index));
       MessageModule(context, 'Фото видалено', MessageType.success);
     }
+  }
+
+  Future<void> _deleteDraw() async {
+    MessageModule(context, 'Забув.. треба зробити', MessageType.error);
+    // final token = await UserStorage.getToken();
+    // final res =
+    // await DRAW_IMAGE_DELETE(token, item.id ?? 0, img);
+    //
+    // if (await CHECK_API(res, context)) {
+    //   setState(() => item.images.removeAt(index));
+    //   MessageModule(context, 'Фото видалено', MessageType.success);
+    // }
   }
   @override
   Widget build(BuildContext context) {
@@ -202,6 +215,28 @@ print(res.body);
                   child: Text("Керувати учасниками", style: TextStyle(color: accentColor)),
                 ),
               ],
+
+              Padding(
+                padding: const EdgeInsets.only(top: 34, bottom: 16),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      ConfirmAndRun(
+                        context: context,
+                        dialogTitle: 'Видалити розіграш?',
+                        dialogMessage:
+                        'Цю дію неможливо скасувати. Розіграш і всі дані будуть видалені назавжди.',
+                        action:
+                        _deleteDraw, // 👈 тут просто передаём метод
+                      );
+                    },
+                    child: Text(
+                      'Видалити розіграш назавжди',
+                      style: TTTextStyle.subtitle,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

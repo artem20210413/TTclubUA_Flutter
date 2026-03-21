@@ -97,6 +97,7 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     if (isLoading)
@@ -207,7 +208,7 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
 
                     // Список карток призів
                     ...draw!.prizes
-                        .map((prize) => _buildPrizeCard(prize))
+                        .map((prize) => _buildPrizeCard(draw, prize))
                         .toList(),
 
                     const SizedBox(height: 40),
@@ -224,28 +225,37 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                       ),
 
                     const SizedBox(height: 40),
-                    GlowingButton(
-                      text: "Активувати розіграш",
-                      onPressed: () => {},
-                      // isLoading: _isLoading,
-                    ),
+
                     if (_isAdmin)
-                      GlowingButton(
-                        text: "Скасувати розіграш",
-                        onPressed: () => {},
-                        // isLoading: _isLoading,
-                      ),
-                    if (_isAdmin)
-                      GlowingButton(
-                        text: "Перевести у запланований",
-                        onPressed: () => {},
-                        // isLoading: _isLoading,
-                      ),
-                    if (_isAdmin)
-                      GlowingButton(
-                        text: "Видалити",
-                        onPressed: () => {},
-                        // isLoading: _isLoading,
+                      Column(
+                        children: [
+
+
+
+                          GlowingButton(
+                            text: "Активувати розіграш",
+                            onPressed: () => {},
+                            // isLoading: _isLoading,
+                          ),
+
+                          GlowingButton(
+                            text: "Завершити розіграш",
+                            onPressed: () => {},
+                            // isLoading: _isLoading,
+                          ),
+                          GlowingButton(
+                            text: "Скасувати розіграш",
+                            onPressed: () => {},
+                            // isLoading: _isLoading,
+                          ),
+                          GlowingButton(
+                            text: "Перевести у запланований",
+                            onPressed: () => {},
+                            // isLoading: _isLoading,
+                          ),
+
+
+                        ],
                       ),
                   ],
                 ),
@@ -257,7 +267,7 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
     );
   }
 
-  Widget _buildPrizeCard(PrizeDto prize) {
+  Widget _buildPrizeCard(DrawDto? draw, PrizeDto prize) {
     bool hasWinner = prize.winnerParticipantId != null;
 
     return GestureDetector(
@@ -273,7 +283,7 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
           : null,
       child: TTNeumorphicBox(
         margin: EdgeInsetsGeometry.only(bottom: 16),
-        padding: EdgeInsets.only(left: 14, right: 16),
+        padding: EdgeInsets.only(left: 14, right: 16, top: 10, bottom: 10),
         radius: 12,
         child: Row(
           children: [
@@ -305,7 +315,9 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                 ],
               ),
             ),
-            if (_isAdmin && !hasWinner)
+            if (_isAdmin &&
+                !hasWinner &&
+                DrawStatus.active == draw!.getStatus())
               CircleButton(
                 accentColor: accentColor,
                 iconAsset: 'assets/svg/dice.svg',
@@ -319,7 +331,7 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                   action: () => _RollDraw(prize),
                 ),
               ),
-            if (_isAdmin && hasWinner)
+            if (_isAdmin && hasWinner && DrawStatus.active == draw!.getStatus())
               CircleButton(
                 accentColor: accentColor,
                 // iconAsset: 'assets/svg/arrow-counter-clockwise.svg',
