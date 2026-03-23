@@ -22,6 +22,7 @@ import '../../../../components/viewers/ConfirmAndRun.dart';
 import '../../../../components/viewers/ImagesCarousel.dart';
 import '../../../../components/viewers/LittleImageThumbnail.dart';
 import '../../Admin/Draw/DrawUploadScreen.dart';
+import '../../Admin/Draw/ParticipantsListScreen.dart';
 import '../../Mention/Profile.dart';
 
 class DrawDetailsScreen extends StatefulWidget {
@@ -36,6 +37,7 @@ class DrawDetailsScreen extends StatefulWidget {
 class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
   DrawDto? draw;
   bool isLoading = true;
+  bool _isLoadingChangeStatus = true;
   bool isActionLoading = false;
   bool _isAdmin = false;
   Color accentColor = AccentColorCache.accentColor;
@@ -52,13 +54,14 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
 
     // Припускаємо метод DRAWS_GET(token, id)
     final res = await DRAW_SHOW(token, widget.drawDto.id!);
-
-    if (await CHECK_API(res, context)) {
+    if (await CHECK_API(res, context, isEx: false)) {
       setState(() {
         draw = DrawDto.fromJson(jsonDecode(res.body)['data']);
         _isAdmin = adminStatus;
         isLoading = false;
       });
+    } else {
+      Navigator.pop(context, true);
     }
   }
 
@@ -97,6 +100,25 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
     }
   }
 
+  Future<void> _changeStatusDraw(DrawStatus status) async {
+    setState(() => _isLoadingChangeStatus = true);
+    final token = await UserStorage.getToken();
+    late DrawDto item = draw ?? DrawDto.empty();
+    item.statusController.text = status.value;
+    final res = await DRAW_UPLOAD(token, item, null);
+    if (await CHECK_API(res, context)) {
+      final body = jsonDecode(res.body);
+      if (body['data'] != null) {
+        setState(() {
+          draw = DrawDto.fromJson(body['data']);
+        });
+      }
+      MessageModule(context, status.label + '!', MessageType.success);
+    } else {
+      MessageModule(context, 'Щось пішло не так', MessageType.error);
+    }
+    setState(() => _isLoadingChangeStatus = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -211,7 +233,7 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                         .map((prize) => _buildPrizeCard(draw, prize))
                         .toList(),
 
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 16),
 
                     // Кнопки дій
                     if (!draw!.isParticipatingNotifier.value &&
@@ -221,40 +243,49 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                         text: isActionLoading ? "Зачекайте..." : "Брати участь",
                         onPressed: isActionLoading ? () {} : _joinDraw,
                         colorGrowing: accentColor,
-                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                       ),
 
-                    const SizedBox(height: 40),
 
                     if (_isAdmin)
                       Column(
                         children: [
 
-
-
-                          GlowingButton(
-                            text: "Активувати розіграш",
-                            onPressed: () => {},
-                            // isLoading: _isLoading,
-                          ),
-
-                          GlowingButton(
-                            text: "Завершити розіграш",
-                            onPressed: () => {},
-                            // isLoading: _isLoading,
-                          ),
-                          GlowingButton(
-                            text: "Скасувати розіграш",
-                            onPressed: () => {},
-                            // isLoading: _isLoading,
-                          ),
-                          GlowingButton(
-                            text: "Перевести у запланований",
-                            onPressed: () => {},
-                            // isLoading: _isLoading,
-                          ),
-
-
+                          if (draw!.id != null) ...[
+                            OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                  minimumSize: const Size(double.infinity, 50),
+                                  side: BorderSide(color: accentColor),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => ParticipantsListScreen(draw: draw!),
+                                  ),
+                                );
+                              },
+                              child: Text("Учасники (${draw!.participants.length})", style: TextStyle(color: accentColor)),
+                            ),
+                          ],
+                          if (draw!.getStatus() == DrawStatus.planned ||
+                              draw!.getStatus() == DrawStatus.finished)
+                            GlowingButton(
+                              margin: EdgeInsets.only(top: 20),
+                              text: "Активувати розіграш",
+                              onPressed: () =>
+                                  {_changeStatusDraw(DrawStatus.active)},
+                              // isLoading: _isLoading,
+                            ),
+                          if (draw!.getStatus() == DrawStatus.active)
+                            GlowingButton(
+                              margin: EdgeInsets.only(top: 20),
+                              text: "Завершити розіграш",
+                              onPressed: () =>
+                                  {_changeStatusDraw(DrawStatus.finished)},
+                              // isLoading: _isLoading,
+                            ),
                         ],
                       ),
                   ],

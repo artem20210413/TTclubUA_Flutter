@@ -61,7 +61,7 @@ class ParticipantDto {
       'draw_id': drawId,
       // Конвертуємо назад у ціле число (int)
       'weight': int.tryParse(weightController.text) ?? 1,
-      'user_name': userNameController.text,
+      'name_manual': userNameController.text,
       'contact_manual': contactManualController.text,
     };
   }

@@ -97,7 +97,7 @@ class DrawDto {
       'id': id,
       'title': titleController.text,
       'description': descriptionController.text,
-      // 'status': statusController.text == '' ? null : statusController.text,
+      'status': statusController.text == '' ? DrawStatus.planned.value : statusController.text,
       'allow_multiple_wins': allowMultipleWinsNotifier.value ? 1 : 0,
       'is_public': isPublicNotifier.value ? 1 : 0,
       'registration_until': registrationUntil?.toIso8601String(),

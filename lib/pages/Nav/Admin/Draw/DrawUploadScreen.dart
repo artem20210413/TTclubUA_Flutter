@@ -5,6 +5,7 @@ import 'package:tt_club_ua/config/default.dart';
 import '../../../../Storage/Cache/AccentColorCache.dart';
 import '../../../../Storage/Search/ImageUrlDto.dart';
 import '../../../../Storage/UserStorage.dart';
+import '../../../../api/routs/Draw/DrawStatus.dart';
 import '../../../../api/routs/Draw/draws.dart';
 import '../../../../api/routs/Dto/Draw/DrawDto.dart';
 import '../../../../api/routs/root.dart';
@@ -34,7 +35,9 @@ class DrawUploadScreen extends StatefulWidget {
 class _DrawUploadScreenState extends State<DrawUploadScreen> {
   final _formKey = GlobalKey<FormState>();
   late DrawDto item;
+  late DrawDto drawChangeStatus;
   bool _isLoading = false;
+  bool _isLoadingChangeStatus = false;
   Color accentColor = AccentColorCache.accentColor;
 
   @override
@@ -42,6 +45,7 @@ class _DrawUploadScreenState extends State<DrawUploadScreen> {
     super.initState();
     // Якщо об'єкт передано — редагуємо, інакше — створюємо порожній
     item = widget.draw ?? DrawDto.empty();
+    drawChangeStatus = item;
   }
 
   Future<void> _saveDraw() async {
@@ -54,7 +58,7 @@ class _DrawUploadScreenState extends State<DrawUploadScreen> {
     final res = isEdit
         ? await DRAW_UPLOAD(token, item, null)
         : await DRAW_CREATE(token, item, null);
-print(res.body);
+
     if (await CHECK_API(res, context)) {
       final body = jsonDecode(res.body);
       if (body['data'] != null) {
@@ -62,24 +66,24 @@ print(res.body);
           item = DrawDto.fromJson(body['data']);
         });
       }
-      MessageModule(context, isEdit ? 'Оновлено!' : 'Створено!', MessageType.success);
-      if (!isEdit) Navigator.pop(context, true); // Повертаємось до списку після створення
+      MessageModule(
+          context, isEdit ? 'Оновлено!' : 'Створено!', MessageType.success);
+      if (!isEdit)
+        Navigator.pop(context, true); // Повертаємось до списку після створення
     }
     setState(() => _isLoading = false);
   }
 
   // Додавання головного фото розіграшу
   void _addImage() async {
-
     final File? croppedFile =
-    await pickAndCropImage(context: context, aspectRatio: null);
+        await pickAndCropImage(context: context, aspectRatio: null);
     if (croppedFile == null) return;
 
     setState(() => _isLoading = true);
     final token = await UserStorage.getToken();
     // Метод додавання фото саме для акцій
-    final res = await DRAW_IMAGE_ADD(
-        token, item.id ?? 0, croppedFile.path);
+    final res = await DRAW_IMAGE_ADD(token, item.id ?? 0, croppedFile.path);
 
     if (await CHECK_API(res, context)) {
       final body = jsonDecode(res.body);
@@ -94,8 +98,7 @@ print(res.body);
 
   void _deleteImage(ImageUrlDto img, int index) async {
     final token = await UserStorage.getToken();
-    final res =
-    await DRAW_IMAGE_DELETE(token, item.id ?? 0, img);
+    final res = await DRAW_IMAGE_DELETE(token, item.id ?? 0, img);
 
     if (await CHECK_API(res, context)) {
       setState(() => item.images.removeAt(index));
@@ -104,16 +107,35 @@ print(res.body);
   }
 
   Future<void> _deleteDraw() async {
-    MessageModule(context, 'Забув.. треба зробити', MessageType.error);
-    // final token = await UserStorage.getToken();
-    // final res =
-    // await DRAW_IMAGE_DELETE(token, item.id ?? 0, img);
-    //
-    // if (await CHECK_API(res, context)) {
-    //   setState(() => item.images.removeAt(index));
-    //   MessageModule(context, 'Фото видалено', MessageType.success);
-    // }
+    final token = await UserStorage.getToken();
+    final res = await DRAW_DELETE(token, item);
+    if (await CHECK_API(res, context)) {
+      MessageModule(context, 'Розіграш видалено', MessageType.success);
+      Navigator.pop(context, true);
+      return; // Виходимо, щоб не показувати помилку нижче
+    }
+    MessageModule(context, 'Щось пішло не так', MessageType.error);
   }
+
+  Future<void> _changeStatusDraw(DrawStatus status) async {
+    setState(() => _isLoadingChangeStatus = true);
+    final token = await UserStorage.getToken();
+    drawChangeStatus.statusController.text = status.value;
+    final res = await DRAW_UPLOAD(token, drawChangeStatus, null);
+    if (await CHECK_API(res, context)) {
+      final body = jsonDecode(res.body);
+      if (body['data'] != null) {
+        setState(() {
+          item = DrawDto.fromJson(body['data']);
+        });
+      }
+      MessageModule(context, status.label + '!', MessageType.success);
+    } else {
+      MessageModule(context, 'Щось пішло не так', MessageType.error);
+    }
+    setState(() => _isLoadingChangeStatus = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return TTScaffold(
@@ -127,7 +149,6 @@ print(res.body);
             children: [
               // Секція фото (GoodsImagesEditor адаптований під Draw)
               if (item.id != null) ...[
-                Text("Головне зображення", style: TTTextStyle.title.copyWith(fontSize: 16)),
                 const SizedBox(height: 12),
                 GoodsImagesEditor(
                   images: item.images,
@@ -136,12 +157,18 @@ print(res.body);
                   onDelete: _deleteImage,
                 ),
                 const SizedBox(height: 24),
+                Text(
+                    "Статус: " +
+                        DrawStatus.fromString(item.statusController.text).label,
+                    style: TTTextStyle.title.copyWith(fontSize: 16)),
+                const SizedBox(height: 24),
               ],
 
               CustomInputField(
                 controller: item.titleController,
                 label: 'Назва розіграшу',
-                validator: (v) => TTValidators.required(item.titleController.text),
+                validator: (v) =>
+                    TTValidators.required(item.titleController.text),
               ),
               const SizedBox(height: 16),
 
@@ -149,7 +176,8 @@ print(res.body);
                 controller: item.descriptionController,
                 hint: 'Опис та умови участі',
                 minHeight: 100,
-                validator: (v) => TTValidators.required(item.descriptionController.text),
+                validator: (v) =>
+                    TTValidators.required(item.descriptionController.text),
               ),
               const SizedBox(height: 16),
 
@@ -158,7 +186,8 @@ print(res.body);
                 value: item.registrationUntil,
                 accentColor: accentColor,
                 showTime: true,
-                onChanged: (val) => setState(() => item.registrationUntil = val),
+                onChanged: (val) =>
+                    setState(() => item.registrationUntil = val),
               ),
               const SizedBox(height: 16),
 
@@ -173,6 +202,44 @@ print(res.body);
                 accentColor: accentColor,
               ),
 
+              // Якщо розіграш вже створено, показуємо кнопку переходу до призів
+              if (item.id != null) ...[
+                const SizedBox(height: 16),
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                      side: BorderSide(color: accentColor),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15))),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => PrizesListScreen(drawId: item.id!)),
+                  ),
+                  child: Text("Керувати призами (${item.prizes.length})",
+                      style: TextStyle(color: accentColor)),
+                ),
+              ],
+              // if (item.id != null) ...[
+              //   const SizedBox(height: 16),
+              //   OutlinedButton(
+              //     style: OutlinedButton.styleFrom(
+              //         minimumSize: const Size(double.infinity, 50),
+              //         side: BorderSide(color: accentColor),
+              //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))
+              //     ),
+              //     onPressed: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //           builder: (_) => ParticipantsListScreen(draw: item),
+              //         ),
+              //       );
+              //     },
+              //     child: Text("Керувати учасниками", style: TextStyle(color: accentColor)),
+              //   ),
+              // ],
+
               const SizedBox(height: 32),
 
               GlowingButton(
@@ -180,42 +247,41 @@ print(res.body);
                 onPressed: _isLoading ? () => {} : _saveDraw,
               ),
 
-              // Якщо розіграш вже створено, показуємо кнопку переходу до призів
-              if (item.id != null) ...[
-                const SizedBox(height: 16),
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 50),
-                    side: BorderSide(color: accentColor),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))
-                  ),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => PrizesListScreen(drawId: item.id!)),
-                  ),
-                  child: Text("Керувати призами (${item.prizes.length})", style: TextStyle(color: accentColor)),
-                ),
-              ],
-              if (item.id != null) ...[
-                const SizedBox(height: 16),
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50),
-                      side: BorderSide(color: accentColor),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ParticipantsListScreen(draw: item),
-                      ),
-                    );
+              if (item.statusController.text != DrawStatus.cancelled.value)
+                GlowingButton(
+                  margin: const EdgeInsets.only(top: 18, bottom: 8),
+                  text: _isLoadingChangeStatus
+                      ? 'Скасування...'
+                      : 'Скасувати розіграши',
+                  onPressed: () => {
+                    ConfirmAndRun(
+                      context: context,
+                      dialogTitle: 'Скасувати розіграш?',
+                      dialogMessage: 'Розіграш будуть скасований.',
+                      action: () => _changeStatusDraw(DrawStatus.cancelled),
+                    )
                   },
-                  child: Text("Керувати учасниками", style: TextStyle(color: accentColor)),
+                  colorGrowing: TTColors.danger,
+                  // isLoading: _isLoading,
                 ),
-              ],
 
+              if (item.statusController.text == DrawStatus.cancelled.value)
+                GlowingButton(
+                  margin: const EdgeInsets.only(top: 18, bottom: 8),
+                  text: _isLoadingChangeStatus
+                      ? 'Повернення...'
+                      : 'Повернути розіграш',
+                  onPressed: () => {
+                    ConfirmAndRun(
+                      context: context,
+                      dialogTitle: 'Повернути розіграш?',
+                      dialogMessage:
+                          'Розіграш будуть повернено до статусу "Запланований".',
+                      action: () => _changeStatusDraw(DrawStatus.planned),
+                    )
+                  },
+                  // isLoading: _isLoading,
+                ),
               Padding(
                 padding: const EdgeInsets.only(top: 34, bottom: 16),
                 child: Center(
@@ -225,9 +291,8 @@ print(res.body);
                         context: context,
                         dialogTitle: 'Видалити розіграш?',
                         dialogMessage:
-                        'Цю дію неможливо скасувати. Розіграш і всі дані будуть видалені назавжди.',
-                        action:
-                        _deleteDraw, // 👈 тут просто передаём метод
+                            'Цю дію неможливо скасувати. Розіграш і всі дані будуть видалені назавжди.',
+                        action: _deleteDraw, // 👈 тут просто передаём метод
                       );
                     },
                     child: Text(

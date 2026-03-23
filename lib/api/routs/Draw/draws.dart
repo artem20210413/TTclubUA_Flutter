@@ -62,6 +62,15 @@ Future<http.Response> DRAW_CREATE(
   return response;
 }
 
+Future<http.Response> DRAW_DELETE(String? token, DrawDto dto) async {
+  final response = await http.delete(
+    Uri.parse(URL_DRAWS_DELETE.replaceAll('{draw}', dto.id.toString())),
+    headers: HEADERS(token),
+  );
+
+  return response;
+}
+
 Future<http.Response> DRAW_UPLOAD(
     String? token, DrawDto dto, String? path) async {
   final response = await http.put(
@@ -69,6 +78,7 @@ Future<http.Response> DRAW_UPLOAD(
     headers: HEADERS(token),
     body: jsonEncode(dto.toJson()),
   );
+  print(jsonEncode(dto.toJson()));
 
   return response;
 }

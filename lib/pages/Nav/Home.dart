@@ -61,7 +61,7 @@ class _HomeState extends State<Home> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                DrawsPage()), // Переход на экран публикаций
+                                AnnualFeePage()), // Переход на экран публикаций
                                 // AnnualFeePage()), // Переход на экран публикаций
                       );
                     },
@@ -156,28 +156,33 @@ class _HomeState extends State<Home> {
                 );
               },
             ),
+            // const SizedBox(height: 20),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/budget.webp',
+            //   title: 'Підтримати клуб',
+            //   // enabled: false,
+            //   onButtonTap: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //           builder: (context) =>
+            //               AnnualFeePage()), // Переход на экран публикаций
+            //     );
+            //   },
+            // ),
             const SizedBox(height: 20),
             PromoCard(
-              imagePath: 'assets/ui/banners/budget.webp',
-              title: 'Підтримати клуб',
-              // enabled: false,
+              imagePath: 'assets/ui/banners/banner_raffle.webp',
+              title: 'Розіграши',
               onButtonTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          AnnualFeePage()), // Переход на экран публикаций
+                          DrawsPage()), // Переход на экран публикаций
                 );
               },
             ),
-            // const SizedBox(height: 20),
-            // PromoCard(
-            //   imagePath: 'assets/ui/banners/budget.webp',
-            //   title: 'Бюджет TTclubUA',
-            //   onButtonTap: () {
-            //     // TODO: действие по нажатию
-            //   },
-            // ),
             // const SizedBox(height: 20),
             // PromoCard(
             //   imagePath: 'assets/ui/banners/ttclubua_in_world.webp',

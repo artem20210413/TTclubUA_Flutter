@@ -13,11 +13,19 @@ import 'package:tt_club_ua/api/routs/Dto/User/UserUpdateDto.dart';
 
 import '../../../Storage/Search/ImageUrlDto.dart';
 
-Future<http.Response> DRAW_PARTICIPANTS_LIST(String? token, DrawDto dto) async {
-  final uri = Uri.parse(
-      URL_DRAWS_PARTICIPANTS_LIST.replaceAll('{draw}', dto.id.toString()));
-  final response = await http.get(uri, headers: HEADERS(token));
+// Future<http.Response> DRAW_PARTICIPANTS_LIST(String? token, DrawDto dto) async {
+//   final uri = Uri.parse(
+//       URL_DRAWS_PARTICIPANTS_LIST.replaceAll('{draw}', dto.id.toString()));
+//   final response = await http.get(uri, headers: HEADERS(token));
+//
+//   return response;
+// }
+Future<http.Response> DRAW_PARTICIPANTS_LIST(String? token, DrawDto dto, {int page = 1}) async {
+  // Додаємо ?page=X до URL
+  final String url = URL_DRAWS_PARTICIPANTS_LIST.replaceAll('{draw}', dto.id.toString());
+  final uri = Uri.parse("$url?page=$page");
 
+  final response = await http.get(uri, headers: HEADERS(token));
   return response;
 }
 
@@ -40,19 +48,34 @@ Future<http.Response> DRAWS_PARTICIPANTS_REGISTER_MANUAL(
     headers: HEADERS(token),
     body: jsonEncode(dto.toJson()),
   );
-
+  print(response.statusCode);
+  print(jsonEncode(response.body));
   return response;
 }
 
 Future<http.Response> DRAWS_PARTICIPANTS_UPDATE(
-    String? token, int draw_id, int participant_id, String weight) async {
+    String? token, int draw_id, int participant_id, ParticipantDto dto) async {
   final response = await http.post(
     Uri.parse(URL_DRAWS_PARTICIPANTS_UPDATE
         .replaceAll('{draw}', draw_id.toString())
         .replaceAll('{participant}', participant_id.toString())),
     headers: HEADERS(token),
-    body: jsonEncode({weight: weight}),
+    body: jsonEncode(dto.toJson()),
+    // body: jsonEncode({weight: weight}),
   );
+
+  return response;
+}
+Future<http.Response> DRAWS_PARTICIPANTS_DELATE(
+    String? token, int draw_id, int participant_id) async {
+  final response = await http.delete(
+    Uri.parse(URL_DRAWS_PARTICIPANTS_DELETE
+        .replaceAll('{draw}', draw_id.toString())
+        .replaceAll('{participant}', participant_id.toString())),
+    headers: HEADERS(token),
+    // body: jsonEncode({weight: weight}),
+  );
+  print(jsonEncode(response.body));
 
   return response;
 }

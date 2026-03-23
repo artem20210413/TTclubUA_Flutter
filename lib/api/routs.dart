@@ -116,6 +116,7 @@ const URL_DRAWS_LIST = '${_HOST}/api/draws';
 const URL_DRAWS_SHOW = '${_HOST}/api/draws/{draw}';
 const URL_DRAWS_CREATE = '${_HOST}/api/draws';
 const URL_DRAWS_UPDATE  = '${_HOST}/api/draws/{draw}';
+const URL_DRAWS_DELETE = '${_HOST}/api/draws/{draw}';
 const URL_DRAWS_ROLL  = '${_HOST}/api/draws/{draw}/roll/{prize}';
 const URL_DRAWS_RESET  = '${_HOST}/api/draws/{draw}/reset/{prize}';
 const URL_DRAWS_IMAGE_DELETE = '${_HOST}/api/draws/{draw}/image/{mediaId}';

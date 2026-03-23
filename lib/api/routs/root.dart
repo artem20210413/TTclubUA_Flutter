@@ -5,12 +5,18 @@ import 'dart:convert';
 
 import '../../components/generalModule.dart';
 
-Future<bool> CHECK_API(http.Response res, BuildContext context) async {
-  if (res.statusCode == 200 || res.statusCode == 201) {
+Future<bool> CHECK_API(http.Response res, BuildContext context,
+    {bool isEx = true}) async {
+  if (res.statusCode == 200 || res.statusCode == 201 || res.statusCode == 204) {
     return true;
   }
-  final responseBody = jsonDecode(res.body);
-  MessageModule(context, 'Error: ${res.statusCode}. Response body: $responseBody', MessageType.error);
+  if (isEx) {
+    final responseBody = jsonDecode(res.body);
+    MessageModule(
+        context,
+        'Error: ${res.statusCode}. Response body: $responseBody',
+        MessageType.error);
+  }
 
   return false;
 }
