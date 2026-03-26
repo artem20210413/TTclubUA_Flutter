@@ -75,20 +75,61 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
     );
   }
 
+  // Widget _buildDots(int count) {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: List.generate(
+  //       count,
+  //       (index) => Container(
+  //         width: 8,
+  //         height: 8,
+  //         margin: const EdgeInsets.symmetric(horizontal: 4),
+  //         decoration: BoxDecoration(
+  //           shape: BoxShape.circle,
+  //           color: _current == index ? Colors.white : Colors.black54,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
   Widget _buildDots(int count) {
+    // Налаштування: скільки всього крапок ми хочемо бачити в рядку
+    const int maxVisibleDots = 13;
+
+    // Якщо крапок мало — малюємо як зазвичай
+    if (count <= maxVisibleDots) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(count, (index) => _dot(index)),
+      );
+    }
+
+    // Розраховуємо вікно видимості крапок (щоб поточна була по центру)
+    int start = _current - (maxVisibleDots ~/ 2);
+    if (start < 0) start = 0;
+    if (start + maxVisibleDots > count) start = count - maxVisibleDots;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(
-        count,
-        (index) => Container(
-          width: 8,
-          height: 8,
-          margin: const EdgeInsets.symmetric(horizontal: 4),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: _current == index ? Colors.white : Colors.black54,
-          ),
-        ),
+      children: List.generate(maxVisibleDots, (i) {
+        final actualIndex = start + i;
+        return _dot(actualIndex);
+      }),
+    );
+  }
+
+// Винесемо саму крапку в окремий метод для чистоти
+  Widget _dot(int index) {
+    final isSelected = _current == index;
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      width: isSelected ? 12 : 6,
+      // Активна крапка трохи ширша
+      height: 6,
+      margin: const EdgeInsets.symmetric(horizontal: 3),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: isSelected ? Colors.white : Colors.white.withOpacity(0.4),
       ),
     );
   }

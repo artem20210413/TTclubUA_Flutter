@@ -16,6 +16,7 @@ import '../../utils/url_launcher.dart';
 import '../Nav.dart';
 import 'Calendar.dart';
 import 'Home/AnnualFeePage.dart';
+import 'Home/BuyingCars/BuyingCarsList.dart';
 import 'Home/Draw/DrawsPage.dart';
 import 'Home/Partners/PartnersPage.dart';
 import 'Home/SuggestionsPage.dart';
@@ -132,16 +133,16 @@ class _HomeState extends State<Home> {
                 );
               },
             ),
-            const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/calendar_of_events.webp',
-              title: 'Календар подій',
-              // enabled: false,
-              onButtonTap: () {
-                final navState = context.findAncestorStateOfType<NavState>();
-                navState?.setTab(2); // 2 — индекс вкладки Calendar
-              },
-            ),
+            // const SizedBox(height: 20),
+            // PromoCard(
+            //   imagePath: 'assets/ui/banners/calendar_of_events.webp',
+            //   title: 'Календар подій',
+            //   // enabled: false,
+            //   onButtonTap: () {
+            //     final navState = context.findAncestorStateOfType<NavState>();
+            //     navState?.setTab(2); // 2 — индекс вкладки Calendar
+            //   },
+            // ),
             const SizedBox(height: 20),
             PromoCard(
               imagePath: 'assets/ui/banners/promotions_from_partners.webp',
@@ -153,6 +154,33 @@ class _HomeState extends State<Home> {
                   MaterialPageRoute(
                       builder: (context) =>
                           PartnersPage()), // Переход на экран публикаций
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            PromoCard(
+              imagePath: 'assets/ui/banners/banner_raffle.webp',
+              title: 'Розіграші',
+              onButtonTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          DrawsPage()), // Переход на экран публикаций
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            PromoCard(
+              // imagePath: 'assets/ui/banners/banner_raffle.webp',
+              imagePath: 'assets/ui/banners/buying_car.webp',
+              title: ' Audi TT',
+              onButtonTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          BuyingCarsList()), // Переход на экран публикаций
                 );
               },
             ),
@@ -170,19 +198,6 @@ class _HomeState extends State<Home> {
             //     );
             //   },
             // ),
-            const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/banner_raffle.webp',
-              title: 'Розіграши',
-              onButtonTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          DrawsPage()), // Переход на экран публикаций
-                );
-              },
-            ),
             // const SizedBox(height: 20),
             // PromoCard(
             //   imagePath: 'assets/ui/banners/ttclubua_in_world.webp',

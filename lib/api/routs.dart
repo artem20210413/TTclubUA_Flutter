@@ -134,3 +134,6 @@ const URL_DRAWS_PRIZES_UPDATE = '${_HOST}/api/draws/{draw}/prizes/{prize}';
 const URL_DRAWS_PRIZES_DELETE = '${_HOST}/api/draws/{draw}/prizes/{prize}';
 const URL_DRAWS_PRIZES_IMAGE_DELETE = '${_HOST}/api/draws/{draw}/prizes/{prize}/image/{mediaId}';
 const URL_DRAWS_PRIZES_IMAGE_ADD = '${_HOST}/api/draws/{draw}/prizes/{prize}/image';
+
+const URL_EXTERNAL_CARS_LIST = '${_HOST}/api/external-cars/list';
+const URL_EXTERNAL_CARS_FILTERS = '${_HOST}/api/external-cars/filters';
