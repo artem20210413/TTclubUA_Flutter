@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tt_club_ua/api/routs/Draw/DrawStatus.dart';
-import 'package:tt_club_ua/api/routs/Dto/Draw/ParticipantDto.dart';
-import '../../../../Storage/Search/ImageUrlDto.dart';
-import 'package:flutter/material.dart';
 
 class ExternalCarFilterDto {
   // Контролери для тексту та чисел (в інпутах все одно текст)
@@ -10,6 +6,7 @@ class ExternalCarFilterDto {
   final TextEditingController cityController = TextEditingController();
   final TextEditingController modelController = TextEditingController();
   final TextEditingController subCategoryController = TextEditingController();
+  final TextEditingController plateNumberController = TextEditingController();
 
   // Контролери для діапазонів (року та ціни)
   final TextEditingController yearFromController = TextEditingController();
@@ -17,8 +14,10 @@ class ExternalCarFilterDto {
   final TextEditingController priceFromController = TextEditingController();
   final TextEditingController priceToController = TextEditingController();
 
+  final ValueNotifier<bool> onlyOursNotifier = ValueNotifier<bool>(false);
+
   // Звичайні змінні для технічних параметрів
-  String? colorHex; // Можна вибирати через пікер, тому не контролер
+  List<String> selectedColors = [];
   int perPage = 15;
 
   ExternalCarFilterDto();
@@ -36,9 +35,17 @@ class ExternalCarFilterDto {
     _addIfNotEmpty(params, 'year_to', yearToController.text);
     _addIfNotEmpty(params, 'price_from', priceFromController.text);
     _addIfNotEmpty(params, 'price_to', priceToController.text);
+    _addIfNotEmpty(params, 'plate_number', plateNumberController.text);
 
-    if (colorHex != null) {
-      params['color_hex'] = colorHex!.replaceFirst('#', '');
+    if (onlyOursNotifier.value) {
+      params['only_ours'] = '1';
+    }
+
+    if (selectedColors.isNotEmpty) {
+      for (int i = 0; i < selectedColors.length; i++) {
+        // Очищуємо решітку і додаємо індексний ключ для API
+        params['color_hex[$i]'] = selectedColors[i].replaceFirst('#', '');
+      }
     }
 
     params['per_page'] = perPage.toString();
@@ -55,7 +62,7 @@ class ExternalCarFilterDto {
 
   // Очищення всіх полів
   void clear() {
-    searchController.clear();
+    // searchController.clear();
     cityController.clear();
     modelController.clear();
     subCategoryController.clear();
@@ -63,7 +70,9 @@ class ExternalCarFilterDto {
     yearToController.clear();
     priceFromController.clear();
     priceToController.clear();
-    colorHex = null;
+    plateNumberController.clear();
+    onlyOursNotifier.value = false;
+    selectedColors = [];
   }
 
   // Обов'язково звільняємо пам'ять
@@ -76,5 +85,22 @@ class ExternalCarFilterDto {
     yearToController.dispose();
     priceFromController.dispose();
     priceToController.dispose();
+    plateNumberController.dispose();
+    onlyOursNotifier.dispose();
+  }
+
+  bool get isFiltered {
+    return
+        // searchController.text.trim().isNotEmpty ||
+        cityController.text.trim().isNotEmpty ||
+            modelController.text.trim().isNotEmpty ||
+            subCategoryController.text.trim().isNotEmpty ||
+            yearFromController.text.trim().isNotEmpty ||
+            yearToController.text.trim().isNotEmpty ||
+            priceFromController.text.trim().isNotEmpty ||
+            priceToController.text.trim().isNotEmpty ||
+            plateNumberController.text.trim().isNotEmpty ||
+            onlyOursNotifier.value == true ||
+            selectedColors.isNotEmpty;
   }
 }

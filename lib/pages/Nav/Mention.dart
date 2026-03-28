@@ -224,7 +224,6 @@ class _MentionState extends State<Mention> {
                   onSubmitted: (_) => fetchSearchResults(),
                   controller: _searchController,
                   label: 'Пошук',
-
                   prefixIcon: GestureDetector(
                     onTap: _openFilterModal,
                     child: ClipOval(

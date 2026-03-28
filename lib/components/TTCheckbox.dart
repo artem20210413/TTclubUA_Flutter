@@ -5,11 +5,13 @@ class TTCheckbox extends StatelessWidget {
   final ValueNotifier<bool> activeNotifier;
   final String label;
   final Color accentColor;
+  final TextStyle? style;
 
   const TTCheckbox({
     super.key,
     required this.activeNotifier,
     this.label = 'Активний товар',
+    this.style,
     required this.accentColor,
   });
 
@@ -32,10 +34,11 @@ class TTCheckbox extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           label,
-          style: TTTextStyle.subtitle.copyWith(
-            // fontSize: 16,
-            color: TTColors.text,
-          ),
+          style: style ??
+              TTTextStyle.subtitle.copyWith(
+                // fontSize: 16,
+                color: TTColors.text,
+              ),
         ),
       ],
     );

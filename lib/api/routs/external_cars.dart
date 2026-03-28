@@ -27,7 +27,7 @@ Future<http.Response> EXTERNAL_CARS_LIST(
   // Виконуємо запит
   final response = await http.get(uri, headers: HEADERS(token));
 
-  // print('Request URL: $uri');
+  print('Request URL: $uri');
 
   return response;
 }

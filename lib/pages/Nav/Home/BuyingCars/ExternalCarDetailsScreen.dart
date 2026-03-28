@@ -28,14 +28,8 @@ class _ExternalCarDetailsScreenState extends State<ExternalCarDetailsScreen> {
   Widget build(BuildContext context) {
     Color accentColor = AccentColorCache.accentColor;
     final item = widget.item;
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => Profile(id: dto.user.id),
-    //   ),
-    // )
     return TTScaffold(
-      title: "${item.markName} ${item.modelName}",
+      // title: "${item.markName} ${item.modelName}",
       body: TTNeumorphicBox(
         margin: const EdgeInsets.only(top: 16, bottom: 0, left: 16, right: 16),
         child: SingleChildScrollView(
@@ -56,6 +50,17 @@ class _ExternalCarDetailsScreenState extends State<ExternalCarDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Center(
+                      child: Text(
+                        item.title,
+                        textAlign: TextAlign.center,
+                        // Центруємо рядки всередині тексту
+                        style: TTTextStyle.title,
+                        maxLines: 1,
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
                     GestureDetector(
                       onTap: () => {
                         if (item.user != null)

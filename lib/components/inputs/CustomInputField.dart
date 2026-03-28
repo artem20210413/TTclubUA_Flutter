@@ -75,8 +75,8 @@ class CustomInputField extends StatelessWidget {
                 decoration: InputDecoration(
                     labelText: label,
                     prefixText: prefixText,
-                    labelStyle: TextStyle(color: textSecondaryColor),
-                    // labelStyle: TTTextStyle.subtitle,
+                    // labelStyle: TextStyle(color: textSecondaryColor),
+                    labelStyle: TTTextStyle.subtitle,
                     border: InputBorder.none,
                     errorStyle: const TextStyle(height: 0),
                     suffixIcon: suffixIcon,

@@ -174,7 +174,7 @@ class _HomeState extends State<Home> {
             PromoCard(
               // imagePath: 'assets/ui/banners/banner_raffle.webp',
               imagePath: 'assets/ui/banners/buying_car.webp',
-              title: ' Audi TT',
+              title: 'Базар',
               onButtonTap: () {
                 Navigator.push(
                   context,
