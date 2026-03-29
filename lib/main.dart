@@ -29,6 +29,7 @@ import 'package:tt_club_ua/pages/Nav/Admin/User/UpdateCarScreen.dart';
 import 'package:tt_club_ua/pages/Onboarding.dart';
 
 import 'Storage/Cache/AccentColorCache.dart';
+import 'config/HardConfig.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,6 +44,14 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
+  try {
+    await HardConfig.init();
+  } catch (e) {
+    print("--------------------------");
+    print("Failed to initialize version: $e");
+    print("--------------------------");
+  }
 
   runApp(MaterialApp(
     theme: ThemeData(

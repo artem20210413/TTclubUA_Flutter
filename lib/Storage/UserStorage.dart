@@ -114,6 +114,10 @@ class UserStorage {
     return _userInfo?['name'];
   }
 
+  static Future<bool> isEntryPaid() async {
+    return _userInfo?['is_entry_paid'] ?? true;
+  }
+
   static Future<String?> getUserEmail() async {
     return _userInfo?['email'];
   }

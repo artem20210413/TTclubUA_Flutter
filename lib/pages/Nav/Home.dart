@@ -30,6 +30,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String userName = '---';
+  bool _isEntryPaid = true;
 
   @override
   void initState() {
@@ -63,7 +64,7 @@ class _HomeState extends State<Home> {
                         MaterialPageRoute(
                             builder: (context) =>
                                 AnnualFeePage()), // Переход на экран публикаций
-                                // AnnualFeePage()), // Переход на экран публикаций
+                        // AnnualFeePage()), // Переход на экран публикаций
                       );
                     },
                   ),
@@ -120,6 +121,55 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
+            // --- Плашка про річний внесок ---
+            if (!_isEntryPaid) ...[
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AnnualFeePage()),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      // Використовуємо прозорий колір акценту для фону
+                      color: TTColors.danger.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                          color: TTColors.danger.withOpacity(0.4), width: 1),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.info_outline,
+                            color: TTColors.danger, size: 24),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Річний внесок не внесено',
+                                  style: TTTextStyle.title18),
+                              Text(
+                                'Зробіть це, щоб підтримати клуб. Якщо ви вважаєте, що це помилка, зверніться до адміністратора.',
+                                style: TTTextStyle.subtitle
+                                    .copyWith(color: Colors.white70),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.arrow_forward_ios,
+                            color: accentColor, size: 14),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
             const SizedBox(height: 20),
             PromoCard(
               imagePath: 'assets/ui/banners/merch.webp',
@@ -133,16 +183,6 @@ class _HomeState extends State<Home> {
                 );
               },
             ),
-            // const SizedBox(height: 20),
-            // PromoCard(
-            //   imagePath: 'assets/ui/banners/calendar_of_events.webp',
-            //   title: 'Календар подій',
-            //   // enabled: false,
-            //   onButtonTap: () {
-            //     final navState = context.findAncestorStateOfType<NavState>();
-            //     navState?.setTab(2); // 2 — индекс вкладки Calendar
-            //   },
-            // ),
             const SizedBox(height: 20),
             PromoCard(
               imagePath: 'assets/ui/banners/promotions_from_partners.webp',
@@ -233,9 +273,10 @@ class _HomeState extends State<Home> {
 
   Future<void> _loadUser() async {
     final name = await UserStorage.getUserName();
-
+    final isEntryPaid = await UserStorage.isEntryPaid();
     setState(() {
       userName = name ?? '--';
+      _isEntryPaid = isEntryPaid;
     });
   }
 }

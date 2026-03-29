@@ -1,6 +1,8 @@
 // const _HOST = 'https://tt.tishchenko.kiev.ua';
 import 'dart:io';
 
+import 'package:tt_club_ua/config/HardConfig.dart';
+
 const _HOST = 'https://ttclub.com.ua';
 
 String buildEnvironment() {
@@ -16,10 +18,12 @@ String buildEnvironment() {
 }
 
 Map<String, String> HEADERS([String? token = null]) {
+
   return {
     'Content-Type': 'application/json; charset=UTF-8',
     'Accept': 'application/json; charset=UTF-8',
     'X-Client-Platform': buildEnvironment(),
+    'X-App-Version': HardConfig.version,
     if (token != null) 'Authorization': 'Bearer $token',
   };
 }
