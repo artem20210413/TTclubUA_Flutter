@@ -31,13 +31,12 @@ Future<http.Response> EDENT_CREATE(String? token, EventDto dto) async {
 
 Future<http.Response> CALENDAR_LIST(String? token,
     {String? month = null, int page = 1}) async {
-
   final uri = Uri.parse(URL_CALENDAR_LIST).replace(queryParameters: {
     // 'title': title,
     'month': month, // формат YYYY-MM
     'page': page.toString(),
   });
-print(uri);
+
   final response = await http.get(uri, headers: HEADERS(token));
 
   // print('Response status: ${response.statusCode}');
