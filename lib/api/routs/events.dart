@@ -37,7 +37,7 @@ Future<http.Response> CALENDAR_LIST(String? token,
     'month': month, // формат YYYY-MM
     'page': page.toString(),
   });
-
+print(uri);
   final response = await http.get(uri, headers: HEADERS(token));
 
   // print('Response status: ${response.statusCode}');
