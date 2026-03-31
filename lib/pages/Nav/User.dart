@@ -576,7 +576,9 @@ class _UserState extends State<User> {
                                   left: -15,
                                   bottom: 60,
                                   child: PhotoActionsButton(
-                                    title: 'Фото Audi: ' + car.personalizedLicensePlateController.text,
+                                    title: 'Фото Audi: ' +
+                                        car.personalizedLicensePlateController
+                                            .text,
                                     accentColor: accentColorButton,
                                     onChange: () => _pickAndUploadImageCar(car),
                                     onDelete:
@@ -665,9 +667,6 @@ class _UserState extends State<User> {
                     ),
                   ),
                   if (_isAdmin)
-                    // Expanded(
-                    //   flex: 3,
-                    //   child:
                     GlowingButton(
                       margin: const EdgeInsets.only(top: 20),
                       text: 'Для адміна',
@@ -680,9 +679,20 @@ class _UserState extends State<User> {
                           ), // Переход на экран публикаций
                         );
                       },
-                      // isLoading: _isLoadingSubmit,
                     ),
-                  // ),
+
+                  GlowingButton(
+                    margin: const EdgeInsets.only(top: 20),
+                    text: 'Мої відрахування',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FinanceScreen(userId: _dto.id),
+                        ),
+                      );
+                    },
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 34),
                     child: Center(

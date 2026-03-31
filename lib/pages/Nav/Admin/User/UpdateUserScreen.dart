@@ -271,7 +271,7 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => FinanceScreen(userDto: dto),
+                      builder: (context) => FinanceScreen(userId: dto.id),
                     ),
                   );
                 },
