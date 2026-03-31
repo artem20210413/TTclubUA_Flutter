@@ -56,27 +56,24 @@ class _BuyingCarsFilterState extends State<BuyingCarsFilter> {
   @override
   void initState() {
     super.initState();
-    // _genesSelected = List<GeneDto>.from(widget.selectedGenes);
-    // _modelsSelected = List<ModelDto>.from(widget.selectedModels);
-    // _colorsSelected = List<ColorDto>.from(widget.selectedColors);
   }
 
-  // bool _containsGene(GeneDto g) => _genesSelected.any((x) => x.id == g.id);
+  bool _containsSubCategories(String g) =>
+      widget.filter.subCategoryController.text == g;
+
   //
   // bool _containsModel(ModelDto m) => _modelsSelected.any((x) => x.id == m.id);
-  //
-  bool _containsColor(String c) => widget.filterData.colors.any((x) => x == c);
 
-  // void _toggleGene(GeneDto g) {
-  //   setState(() {
-  //     if (_containsGene(g)) {
-  //       _genesSelected.removeWhere((x) => x.id == g.id);
-  //     } else {
-  //       _genesSelected.add(g);
-  //     }
-  //   });
-  //   widget.onGenesChanged(_genesSelected);
-  // }
+  void _toggleSubCategories(String g) {
+    setState(() {
+      if (widget.filter.subCategoryController.text == g) {
+        widget.filter.subCategoryController.clear();
+      } else {
+        widget.filter.subCategoryController.text = g;
+      }
+    });
+    widget.onFilterChanged(widget.filter);
+  }
 
   // void _toggleModel(ModelDto m) {
   //   setState(() {
@@ -227,6 +224,18 @@ class _BuyingCarsFilterState extends State<BuyingCarsFilter> {
                       label: 'Наприклад: Київ',
                     ),
                     const SizedBox(height: 16),
+                    // ─── Покоління ────────────────────────────
+                    if (widget.filterData.subCategories.isNotEmpty) ...[
+                      _buildLabel('Тип'),
+                      const SizedBox(height: 8),
+                      _buildChipsRow<String>(
+                        items: widget.filterData.subCategories,
+                        isSelected: _containsSubCategories,
+                        label: (g) => g,
+                        onTap: _toggleSubCategories,
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                     // ─── Колір ────────────────────────────────
                     if (widget.filterData.colors.isNotEmpty) ...[
                       _buildLabel('Колір'),
@@ -573,39 +582,44 @@ class _BuyingCarsFilterState extends State<BuyingCarsFilter> {
     required String Function(T) label,
     required ValueChanged<T> onTap,
   }) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: items.map((item) {
-          final selected = isSelected(item);
-          return Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: GestureDetector(
-              onTap: () => onTap(item),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 160),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: selected ? TTColors.card : Colors.transparent,
-                  border: Border.all(
-                    color:
-                        selected ? widget.accentColor : TTColors.text_secondary,
+    return Align(
+      alignment: Alignment.centerLeft, // Гарантуємо притискання до лівого краю
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: items.map((item) {
+            final selected = isSelected(item);
+            return Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: GestureDetector(
+                onTap: () => onTap(item),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 160),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: selected ? TTColors.card : Colors.transparent,
+                    border: Border.all(
+                      color: selected
+                          ? widget.accentColor
+                          : TTColors.text_secondary,
+                    ),
                   ),
-                ),
-                child: Text(
-                  label(item),
-                  style: TTTextStyle.subtitle.copyWith(
-                    fontSize: 13,
-                    color:
-                        selected ? widget.accentColor : TTColors.text_secondary,
+                  child: Text(
+                    label(item),
+                    style: TTTextStyle.subtitle.copyWith(
+                      fontSize: 13,
+                      color: selected
+                          ? widget.accentColor
+                          : TTColors.text_secondary,
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
