@@ -270,7 +270,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Додати запис', style: TTTextStyle.title18),
+                        Text('Додати запис', style: TTTextStyle.title),
                         const SizedBox(height: 20),
                         CustomInputField(
                           controller: amountController,
@@ -351,7 +351,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                Text('Видалити запис?', style: TTTextStyle.title18),
+                Text('Видалити запис?', style: TTTextStyle.title),
                 const SizedBox(height: 12),
                 Text('Ця дія незворотня', style: TTTextStyle.subtitle),
                 const SizedBox(height: 24),
