@@ -122,54 +122,54 @@ class _HomeState extends State<Home> {
               ),
             ),
             // --- Плашка про річний внесок ---
-            if (!_isEntryPaid) ...[
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AnnualFeePage()),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(
-                      // Використовуємо прозорий колір акценту для фону
-                      color: TTColors.danger.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                          color: TTColors.danger.withOpacity(0.4), width: 1),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.info_outline,
-                            color: TTColors.danger, size: 24),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Річний внесок не внесено',
-                                  style: TTTextStyle.title18),
-                              Text(
-                                'Зробіть це, щоб підтримати клуб. Якщо ви вважаєте, що це помилка, зверніться до адміністратора.',
-                                style: TTTextStyle.subtitle
-                                    .copyWith(color: Colors.white70),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Icon(Icons.arrow_forward_ios,
-                            color: accentColor, size: 14),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            // if (!_isEntryPaid) ...[
+            //   const SizedBox(height: 20),
+            //   Container(
+            //     padding: const EdgeInsets.symmetric(horizontal: 5),
+            //     child: GestureDetector(
+            //       onTap: () {
+            //         Navigator.push(
+            //           context,
+            //           MaterialPageRoute(builder: (context) => AnnualFeePage()),
+            //         );
+            //       },
+            //       child: Container(
+            //         padding: const EdgeInsets.symmetric(
+            //             horizontal: 16, vertical: 12),
+            //         decoration: BoxDecoration(
+            //           // Використовуємо прозорий колір акценту для фону
+            //           color: TTColors.danger.withOpacity(0.1),
+            //           borderRadius: BorderRadius.circular(16),
+            //           border: Border.all(
+            //               color: TTColors.danger.withOpacity(0.4), width: 1),
+            //         ),
+            //         child: Row(
+            //           children: [
+            //             Icon(Icons.info_outline,
+            //                 color: TTColors.danger, size: 24),
+            //             const SizedBox(width: 12),
+            //             Expanded(
+            //               child: Column(
+            //                 crossAxisAlignment: CrossAxisAlignment.start,
+            //                 children: [
+            //                   Text('Річний внесок не внесено',
+            //                       style: TTTextStyle.title18),
+            //                   Text(
+            //                     'Зробіть це, щоб підтримати клуб. Якщо ви вважаєте, що це помилка, зверніться до адміністратора.',
+            //                     style: TTTextStyle.subtitle
+            //                         .copyWith(color: Colors.white70),
+            //                   ),
+            //                 ],
+            //               ),
+            //             ),
+            //             Icon(Icons.arrow_forward_ios,
+            //                 color: accentColor, size: 14),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ],
             const SizedBox(height: 20),
             PromoCard(
               imagePath: 'assets/ui/banners/merch.webp',
