@@ -125,7 +125,9 @@ class _FinanceScreenState extends State<FinanceScreen> {
         Uri.parse(URL_REDIRECT_JAK.replaceAll('{userId}', myUserId.toString()));
 
     UrlHelper.openExternal(
-      message: _isAdmin ? 'УВАГА! Надходженя буде від ВАШОГО аккаунта' : 'Ця дія відкриє стороннє застосування або вебсторінку. Продовжити?',
+      message: _isAdmin
+          ? 'УВАГА! Надходженя буде від ВАШОГО аккаунта'
+          : 'Ця дія відкриє стороннє застосування або вебсторінку. Продовжити?',
       context,
       url,
     );
@@ -267,27 +269,21 @@ class _FinanceScreenState extends State<FinanceScreen> {
   void _addFinanceDialog() {
     final amountController = TextEditingController();
     final descController = TextEditingController();
+    // Створюємо локальну змінну для дати (за замовчуванням - зараз)
+    DateTime selectedDate = DateTime.now();
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-            left: 20,
-            right: 20,
-            top: 20),
-        decoration: BoxDecoration(
-          color: TTColors.background,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        child: Container(
-          // Обмежуємо максимальну висоту шторки (наприклад, 90% екрана)
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.8,
-          ),
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+      builder: (context) => StatefulBuilder(
+        // Додаємо StatefulBuilder, щоб оновлювати дату всередині шторки
+        builder: (context, setModalState) => Container(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+              left: 20,
+              right: 20,
+              top: 20),
           decoration: BoxDecoration(
             color: TTColors.background,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -295,7 +291,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
           child: SafeArea(
             top: false,
             child: Column(
-              mainAxisSize: MainAxisSize.min, // Важливо для BottomSheet
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
                   width: 40,
@@ -306,8 +302,6 @@ class _FinanceScreenState extends State<FinanceScreen> {
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-
-                // Прокручувальна частина
                 Flexible(
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
@@ -316,36 +310,102 @@ class _FinanceScreenState extends State<FinanceScreen> {
                       children: [
                         Text('Додати запис', style: TTTextStyle.title),
                         const SizedBox(height: 20),
+
+                        // ВИБІР ДАТИ
+                        InkWell(
+                          onTap: () async {
+                            final DateTime? picked = await showDatePicker(
+                              context: context,
+                              initialDate: selectedDate,
+                              firstDate: DateTime(2020),
+                              lastDate: DateTime(2101),
+                              // Стилізація календаря під твій акцентний коліr
+                              builder: (context, child) => Theme(
+                                data: Theme.of(context).copyWith(
+                                  colorScheme: ColorScheme.dark(
+                                    primary: accentColor,
+                                    onPrimary: Colors.white,
+                                    surface: TTColors.card,
+                                    onSurface: TTColors.text,
+                                  ),
+                                ),
+                                child: child!,
+                              ),
+                            );
+                            if (picked != null) {
+                              setModalState(() => selectedDate = picked);
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: TTColors.card.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                  color:
+                                      TTColors.text_secondary.withOpacity(0.2)),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  DateFormat('dd MMMM yyyy', 'uk_UA')
+                                      .format(selectedDate),
+                                  style: TTTextStyle.subtitle
+                                      .copyWith(color: TTColors.text),
+                                ),
+                                Icon(Icons.calendar_today,
+                                    color: accentColor, size: 18),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
                         CustomInputField(
                           controller: amountController,
                           label: 'Сума (₴)',
                           keyboardType: TextInputType.number,
                         ),
                         const SizedBox(height: 16),
-
                         BigTextInput(
                           controller: descController,
                           label: 'Опис',
                           minHeight: 50,
                           minLines: 2,
                         ),
-                        // CustomInputField(
-                        //   controller: descController,
-                        //   label: 'Опис',
-                        // ),
                       ],
                     ),
                   ),
                 ),
-
-                // Кнопка "Показати" завжди зафіксована знизу
                 const SizedBox(height: 24),
                 GlowingButton(
                   text: 'Зберегти',
                   colorGrowing: accentColor,
                   onPressed: () async {
-                    // Твоя логіка FINANCE_SET
-                    Navigator.pop(context);
+                    // Використовуємо обрану дату selectedDate
+                    final dto = FinanceDto(
+                      id: 0,
+                      amount: amountController.text,
+                      description: descController.text,
+                      createdAt: selectedDate,
+                    );
+
+                    final token = await UserStorage.getToken();
+                    final res = await FINANCE_SET(token, dto, widget.userId);
+
+                    if (res.statusCode == 200 || res.statusCode == 201) {
+                      setState(() {
+                        finances.clear();
+                        _page = 1;
+                        _hasMore = true;
+                      });
+                      _loadFinances();
+                      _loadStatistics();
+
+                      Navigator.pop(context);
+                    }
                   },
                 ),
               ],
@@ -412,7 +472,25 @@ class _FinanceScreenState extends State<FinanceScreen> {
                       child: GlowingButton(
                         text: 'Видалити',
                         colorGrowing: Colors.redAccent,
-                        onPressed: () => Navigator.pop(context, true),
+                        onPressed: () async {
+                          // Прибрали стрілку "=>", залишили тільки async
+                          final token = await UserStorage.getToken();
+                          final res = await FINANCE_DELETE(token, finance.id);
+
+                          if (res.statusCode == 200) {
+                            _loadStatistics();
+
+                            setState(() {
+                              finances.remove(finance);
+                            });
+
+                            // Важливо: перевіряємо, чи контекст ще живий перед pop
+                            if (context.mounted) {
+                              Navigator.pop(
+                                  context, true); // Крапка з комою замість коми
+                            }
+                          }
+                        },
                       ),
                     ),
                   ],
