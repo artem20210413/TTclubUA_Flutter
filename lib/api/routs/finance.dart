@@ -7,7 +7,6 @@ import 'package:tt_club_ua/api/routs/Dto/User/UserUpdateDto.dart';
 
 Future<http.Response> FINANCE_SET(
     String? token, FinanceDto dto, int userID) async {
-  print(dto.toJson());
   final response = await http.post(
     Uri.parse(URL_FINANCE_SET.replaceAll('{userId}', userID.toString())),
     headers: HEADERS(token),
