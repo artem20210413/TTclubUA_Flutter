@@ -22,7 +22,8 @@ class DrawCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String formattedDate = draw.registrationUntil != null
-        ? DateFormat('dd.MM.yyyy HH:mm').format(draw.registrationUntil!)
+        ? DateFormat('dd MMM HH:mm', 'uk_UA').format(draw.registrationUntil!)
+        // ? DateFormat('dd.MM.yy HH:mm').format(draw.registrationUntil!)
         : 'Дата не вказана';
 
     return GestureDetector(
@@ -62,14 +63,12 @@ class DrawCard extends StatelessWidget {
                       ],
                     ),
                   if (draw.isParticipatingNotifier.value)
-                    Expanded(
-                      child: TTLabel(
-                          text: "Зареєстровано",
-                          accentColor: DrawStatus.active == draw.getStatus()
-                              ? TTColors.success
-                              : TTColors.text_secondary,
-                          margin: EdgeInsets.only(left: 8)),
-                    ),
+                    TTLabel(
+                        text: "Зареєстровано",
+                        accentColor: DrawStatus.active == draw.getStatus()
+                            ? TTColors.success
+                            : TTColors.text_secondary,
+                        margin: EdgeInsets.only(left: 8)),
                 ],
               ),
             ),

@@ -7,6 +7,7 @@ import '../../../../api/routs/Draw/draws.dart';
 import '../../../../api/routs/Dto/Draw/DrawDto.dart';
 import '../../../../api/routs/root.dart';
 import '../../../../components/TTLoading.dart';
+import '../../../../components/TTRefreshIndicator.dart';
 import '../../../../components/buttons/CircleButton.dart';
 import '../../../../components/buttons/GlassFabFloatingButton.dart';
 import '../../../../components/generalModule.dart';
@@ -88,10 +89,10 @@ class _DrawsPageState extends State<DrawsPage> {
     }
   }
 
-  void _onSearch() {
+  Future<void> _onSearch() async {
     _currentPage = 1;
     _hasMore = true;
-    _fetchDraws(page: 1);
+    await _fetchDraws(page: 1);
   }
 
   Future<void> _loadMore() async {
@@ -116,56 +117,126 @@ class _DrawsPageState extends State<DrawsPage> {
               },
             )
           : null,
-      body: Column(
-        children: [
-          Expanded(
-            child: isLoading
-                ? const TTLoading()
-                : RefreshIndicator(
-                    onRefresh: () => _fetchDraws(),
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.all(16),
-                      itemCount: draws.length + (_isLoadingMore ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index == draws.length) {
-                          return const Center(
-                              child: Padding(
-                            padding: EdgeInsets.all(16),
-                            child: CircularProgressIndicator(),
-                          ));
-                        }
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          child: DrawCard(
-                            draw: draws[index],
-                            accentColor: accentColor,
-                            onTap: () async {
-                              final result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => DrawDetailsScreen(
-                                    drawDto: draws[
-                                        index], // Передаємо існуючий об'єкт
-                                  ),
-                                ),
-                              );
-
-                              // Якщо повернулися після успішного збереження — оновлюємо дані
-                              if (result != null) {
-                                _fetchDraws();
-                              }
-                            },
+      body: isLoading
+          ? const TTLoading()
+          : TTRefreshIndicator(
+              onRefresh: () => _fetchDraws(),
+              accentColor: accentColor,
+              // Тепер TTRefreshIndicator обгортає безпосередньо ListView
+              child: ListView.builder(
+                controller: _scrollController,
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics(),
+                ),
+                padding: const EdgeInsets.all(16),
+                itemCount: draws.length + (_isLoadingMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index == draws.length) {
+                    return const Center(
+                        child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: CircularProgressIndicator(),
+                    ));
+                  }
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: DrawCard(
+                      draw: draws[index],
+                      accentColor: accentColor,
+                      onTap: () async {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => DrawDetailsScreen(
+                              drawDto:
+                                  draws[index], // Передаємо існуючий об'єкт
+                            ),
                           ),
                         );
+
+                        // Якщо повернулися після успішного збереження — оновлюємо дані
+                        if (result != null) {
+                          _fetchDraws();
+                        }
                       },
                     ),
-                  ),
-          ),
-        ],
-      ),
+                  );
+                },
+              ),
+            ),
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return TTScaffold(
+  //     title: 'Розіграші',
+  //     floatingActionButton: _isAdmin
+  //         ? GlassFabFloatingButton(
+  //       accentColor: accentColor,
+  //       onPressed: () async {
+  //         final result = await Navigator.push(
+  //           context,
+  //           MaterialPageRoute(builder: (_) => const DrawUploadScreen()),
+  //         );
+  //         if (result != null) _onSearch();
+  //       },
+  //     )
+  //         : null,
+  //     body: TTRefreshIndicator(
+  //       onRefresh: _onSearch,
+  //       accentColor: accentColor,
+  //       child: Column(
+  //         children: [
+  //           Expanded(
+  //             child: isLoading
+  //                 ? const TTLoading()
+  //                 : RefreshIndicator(
+  //               onRefresh: () => _fetchDraws(),
+  //               child: ListView.builder(
+  //                 controller: _scrollController,
+  //                 padding: const EdgeInsets.all(16),
+  //                 itemCount: draws.length + (_isLoadingMore ? 1 : 0),
+  //                 itemBuilder: (context, index) {
+  //                   if (index == draws.length) {
+  //                     return const Center(
+  //                         child: Padding(
+  //                           padding: EdgeInsets.all(16),
+  //                           child: CircularProgressIndicator(),
+  //                         ));
+  //                   }
+  //                   return Container(
+  //                     margin: const EdgeInsets.only(bottom: 12),
+  //                     child: DrawCard(
+  //                       draw: draws[index],
+  //                       accentColor: accentColor,
+  //                       onTap: () async {
+  //                         final result = await Navigator.push(
+  //                           context,
+  //                           MaterialPageRoute(
+  //                             builder: (_) => DrawDetailsScreen(
+  //                               drawDto: draws[
+  //                               index], // Передаємо існуючий об'єкт
+  //                             ),
+  //                           ),
+  //                         );
+  //
+  //                         // Якщо повернулися після успішного збереження — оновлюємо дані
+  //                         if (result != null) {
+  //                           _fetchDraws();
+  //                         }
+  //                       },
+  //                     ),
+  //                   );
+  //                 },
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   void dispose() {

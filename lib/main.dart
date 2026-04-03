@@ -22,6 +22,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:tt_club_ua/pages/Login.dart';
 import 'package:tt_club_ua/pages/Nav.dart';
@@ -32,8 +33,11 @@ import 'Storage/Cache/AccentColorCache.dart';
 import 'config/HardConfig.dart';
 
 Future<void> main() async {
+  //  Обов'язково додаємо цей рядок для асинхронних операцій у main
   WidgetsFlutterBinding.ensureInitialized();
+
   await AccentColorCache.init();
+  await initializeDateFormatting('uk_UA', null);
   // try {
   //   await dotenv.load(fileName: ".env");
   // } catch (e) {

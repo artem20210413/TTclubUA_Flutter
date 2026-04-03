@@ -12,6 +12,7 @@ import '../../../../api/routs/Dto/Draw/PrizeDto.dart';
 import '../../../../api/routs/root.dart';
 import '../../../../components/TTLoading.dart';
 import '../../../../components/TTNeumorphicBox.dart';
+import '../../../../components/TTRefreshIndicator.dart';
 import '../../../../components/buttons/CircleButton.dart';
 import '../../../../components/buttons/GlassFabFloatingButton.dart';
 import '../../../../components/buttons/GlowingButton.dart';
@@ -142,158 +143,190 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
               },
             )
           : null,
-      body: SingleChildScrollView(
-        padding: EdgeInsets.only(top: 16, bottom: 24, left: 16, right: 8),
-        child: TTNeumorphicBox(
-          padding: EdgeInsets.only(top: 12, bottom: 24, left: 8, right: 14),
-          // radius: 32,
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                if (draw!.images.isNotEmpty)
-                  ImagesCarousel(
-                    images: draw!.images,
-                    height: 320,
-                    borderRadius: 32,
-                  ),
+      body: TTRefreshIndicator(
+        onRefresh: _loadData,
+        accentColor: accentColor,
+        // iconPath: 'assets/svg/tt_logo.svg', // Можна передати іншу іконку
+        child: SingleChildScrollView(
+          // 2. ВАЖЛИВО: додаємо Physics, щоб свайп працював, навіть якщо контенту мало
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
+          ),
+          padding: EdgeInsets.only(top: 16, bottom: 24, left: 16, right: 8),
+          child: TTNeumorphicBox(
+            padding: EdgeInsets.only(top: 12, bottom: 24, left: 8, right: 14),
+            // radius: 32,
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  if (draw!.images.isNotEmpty)
+                    ImagesCarousel(
+                      images: draw!.images,
+                      height: 320,
+                      borderRadius: 32,
+                    ),
 
-                if (draw!.images.isNotEmpty) const SizedBox(height: 16),
+                  if (draw!.images.isNotEmpty) const SizedBox(height: 16),
 // Використовуємо Align або інший спосіб притиснути до правого краю,
 // бо Spacer() не працює всередині Wrap
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Wrap(
-                    alignment: WrapAlignment.start,
-                    // Вирівнювання елементів по правому краю
-                    spacing: 8.0,
-                    // Відступ між лейблами по горизонталі
-                    runSpacing: 8.0,
-                    // Відступ між рядками по вертикалі
-                    children: [
-                      TTLabel(
-                          text: draw!.getStatus().label,
-                          accentColor: draw!.getStatus().color),
-                      if (draw!.isParticipatingNotifier.value)
-                        TTLabel(
-                            text: "Зареєстровано",
-                            accentColor: DrawStatus.active == draw!.getStatus()
-                                ? TTColors.success
-                                : TTColors.text_secondary),
-                      if (draw!.allowMultipleWinsNotifier.value)
-                        TTLabel(
-                          text: "Мульти-виграш",
-                          accentColor: accentColor,
-                        ),
-                      if (draw!.isPublicNotifier.value)
-                        TTLabel(text: "Публічний", accentColor: accentColor),
-                    ],
-                  ),
-                ),
-                Column(
-                  children: [
-                    const SizedBox(height: 16),
-                    Row(
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Wrap(
+                      alignment: WrapAlignment.start,
+                      // Вирівнювання елементів по правому краю
+                      spacing: 8.0,
+                      // Відступ між лейблами по горизонталі
+                      runSpacing: 8.0,
+                      // Відступ між рядками по вертикалі
                       children: [
-                        Text('Дійсний до: ', style: TTTextStyle.subtitle),
-                        const SizedBox(width: 6),
-                        Text(
-                            draw!.registrationUntil != null
-                                ? DateFormat('dd.MM.yyyy HH:mm')
-                                    .format(draw!.registrationUntil!)
-                                : '-',
-                            style: TTTextStyle.subtitle
-                                .copyWith(color: TTColors.text)),
-                        const Spacer(),
-                        Text("Учасників: ", style: TTTextStyle.subtitle),
-                        const SizedBox(width: 6),
-                        Text(draw!.participants.length.toString(),
-                            style: TTTextStyle.subtitle
-                                .copyWith(color: TTColors.text)),
+                        TTLabel(
+                            text: draw!.getStatus().label,
+                            accentColor: draw!.getStatus().color),
+                        if (draw!.isParticipatingNotifier.value)
+                          TTLabel(
+                              text: "Зареєстровано",
+                              accentColor:
+                                  DrawStatus.active == draw!.getStatus()
+                                      ? TTColors.success
+                                      : TTColors.text_secondary),
+                        if (draw!.allowMultipleWinsNotifier.value)
+                          TTLabel(
+                            text: "Мульти-виграш",
+                            accentColor: accentColor,
+                          ),
+                        if (draw!.isPublicNotifier.value)
+                          TTLabel(text: "Публічний", accentColor: accentColor),
                       ],
                     ),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(draw!.descriptionController.text,
-                        style: TTTextStyle.subtitle),
-                    const SizedBox(height: 16),
-
-                    Text("Призи:",
-                        style: TTTextStyle.title.copyWith(fontSize: 18)),
-                    const SizedBox(height: 12),
-
-                    // Список карток призів
-                    ...draw!.prizes
-                        .map((prize) => _buildPrizeCard(draw, prize))
-                        .toList(),
-
-                    const SizedBox(height: 16),
-
-                    // Кнопки дій
-                    if (!draw!.isParticipatingNotifier.value &&
-                        draw!.getStatus() == DrawStatus.active &&
-                        draw!.isPublicNotifier.value)
-                      GlowingButton(
-                        text: isActionLoading ? "Зачекайте..." : "Брати участь",
-                        onPressed: isActionLoading ? () {} : _joinDraw,
-                        colorGrowing: accentColor,
-                        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                      ),
-
-
-                    if (_isAdmin)
-                      Column(
+                  ),
+                  Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      Row(
                         children: [
-
-                          if (draw!.getStatus() == DrawStatus.planned ||
-                              draw!.getStatus() == DrawStatus.finished)
-                            GlowingButton(
-                              margin: EdgeInsets.only(top: 20),
-                              text: "Активувати розіграш",
-                              onPressed: () =>
-                                  {_changeStatusDraw(DrawStatus.active)},
-                              // isLoading: _isLoading,
-                            ),
-
-                          const SizedBox(height: 50),
-
-                          if (draw!.id != null) ...[
-                            OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                  minimumSize: const Size(double.infinity, 50),
-                                  side: BorderSide(color: accentColor),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => ParticipantsListScreen(draw: draw!),
-                                  ),
-                                );
-                              },
-                              child: Text("Учасники (${draw!.participants.length})", style: TextStyle(color: accentColor)),
-                            ),
-                          ],
-                          if (draw!.getStatus() == DrawStatus.active)
-                            GlowingButton(
-                              margin: EdgeInsets.only(top: 20),
-                              text: "Завершити розіграш",
-                              onPressed: () =>
-                                  {_changeStatusDraw(DrawStatus.finished)},
-                              // isLoading: _isLoading,
-                            ),
+                          Text('Дійсний до: ', style: TTTextStyle.subtitle),
+                          const SizedBox(width: 6),
+                          Text(
+                              draw!.registrationUntil != null
+                                  ? DateFormat('dd.MM.yyyy HH:mm')
+                                      .format(draw!.registrationUntil!)
+                                  : '-',
+                              style: TTTextStyle.subtitle
+                                  .copyWith(color: TTColors.text)),
+                          const Spacer(),
+                          GestureDetector(
+                              onTap: _isAdmin
+                                  ? () async {
+                                      final result = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              ParticipantsListScreen(
+                                                  draw: draw!),
+                                        ),
+                                      );
+                                      if (result != null) _loadData();
+                                    }
+                                  : null,
+                              child: Row(
+                                children: [
+                                  Text("Учасників: ",
+                                      style: TTTextStyle.subtitle),
+                                  const SizedBox(width: 6),
+                                  Text(draw!.participants.length.toString(),
+                                      style: TTTextStyle.subtitle
+                                          .copyWith(color: TTColors.text)),
+                                ],
+                              ))
                         ],
                       ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(draw!.descriptionController.text,
+                          style: TTTextStyle.subtitle),
+                      const SizedBox(height: 16),
+
+                      Text("Призи:",
+                          style: TTTextStyle.title.copyWith(fontSize: 18)),
+                      const SizedBox(height: 12),
+
+                      // Список карток призів
+                      ...draw!.prizes
+                          .map((prize) => _buildPrizeCard(draw, prize))
+                          .toList(),
+
+                      const SizedBox(height: 16),
+
+                      // Кнопки дій
+                      if (!draw!.isParticipatingNotifier.value &&
+                          draw!.getStatus() == DrawStatus.active &&
+                          draw!.isPublicNotifier.value)
+                        GlowingButton(
+                          text:
+                              isActionLoading ? "Зачекайте..." : "Брати участь",
+                          onPressed: isActionLoading ? () {} : _joinDraw,
+                          colorGrowing: accentColor,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 16),
+                        ),
+
+                      if (_isAdmin)
+                        Column(
+                          children: [
+                            if (draw!.getStatus() == DrawStatus.planned ||
+                                draw!.getStatus() == DrawStatus.finished)
+                              GlowingButton(
+                                margin: EdgeInsets.only(top: 20),
+                                text: "Активувати розіграш",
+                                onPressed: () =>
+                                    {_changeStatusDraw(DrawStatus.active)},
+                                // isLoading: _isLoading,
+                              ),
+                            // if (draw!.id != null) ...[
+                            //   OutlinedButton(
+                            //     style: OutlinedButton.styleFrom(
+                            //         minimumSize:
+                            //             const Size(double.infinity, 50),
+                            //         side: BorderSide(color: accentColor),
+                            //         shape: RoundedRectangleBorder(
+                            //             borderRadius:
+                            //                 BorderRadius.circular(15))),
+                            //     onPressed: () async {
+                            //       final result = await Navigator.push(
+                            //         context,
+                            //         MaterialPageRoute(
+                            //           builder: (_) =>
+                            //               ParticipantsListScreen(draw: draw!),
+                            //         ),
+                            //       );
+                            //       if (result != null) _loadData();
+                            //     },
+                            //     child: Text(
+                            //         "Учасники (${draw!.participants.length})",
+                            //         style: TextStyle(color: accentColor)),
+                            //   ),
+                            // ],
+                            if (draw!.getStatus() == DrawStatus.active)
+                              GlowingButton(
+                                margin: EdgeInsets.only(top: 20),
+                                text: "Завершити розіграш",
+                                onPressed: () =>
+                                    {_changeStatusDraw(DrawStatus.finished)},
+                                // isLoading: _isLoading,
+                              ),
+                          ],
+                        ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
