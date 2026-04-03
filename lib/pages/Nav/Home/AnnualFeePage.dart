@@ -10,17 +10,27 @@ import '../../../components/TTNeumorphicBox.dart';
 import '../../../components/buttons/GlowingButton.dart';
 import '../../../components/layout/TTScaffold.dart';
 import '../../../config/default.dart';
+import '../../../utils/url_launcher.dart';
 
-class AnnualFeePage extends StatelessWidget {
+class AnnualFeePage extends StatefulWidget {
   const AnnualFeePage({super.key});
 
+  @override
+  State<AnnualFeePage> createState() => _AnnualFeePageState();
+}
+
+class _AnnualFeePageState extends State<AnnualFeePage> {
   Future<void> _launchMonobankJar() async {
     final userID = await UserStorage.getId();
 
     final Uri url =
         Uri.parse(URL_REDIRECT_JAK.replaceAll('{userId}', userID.toString()));
 
-    await launchUrl(url, mode: LaunchMode.externalApplication);
+    UrlHelper.openExternal(
+      context,
+      url,
+    );
+    // await launchUrl(url, mode: LaunchMode.externalApplication);
   }
 
   @override
@@ -40,10 +50,8 @@ class AnnualFeePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                      'Підтримай спільноту TT Club UA.',
-                      textAlign: TextAlign.center,
-                      style: TTTextStyle.subtitle),
+                  Text('Підтримай спільноту TT Club UA.',
+                      textAlign: TextAlign.center, style: TTTextStyle.subtitle),
                   // const SizedBox(height: 20),
                   // TTNeumorphicBox(
                   //   padding: const EdgeInsets.all(12),
@@ -61,7 +69,7 @@ class AnnualFeePage extends StatelessWidget {
                   const SizedBox(height: 15),
                   Text(
                     'Підтримка через офіційне посилання Monobank.\n'
-                      'Для зарахування коштів не змінюйте поле коментаря',
+                    'Для зарахування коштів не змінюйте поле коментаря',
                     textAlign: TextAlign.center,
                     style: TTTextStyle.subtitle
                         .copyWith(fontSize: 10, color: TTColors.text),
@@ -69,8 +77,8 @@ class AnnualFeePage extends StatelessWidget {
                   const SizedBox(height: 5),
                   Text(
                     'Це добровільна підтримка реального автомобільного клубу TT Club UA. '
-                        'Переказ не є покупкою цифрових товарів чи послуг, '
-                        'а оплата здійснюється поза межами App Store та Google Play.',
+                    'Переказ не є покупкою цифрових товарів чи послуг, '
+                    'а оплата здійснюється поза межами App Store та Google Play.',
                     textAlign: TextAlign.center,
                     style: TTTextStyle.subtitle.copyWith(fontSize: 10),
                   ),

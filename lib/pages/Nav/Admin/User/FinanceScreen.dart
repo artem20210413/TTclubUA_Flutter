@@ -5,8 +5,10 @@ import 'dart:convert';
 import 'package:tt_club_ua/api/routs/Dto/Finance/FinanceDto.dart';
 import 'package:tt_club_ua/Storage/UserStorage.dart';
 import 'package:tt_club_ua/api/routs/Finance.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../Storage/Cache/AccentColorCache.dart';
 import '../../../../Storage/Cache/DeviceInsetsCache.dart';
+import '../../../../api/routs.dart';
 import '../../../../api/routs/Dto/User/UserUpdateDto.dart';
 import '../../../../api/routs/root.dart';
 import '../../../../components/Finance/FinanceItemCard.dart';
@@ -20,6 +22,7 @@ import '../../../../components/inputs/BigTextInput.dart';
 import '../../../../components/inputs/CustomInputField.dart';
 import '../../../../components/layout/TTScaffold.dart';
 import '../../../../config/default.dart';
+import '../../../../utils/url_launcher.dart';
 
 class FinanceScreen extends StatefulWidget {
   final int userId;
@@ -64,6 +67,8 @@ class _FinanceScreenState extends State<FinanceScreen> {
     final response = await FINANCE_STATISTICS(token, widget.userId);
     if (await CHECK_API(response, context)) {
       final Map<String, dynamic> data = jsonDecode(response.body)['data'];
+
+      // print(data);
       setState(() {
         _statistics = data;
       });
@@ -113,6 +118,20 @@ class _FinanceScreenState extends State<FinanceScreen> {
     });
   }
 
+  Future<void> _launchMonobankJar() async {
+    final myUserId = await UserStorage.getCities();
+
+    final Uri url =
+        Uri.parse(URL_REDIRECT_JAK.replaceAll('{userId}', myUserId.toString()));
+
+    UrlHelper.openExternal(
+      message: _isAdmin ? 'УВАГА! Надходженя буде від ВАШОГО аккаунта' : 'Ця дія відкриє стороннє застосування або вебсторінку. Продовжити?',
+      context,
+      url,
+    );
+    // await launchUrl(url, mode: LaunchMode.externalApplication);
+  }
+
   @override
   Widget build(BuildContext context) {
     return TTScaffold(
@@ -120,11 +139,17 @@ class _FinanceScreenState extends State<FinanceScreen> {
         child: _isLoading
             ? const TTLoading()
             : Padding(
-                padding: EdgeInsetsGeometry.only(top: 16),
+                padding: EdgeInsetsGeometry.only(top: 16, left: 8, right: 8),
                 child: Column(
                   children: [
                     if (_statistics != null) _buildStatsSection(),
                     if (_isAdmin) _buildAdminActions(),
+                    GlowingButton(
+                      margin: const EdgeInsets.all(16.0),
+                      text: 'Підтримати клуб',
+                      onPressed: _launchMonobankJar,
+                      colorGrowing: accentColor,
+                    ),
                     Expanded(
                       child: _buildFinanceList(),
                     ),
@@ -144,16 +169,35 @@ class _FinanceScreenState extends State<FinanceScreen> {
   Widget _buildStatsSection() {
     // Тут можна використати твій StatisticsCard, але обгорнутий у дизайн
     return TTNeumorphicBox(
-      margin: EdgeInsetsGeometry.only(left: 8, right: 0),
-      padding: const EdgeInsets.all(20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _statItem("Баланс", "${_statistics!['balance'] ?? 0} ₴", accentColor),
-          _statItem("Всього", "${_statistics!['total'] ?? 0} ₴", Colors.white),
-        ],
-      ),
-    );
+        margin: EdgeInsetsGeometry.only(left: 8, right: 0),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _statItem("Цього року", "${_statistics!['last_year'] ?? 0} ₴",
+                    Colors.white),
+                _statItem("Макс. внесок",
+                    "${_statistics!['largest_payment'] ?? 0} ₴", Colors.white),
+              ],
+            ),
+            const SizedBox(height: 5),
+            Text("Початок року рахується з вересня",
+                style: TTTextStyle.subtitle),
+
+            // const SizedBox(height: 10),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //   children: [
+            //     _statItem("Цього року", "${_statistics!['last_year'] ?? 0} ₴",
+            //         accentColor),
+            //     _statItem("Макс. внесок",
+            //         "${_statistics!['largest_payment'] ?? 0} ₴", Colors.white),
+            //   ],
+            // ),
+          ],
+        ));
   }
 
   Widget _statItem(String label, String value, Color color) {

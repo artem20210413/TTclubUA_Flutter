@@ -684,6 +684,7 @@ class _UserState extends State<User> {
                   GlowingButton(
                     margin: const EdgeInsets.only(top: 20),
                     text: 'Мої відрахування',
+                    colorGrowing: accentColorButton,
                     onPressed: () {
                       Navigator.push(
                         context,

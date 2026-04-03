@@ -68,4 +68,10 @@ class TTTextStyle {
     fontSize: 14,
     color: TTColors.text_secondary,
   );
+  static const TextStyle caption = TextStyle(
+    fontFamily: fontFamily,
+    fontWeight: FontWeight.w400, // Regular
+    fontSize: 12,                // Дрібний
+    color: TTColors.text_secondary, // Приглушений
+  );
 }
