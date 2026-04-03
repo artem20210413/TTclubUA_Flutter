@@ -32,13 +32,17 @@ class TTCheckbox extends StatelessWidget {
           },
         ),
         const SizedBox(width: 8),
-        Text(
-          label,
-          style: style ??
-              TTTextStyle.subtitle.copyWith(
-                // fontSize: 16,
-                color: TTColors.text,
-              ),
+        Expanded(
+          child: Text(
+            label,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: style ??
+                TTTextStyle.subtitle.copyWith(
+                  // fontSize: 16,
+                  color: TTColors.text,
+                ),
+          ),
         ),
       ],
     );

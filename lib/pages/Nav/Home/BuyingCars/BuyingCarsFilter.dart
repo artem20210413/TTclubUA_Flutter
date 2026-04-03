@@ -100,226 +100,231 @@ class _BuyingCarsFilterState extends State<BuyingCarsFilter> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // Обмежуємо максимальну висоту шторки (наприклад, 90% екрана)
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.8,
-      ),
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-      decoration: BoxDecoration(
-        color: TTColors.background,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      child: SafeArea(
-        top: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // Важливо для BottomSheet
-          children: [
-            // Фіксована "ручка" зверху
-            Container(
-              width: 40,
-              height: 4,
-              margin: const EdgeInsets.only(bottom: 12),
-              decoration: BoxDecoration(
-                color: widget.accentColor.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-
-            // Прокручувальна частина
-            Flexible(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // --- Твій Хедер ---
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Фільтри', style: TTTextStyle.title18),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              widget.onClear();
-                            });
-                          },
-                          child: Text('Скинути',
-                              style: TTTextStyle.subtitle
-                                  .copyWith(color: TTColors.text_secondary)),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
-                    // --- Тільки свої (TT Club) ---
-
-                    TTCheckbox(
-                      label: 'Тільки свої (TT Club ua)',
-                      activeNotifier: widget.filter.onlyOursNotifier,
-                      accentColor: widget.accentColor,
-                      style: TTTextStyle.subtitle,
-                    ),
-                    const SizedBox(height: 16),
-                    // --- Рік випуску ---
-                    _buildLabel('Рік випуску'),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomInputField(
-                            controller: widget.filter.yearFromController,
-                            label: 'Від ${widget.filterData.minYear}',
-                            keyboardType: TextInputType.number,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: CustomInputField(
-                            controller: widget.filter.yearToController,
-                            label: 'До ${widget.filterData.maxYear}',
-                            keyboardType: TextInputType.number,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    // --- Ціна ($) ---
-                    _buildLabel('Ціна (USD)'),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomInputField(
-                            controller: widget.filter.priceFromController,
-                            label: 'Ціна від ${widget.filterData.minPrice}',
-                            keyboardType: TextInputType.number,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: CustomInputField(
-                            controller: widget.filter.priceToController,
-                            label: 'Ціна до ${widget.filterData.maxPrice}',
-                            keyboardType: TextInputType.number,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    // --- Номерний знак ---
-                    _buildLabel('Держ. номер'),
-                    const SizedBox(height: 8),
-                    CustomInputField(
-                      controller: widget.filter.plateNumberController,
-                      label: 'AA0000AA',
-                      // textCapitalization: TextCapitalization.characters, // Авто-капс для номерів
-                    ),
-                    const SizedBox(height: 16),
-                    // ─── Місто ────────────────────────────────
-                    _buildLabel('Місто'),
-                    const SizedBox(height: 8),
-                    CustomInputField(
-                      controller: widget.filter.cityController,
-                      label: 'Наприклад: Київ',
-                    ),
-                    const SizedBox(height: 16),
-                    // ─── Покоління ────────────────────────────
-                    if (widget.filterData.subCategories.isNotEmpty) ...[
-                      _buildLabel('Тип'),
-                      const SizedBox(height: 8),
-                      _buildChipsRow<String>(
-                        items: widget.filterData.subCategories,
-                        isSelected: _containsSubCategories,
-                        label: (g) => g,
-                        onTap: _toggleSubCategories,
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-                    // ─── Колір ────────────────────────────────
-                    if (widget.filterData.colors.isNotEmpty) ...[
-                      _buildLabel('Колір'),
-                      const SizedBox(height: 8),
-                      SizedBox(
-                        height: 44,
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: widget.filterData.colors.length,
-                          separatorBuilder: (_, __) => const SizedBox(width: 8),
-                          itemBuilder: (_, index) {
-                            final colorHEX = widget.filterData.colors[index];
-
-                            // перетворюємо hex у Color
-                            final color = Color(
-                              int.parse(
-                                  "0xFF${colorHEX.replaceFirst('#', '')}"),
-                            ); // У itemBuilder:
-                            final selected =
-                                widget.filter.selectedColors.contains(colorHEX);
-
-                            return GestureDetector(
-                              onTap: () => _toggleColor(colorHEX),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 100),
-                                width: 32,
-                                height: 32,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF1E1E1E),
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: selected
-                                        ? Colors.white
-                                        : Colors.black.withOpacity(0.35),
-                                    width: selected ? 2 : 1.2,
-                                  ),
-                                  boxShadow: [
-                                    if (selected)
-                                      BoxShadow(
-                                        color: widget.accentColor
-                                            .withOpacity(0.35),
-                                        blurRadius: 5,
-                                        spreadRadius: 1,
-                                      ),
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.45),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                alignment: Alignment.center,
-                                child: Container(
-                                  width: 20,
-                                  height: 20,
-                                  decoration: BoxDecoration(
-                                    color: color,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-                    const SizedBox(height: 20),
-                  ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.translucent,
+      child: Container(
+        // Обмежуємо максимальну висоту шторки (наприклад, 90% екрана)
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.8,
+        ),
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+        decoration: BoxDecoration(
+          color: TTColors.background,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // Важливо для BottomSheet
+            children: [
+              // Фіксована "ручка" зверху
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                  color: widget.accentColor.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
-            ),
 
-            // Кнопка "Показати" завжди зафіксована знизу
-            const SizedBox(height: 16),
-            GlowingButton(
-              text: 'Показати',
-              colorGrowing: widget.accentColor,
-              onPressed: () {
-                widget.onApply();
-                Navigator.pop(context);
-              },
-            ),
-          ],
+              // Прокручувальна частина
+              Flexible(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // --- Твій Хедер ---
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Фільтри', style: TTTextStyle.title18),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                widget.onClear();
+                              });
+                            },
+                            child: Text('Скинути',
+                                style: TTTextStyle.subtitle
+                                    .copyWith(color: TTColors.text_secondary)),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+
+                      // --- Тільки свої (TT Club) ---
+
+                      TTCheckbox(
+                        label: 'Тільки свої (TT Club ua)',
+                        activeNotifier: widget.filter.onlyOursNotifier,
+                        accentColor: widget.accentColor,
+                        style: TTTextStyle.subtitle,
+                      ),
+                      const SizedBox(height: 16),
+                      // --- Рік випуску ---
+                      _buildLabel('Рік випуску'),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomInputField(
+                              controller: widget.filter.yearFromController,
+                              label: 'Від ${widget.filterData.minYear}',
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: CustomInputField(
+                              controller: widget.filter.yearToController,
+                              label: 'До ${widget.filterData.maxYear}',
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      // --- Ціна ($) ---
+                      _buildLabel('Ціна (USD)'),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomInputField(
+                              controller: widget.filter.priceFromController,
+                              label: 'Ціна від ${widget.filterData.minPrice}',
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: CustomInputField(
+                              controller: widget.filter.priceToController,
+                              label: 'Ціна до ${widget.filterData.maxPrice}',
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      // --- Номерний знак ---
+                      _buildLabel('Держ. номер'),
+                      const SizedBox(height: 8),
+                      CustomInputField(
+                        controller: widget.filter.plateNumberController,
+                        label: 'AA0000AA',
+                        // textCapitalization: TextCapitalization.characters, // Авто-капс для номерів
+                      ),
+                      const SizedBox(height: 16),
+                      // ─── Місто ────────────────────────────────
+                      _buildLabel('Місто'),
+                      const SizedBox(height: 8),
+                      CustomInputField(
+                        controller: widget.filter.cityController,
+                        label: 'Наприклад: Київ',
+                      ),
+                      const SizedBox(height: 16),
+                      // ─── Покоління ────────────────────────────
+                      if (widget.filterData.subCategories.isNotEmpty) ...[
+                        _buildLabel('Тип'),
+                        const SizedBox(height: 8),
+                        _buildChipsRow<String>(
+                          items: widget.filterData.subCategories,
+                          isSelected: _containsSubCategories,
+                          label: (g) => g,
+                          onTap: _toggleSubCategories,
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                      // ─── Колір ────────────────────────────────
+                      if (widget.filterData.colors.isNotEmpty) ...[
+                        _buildLabel('Колір'),
+                        const SizedBox(height: 8),
+                        SizedBox(
+                          height: 44,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: widget.filterData.colors.length,
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(width: 8),
+                            itemBuilder: (_, index) {
+                              final colorHEX = widget.filterData.colors[index];
+
+                              // перетворюємо hex у Color
+                              final color = Color(
+                                int.parse(
+                                    "0xFF${colorHEX.replaceFirst('#', '')}"),
+                              ); // У itemBuilder:
+                              final selected = widget.filter.selectedColors
+                                  .contains(colorHEX);
+
+                              return GestureDetector(
+                                onTap: () => _toggleColor(colorHEX),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 100),
+                                  width: 32,
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF1E1E1E),
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: selected
+                                          ? Colors.white
+                                          : Colors.black.withOpacity(0.35),
+                                      width: selected ? 2 : 1.2,
+                                    ),
+                                    boxShadow: [
+                                      if (selected)
+                                        BoxShadow(
+                                          color: widget.accentColor
+                                              .withOpacity(0.35),
+                                          blurRadius: 5,
+                                          spreadRadius: 1,
+                                        ),
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.45),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    width: 20,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                      color: color,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Кнопка "Показати" завжди зафіксована знизу
+              const SizedBox(height: 16),
+              GlowingButton(
+                text: 'Показати',
+                colorGrowing: widget.accentColor,
+                onPressed: () {
+                  widget.onApply();
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

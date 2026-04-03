@@ -32,6 +32,7 @@ class TTLabel extends StatelessWidget {
       ),
       child: Text(
         text,
+        overflow: TextOverflow.ellipsis,
         style: TTTextStyle.subtitle.copyWith(
             fontWeight: FontWeight.bold,
             color: accentColor,

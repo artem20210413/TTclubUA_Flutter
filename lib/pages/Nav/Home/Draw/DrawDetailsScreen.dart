@@ -251,6 +251,18 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                       Column(
                         children: [
 
+                          if (draw!.getStatus() == DrawStatus.planned ||
+                              draw!.getStatus() == DrawStatus.finished)
+                            GlowingButton(
+                              margin: EdgeInsets.only(top: 20),
+                              text: "Активувати розіграш",
+                              onPressed: () =>
+                                  {_changeStatusDraw(DrawStatus.active)},
+                              // isLoading: _isLoading,
+                            ),
+
+                          const SizedBox(height: 50),
+
                           if (draw!.id != null) ...[
                             OutlinedButton(
                               style: OutlinedButton.styleFrom(
@@ -269,15 +281,6 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                               child: Text("Учасники (${draw!.participants.length})", style: TextStyle(color: accentColor)),
                             ),
                           ],
-                          if (draw!.getStatus() == DrawStatus.planned ||
-                              draw!.getStatus() == DrawStatus.finished)
-                            GlowingButton(
-                              margin: EdgeInsets.only(top: 20),
-                              text: "Активувати розіграш",
-                              onPressed: () =>
-                                  {_changeStatusDraw(DrawStatus.active)},
-                              // isLoading: _isLoading,
-                            ),
                           if (draw!.getStatus() == DrawStatus.active)
                             GlowingButton(
                               margin: EdgeInsets.only(top: 20),

@@ -118,14 +118,13 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
                           currentItem.instagramUrlController.text.isNotEmpty
                               ? IconPosition.right
                               : IconPosition.left,
-                      text: UrlFormatter.getInstagramHandle(
-                          currentItem.instagramUrlController.text),
+                      text: 'Відвідати сайт',
                       iconPath: 'assets/svg/globe.svg',
                       url: currentItem.websiteUrlController.text,
                       color: accentColor,
-                      dialogTitle: 'Перехід до Instagram',
+                      dialogTitle: 'Перехід на сайт',
                       dialogMessage:
-                          'Відкрити сторінку партнера в застосунку Instagram?',
+                      'Ви збираєтесь перейти на зовнішній веб-сайт партнера. Продовжити?',
                     )
                 ],
               ),
@@ -136,13 +135,12 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
                   children: [
                     PlaceLink(
                       iconPosition: IconPosition.left,
-                      text: 'google maps',
+                      text: 'Google Maps', // З великої літери виглядає краще
                       iconPath: 'assets/svg/location.svg',
                       url: currentItem.googleMapsUrlController.text,
                       color: accentColor,
-                      dialogTitle: 'Перехід до Instagram',
-                      dialogMessage:
-                          'Відкрити сторінку партнера в застосунку Instagram?',
+                      dialogTitle: 'Перехід до Google Maps',
+                      dialogMessage: 'Відкрити місцезнаходження партнера на карті?',
                     ),
                   ],
                 ),

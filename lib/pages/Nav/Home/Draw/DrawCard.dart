@@ -62,10 +62,14 @@ class DrawCard extends StatelessWidget {
                       ],
                     ),
                   if (draw.isParticipatingNotifier.value)
-                    TTLabel(
-                        text: "Зареєстровано",
-                        accentColor: DrawStatus.active == draw.getStatus() ? TTColors.success : TTColors.text_secondary,
-                        margin: EdgeInsets.only(left: 8)),
+                    Expanded(
+                      child: TTLabel(
+                          text: "Зареєстровано",
+                          accentColor: DrawStatus.active == draw.getStatus()
+                              ? TTColors.success
+                              : TTColors.text_secondary,
+                          margin: EdgeInsets.only(left: 8)),
+                    ),
                 ],
               ),
             ),

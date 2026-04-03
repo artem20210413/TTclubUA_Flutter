@@ -38,7 +38,6 @@ class _GlowingButtonState extends State<GlowingButton> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final gradientColorBackgroundWithOpacity = _isPressed ? 0.0 : 0.85;
@@ -89,13 +88,17 @@ class _GlowingButtonState extends State<GlowingButton> {
             ? const TTLoading(
                 size: 40,
               )
-            : Text(
-                widget.text,
-                style: TextStyle(
-                  color: textColor,
-                  fontFamily: TTTextStyle.fontFamily,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 24,
+            : Padding(
+                padding: EdgeInsetsGeometry.only(left: 16, right: 8),
+                child: Text(
+                  widget.text,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: textColor,
+                    fontFamily: TTTextStyle.fontFamily,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 24,
+                  ),
                 ),
               ),
       ),

@@ -46,7 +46,7 @@ class _ExternalCarDetailsScreenState extends State<ExternalCarDetailsScreen> {
               ),
 
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.only(top: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -106,12 +106,30 @@ class _ExternalCarDetailsScreenState extends State<ExternalCarDetailsScreen> {
                     //   "${item.year} ${item.markName} ${item.modelName}",
                     //   style: TTTextStyle.title.copyWith(fontSize: 22),
                     // ),
-                    if (item.generationName.isNotEmpty)
-                      Text(
-                        item.generationName,
-                        style: TTTextStyle.subtitle
-                            .copyWith(color: TTColors.text_secondary),
-                      ),
+                    Builder(
+                      builder: (context) {
+                        // 1. Збираємо тільки ті поля, які не є порожніми
+                        final List<String> parts = [
+                          item.generationName,
+                          item.modificationName ?? '', // якщо modificationName nullable
+                          item.equipmentName,
+                        ].where((str) => str.trim().isNotEmpty).toList();
+
+                        // 2. З'єднуємо їх через сепаратор
+                        final String fullText = parts.join('  •  ');
+
+                        // 3. Якщо тексту взагалі немає — не виводимо нічого або заглушку
+                        if (fullText.isEmpty) return const SizedBox.shrink();
+
+                        return Text(
+                          fullText,
+                          style: TTTextStyle.subtitle,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        );
+                      },
+                    ),
 
                     const SizedBox(height: 20),
                     Divider(
@@ -141,7 +159,8 @@ class _ExternalCarDetailsScreenState extends State<ExternalCarDetailsScreen> {
 
                     // --- Кнопка переходу на Auto.ria ---
                     GlowingButton(
-                      text: 'Переглянути на джерелі',
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      text: 'Джерело',
                       colorGrowing: accentColor,
                       onPressed: () async {
                         final uri = Uri.parse(item.linkToView);
