@@ -105,6 +105,7 @@ const URL_SEARCH_CAR = '${_HOST}/api/car/search';
 const URL_CAR_CREATE = '${_HOST}/api/car/create';
 const URL_CAR_UPDATE = '${_HOST}/api/car/{id}';
 const URL_CAR_DELETE = '${_HOST}/api/car/{id}';
+const URL_CAR_DELETE_MINE = '${_HOST}/api/car/{id}/mine';
 const URL_MENTION_CAR = '${_HOST}/api/mention/car/';
 const URL_CAR_ADD_COLLECTIONS = '${_HOST}/api/car/{id}/collections';
 const URL_CAR_DELETE_COLLECTIONS = '${_HOST}/api/car/{car}/collections/{images}';

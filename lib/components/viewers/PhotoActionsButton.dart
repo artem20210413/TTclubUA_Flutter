@@ -7,6 +7,7 @@ import '../buttons/CircleButton.dart';
 class PhotoActionsButton extends StatelessWidget {
   final VoidCallback? onChange;
   final VoidCallback? onDelete;
+  final Widget? additionally;
   final Color accentColor;
   final String title;
 
@@ -14,6 +15,7 @@ class PhotoActionsButton extends StatelessWidget {
     super.key,
     required this.accentColor,
     required this.title,
+    this.additionally,
     this.onChange,
     this.onDelete,
   });
@@ -99,14 +101,14 @@ class PhotoActionsButton extends StatelessWidget {
                     ),
                     title: Text(
                       'Видалити фото',
-                      style:
-                          TTTextStyle.subtitle,
+                      style: TTTextStyle.subtitle,
                     ),
                     onTap: () {
                       Navigator.of(ctx).pop();
                       onDelete?.call();
                     },
                   ),
+                if (additionally != null) additionally!,
                 const SizedBox(height: 8),
               ],
             ),

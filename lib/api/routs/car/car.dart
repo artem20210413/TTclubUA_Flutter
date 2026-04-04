@@ -51,14 +51,14 @@ Future<Response> GET_COLORS(String? token) async {
 //   return response;
 // }
 Future<http.Response> SEARCH_CAR(
-    String? token,
-    String query, {
-      int page = 1,
-      List<int>? geneIds,
-      List<int>? modelIds,
-      List<int>? colorIds,
-      String? city,
-    }) async {
+  String? token,
+  String query, {
+  int page = 1,
+  List<int>? geneIds,
+  List<int>? modelIds,
+  List<int>? colorIds,
+  String? city,
+}) async {
   final params = {
     'search': query,
     'page': page.toString(),
@@ -83,7 +83,6 @@ Future<http.Response> SEARCH_CAR(
   return response;
 }
 
-
 Future<http.Response> CAR_FIND(String? token, int carId) async {
   final response = await http.get(
       Uri.parse(URL_CAR_FIND.replaceAll('{id}', carId.toString())),
@@ -95,6 +94,14 @@ Future<http.Response> CAR_FIND(String? token, int carId) async {
 Future<http.Response> CAR_DELETE(String? token, int carId) async {
   final response = await http.delete(
       Uri.parse(URL_CAR_DELETE.replaceAll('{id}', carId.toString())),
+      headers: HEADERS(token));
+
+  return response;
+}
+
+Future<http.Response> CAR_DELETE_MINE(String? token, int carId) async {
+  final response = await http.delete(
+      Uri.parse(URL_CAR_DELETE_MINE.replaceAll('{id}', carId.toString())),
       headers: HEADERS(token));
 
   return response;
@@ -145,8 +152,8 @@ Future<http.Response> UPLOAD_CAR_BY_ID(String? token, CarDto car) async {
     headers: HEADERS(token),
     body: jsonEncode(car.toJson()),
   );
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${jsonDecode(response.body)}');
+  // print('Response status: ${response.statusCode}');
+  // print('Response body: ${jsonDecode(response.body)}');
 
   return response;
 }

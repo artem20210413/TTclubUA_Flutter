@@ -35,6 +35,7 @@ import '../../components/viewers/PhotoActionsButton.dart';
 import '../../components/viewers/PickAndCropImage.dart';
 import '../../components/viewers/TelegramLink.dart';
 import 'Admin/User/FinanceScreen.dart';
+import 'User/EditCarScreen.dart';
 import 'User/ProfileEditPage.dart';
 
 class User extends StatefulWidget {
@@ -594,6 +595,37 @@ class _UserState extends State<User> {
                                                 );
                                               }
                                             : null,
+                                    additionally: ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      leading: SvgPicture.asset(
+                                        width: 30,
+                                        height: 30,
+                                        'assets/svg/pencil.svg',
+                                        colorFilter: ColorFilter.mode(
+                                          accentColorButton,
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+                                      title: Text(
+                                        'Редагувати',
+                                        style: TTTextStyle.subtitle,
+                                      ),
+                                      onTap: () async {
+                                        Navigator.pop(context);
+                                        final result = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => EditCarScreen(
+                                                car:
+                                                    car), // Передаємо твій CarDto
+                                          ),
+                                        );
+
+                                        if (result == true) {
+                                          _load(); // Твій метод оновлення списку машин
+                                        }
+                                      },
+                                    ),
                                   ),
                                 ),
                               ],
