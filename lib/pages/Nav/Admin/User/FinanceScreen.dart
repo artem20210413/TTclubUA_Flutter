@@ -178,7 +178,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _statItem("Цього року", "${_statistics!['last_year'] ?? 0} ₴",
+                _statItem("Цього сезону", "${_statistics!['last_year'] ?? 0} ₴",
                     Colors.white),
                 _statItem("Макс. внесок",
                     "${_statistics!['largest_payment'] ?? 0} ₴", Colors.white),
