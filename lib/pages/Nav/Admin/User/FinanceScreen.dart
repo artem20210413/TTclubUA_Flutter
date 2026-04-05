@@ -119,7 +119,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
   }
 
   Future<void> _launchMonobankJar() async {
-    final myUserId = await UserStorage.getCities();
+    final myUserId = await UserStorage.getId();
 
     final Uri url =
         Uri.parse(URL_REDIRECT_JAK.replaceAll('{userId}', myUserId.toString()));

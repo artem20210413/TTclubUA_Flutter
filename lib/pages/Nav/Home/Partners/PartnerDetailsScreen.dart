@@ -145,7 +145,7 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
                   ],
                 ),
               const SizedBox(height: 16),
-              Text(
+              SelectableText(
                 currentItem.descriptionController.text.isNotEmpty
                     ? currentItem.descriptionController.text
                     : 'Опис відсутній',
