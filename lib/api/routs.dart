@@ -31,6 +31,7 @@ Map<String, String> HEADERS([String? token = null]) {
 const URL_SYSTEM_USER_STATS = '${_HOST}/api/system/user-stats';
 const URL_APP_CONFIG = '${_HOST}/api/app-config/{platform}';
 
+const URL_ROLES= '${_HOST}/api/roles';
 const URL_LOGIN = '${_HOST}/api/login';
 const URL_LOGIN_TG_VERIFY = '${_HOST}/api/login/tg/verify';
 const URL_LOGIN_TG_SEND_CODE = '${_HOST}/api/login/tg/send-code';

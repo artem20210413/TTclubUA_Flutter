@@ -228,16 +228,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                       },
                     ),
 
-                    // Примечание: тут нужно подключить твой существующий выбор городов.
-                    // Например:
-                    // GestureDetector(
-                    //   onTap: () async {
-                    //     final selected = await Navigator.push(...);
-                    //     if (selected != null) setState(() { _dto.cities = selected; _dto.citiesText = ...; });
-                    //   },
-                    //   child: ...
-                    // ),
-
                     const SizedBox(height: 18),
                     GlowingButton(
                       text: 'Зберегти зміни',

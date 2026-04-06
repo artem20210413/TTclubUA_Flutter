@@ -24,11 +24,13 @@ class UserUpdateDto {
   List<CityDto> cities = [];
   String? citiesText;
   List<CarDto> cars = [];
+  List<String> roles = [];
 
   UserUpdateDto.fromJson(this.json)
       : active = json['active'] ?? false,
         id = json['id'] ?? '',
         profileImage = json['profile_image'] ?? '',
+        roles = (json['roles'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
         cities = (json['cities'] as List<dynamic>?)
                 ?.map((city) => CityDto.fromJson(city))
                 .toList() ??
@@ -65,6 +67,7 @@ class UserUpdateDto {
       'phone': phoneController.text,
       // 'active': active,
       // 'profile_image': profileImage,
+      'roles': roles,
       'cities': cities.map((city) => city.id).toList(),
       // 'cars': cars.map((car) => car.toJson()).toList(),
     };

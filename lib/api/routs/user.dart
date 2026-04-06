@@ -47,6 +47,13 @@ Future<http.Response> USER_FIND(String? token, int userId) async {
   return response;
 }
 
+Future<http.Response> ROLES(String? token, int userId) async {
+  final response =
+      await http.get(Uri.parse(URL_ROLES), headers: HEADERS(token));
+
+  return response;
+}
+
 Future<http.Response> USER_EXPORT(String? token) async {
   final response =
       await http.get(Uri.parse(URL_USER_EXPORT), headers: HEADERS(token));
