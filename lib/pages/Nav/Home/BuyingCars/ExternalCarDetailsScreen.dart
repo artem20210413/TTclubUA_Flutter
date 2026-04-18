@@ -122,28 +122,19 @@ class _ExternalCarDetailsScreenState extends State<ExternalCarDetailsScreen> {
                         // 3. Якщо тексту взагалі немає — не виводимо нічого або заглушку
                         if (fullText.isEmpty) return const SizedBox.shrink();
 
-                        return Text(
-                          fullText,
-                          style: TTTextStyle.subtitle,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
+                        return Center(
+                          child: Text(
+                            fullText,
+                            style: TTTextStyle.subtitle,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
                         );
                       },
                     ),
 
                     const SizedBox(height: 16),
-                    if (item.plateNumber != '') ...[
-                      Text(
-                        item.plateNumber,
-                        style: TTTextStyle.title18,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign
-                            .center, // Меняем TextAlign.right на center
-                      ),
-                      const SizedBox(height: 16),
-                    ],
                     Divider(
                       color: TTColors.text_secondary.withOpacity(0.2),
                     ),
@@ -206,7 +197,8 @@ class _ExternalCarDetailsScreenState extends State<ExternalCarDetailsScreen> {
             label2: 'Привід',
             val2: item.driveName),
         const SizedBox(height: 12),
-        _specRow('assets/svg/fingerprint-pattern.svg', 'Номер', item.plateNumber,
+        _specRow(
+            'assets/svg/fingerprint-pattern.svg', 'Номер', item.plateNumber,
             icon2: 'assets/svg/car.svg',
             label2: 'Кузов',
             val2: item.subCategory),
