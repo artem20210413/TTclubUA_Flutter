@@ -111,7 +111,8 @@ class _ExternalCarDetailsScreenState extends State<ExternalCarDetailsScreen> {
                         // 1. Збираємо тільки ті поля, які не є порожніми
                         final List<String> parts = [
                           item.generationName,
-                          item.modificationName ?? '', // якщо modificationName nullable
+                          item.modificationName ?? '',
+                          // якщо modificationName nullable
                           item.equipmentName,
                         ].where((str) => str.trim().isNotEmpty).toList();
 
@@ -131,7 +132,18 @@ class _ExternalCarDetailsScreenState extends State<ExternalCarDetailsScreen> {
                       },
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
+                    if (item.plateNumber != '') ...[
+                      Text(
+                        item.plateNumber,
+                        style: TTTextStyle.title18,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign
+                            .center, // Меняем TextAlign.right на center
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                     Divider(
                       color: TTColors.text_secondary.withOpacity(0.2),
                     ),
@@ -185,24 +197,34 @@ class _ExternalCarDetailsScreenState extends State<ExternalCarDetailsScreen> {
     return Column(
       children: [
         _specRow('assets/svg/speedometer.svg', 'Пробіг', item.race,
-            'assets/svg/gas-pump.svg', 'Паливо', item.fuelName),
+            icon2: 'assets/svg/gas-pump.svg',
+            label2: 'Паливо',
+            val2: item.fuelName),
         const SizedBox(height: 12),
         _specRow('assets/svg/gear.svg', 'КПП', item.gearboxName,
-            'assets/svg/tire.svg', 'Привід', item.driveName),
+            icon2: 'assets/svg/tire.svg',
+            label2: 'Привід',
+            val2: item.driveName),
         const SizedBox(height: 12),
-        _specRow('assets/svg/location.svg', 'Місто', item.cityName,
-            'assets/svg/car.svg', 'Кузов', item.subCategory),
+        _specRow('assets/svg/fingerprint-pattern.svg', 'Номер', item.plateNumber,
+            icon2: 'assets/svg/car.svg',
+            label2: 'Кузов',
+            val2: item.subCategory),
+        const SizedBox(height: 12),
+        _specRow('assets/svg/location.svg', 'Місто', item.cityName),
       ],
     );
   }
 
-  Widget _specRow(String icon1, String label1, String val1, String icon2,
-      String label2, String val2) {
+  Widget _specRow(String icon1, String label1, String val1,
+      {String? icon2, String? label2, String? val2}) {
     return Row(
       children: [
         Expanded(child: _specItem(icon1, label1, val1)),
-        const SizedBox(width: 10),
-        Expanded(child: _specItem(icon2, label2, val2)),
+        if (icon2 != null || label2 != null || val2 != null) ...[
+          const SizedBox(width: 10),
+          Expanded(child: _specItem(icon2!, label2!, val2!)),
+        ]
       ],
     );
   }

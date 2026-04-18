@@ -6,6 +6,7 @@ class ExternalCarDto {
   final String title;
   final String? description;
   final double priceUsd;
+  final String plateNumber;
   final String cityName;
   final String cityLocative;
   final String regionName;
@@ -31,6 +32,7 @@ class ExternalCarDto {
     required this.title,
     this.description,
     required this.priceUsd,
+    required this.plateNumber,
     required this.cityName,
     required this.cityLocative,
     required this.regionName,
@@ -62,6 +64,7 @@ class ExternalCarDto {
       cityLocative: json['cityLocative'] ?? '',
       // Додаємо .toString() і перевірку на null для безпеки
       regionName: json['regionName']?.toString() ?? '',
+      plateNumber: json['plate_number']?.toString() ?? '',
       markName: json['mark_name']?.toString() ?? '',
       modelName: json['model_name']?.toString() ?? '',
       subCategory: json['sub_category']?.toString() ?? '',

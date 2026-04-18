@@ -217,31 +217,31 @@ class _EditCarScreenState extends State<EditCarScreen> {
               colorGrowing: accentColor,
               onPressed: isSaving ? () {} : _saveCar,
             ),
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 34, bottom: 20),
-            //   child: Center(
-            //     child: GestureDetector(
-            //       onTap: () {
-            //         ConfirmAndRun(
-            //           context: context,
-            //           dialogTitle: 'Видалити Audi ${widget.car.model.name}?',
-            //           dialogMessage:
-            //               'Ви продали своє авто та впевнені, що хочете видалити цю Audi ${widget.car.model.name} з гаража? Усі дані авто будуть втрачені.',
-            //           action:
-            //               _deleteCar, // Твій метод, який видаляє саме ID машини, а не юзера
-            //         );
-            //       },
-            //       child: Container(
-            //         padding:
-            //             const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            //         child: Text(
-            //           'Видалити Audi ${widget.car.model.name} з гаража',
-            //           style: TTTextStyle.subtitle,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            Padding(
+              padding: const EdgeInsets.only(top: 34, bottom: 20),
+              child: Center(
+                child: GestureDetector(
+                  onTap: () {
+                    ConfirmAndRun(
+                      context: context,
+                      dialogTitle: 'Видалити Audi ${widget.car.model.name}?',
+                      dialogMessage:
+                          'Ви продали своє авто та впевнені, що хочете видалити цю Audi ${widget.car.model.name} з гаража? Усі дані авто будуть втрачені.',
+                      action:
+                          _deleteCar, // Твій метод, який видаляє саме ID машини, а не юзера
+                    );
+                  },
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Text(
+                      'Видалити Audi ${widget.car.model.name} з гаража',
+                      style: TTTextStyle.subtitle,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
