@@ -23,6 +23,7 @@ import '../../../../components/inputs/CustomInputField.dart';
 import '../../../../components/layout/TTScaffold.dart';
 import '../../../../config/default.dart';
 import '../../../../utils/url_launcher.dart';
+import '../../Home/AnnualFeePage.dart';
 
 class FinanceScreen extends StatefulWidget {
   final int userId;
@@ -149,7 +150,16 @@ class _FinanceScreenState extends State<FinanceScreen> {
                     GlowingButton(
                       margin: const EdgeInsets.all(16.0),
                       text: 'Підтримати клуб',
-                      onPressed: _launchMonobankJar,
+                      // onPressed: _launchMonobankJar,
+                      onPressed: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  AnnualFeePage()), // Переход на экран публикаций
+                          // AnnualFeePage()), // Переход на экран публикаций
+                        );
+                      },
                       colorGrowing: accentColor,
                     ),
                     Expanded(
