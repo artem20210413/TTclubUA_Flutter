@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "423935633093",
+    "project_id": "tt-club-ua",
+    "storage_bucket": "tt-club-ua.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:423935633093:android:a907d7640c1ee0fd5cb2ac",
+        "android_client_info": {
+          "package_name": "ua.com.ttclub.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJ7WbCXhAj2L9VtQe5HWpo8NceSP39R_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

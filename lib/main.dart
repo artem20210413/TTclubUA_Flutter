@@ -19,7 +19,8 @@
 //         '/nav': (context) => Nav(),
 //       },
 //     ));
-
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -38,6 +39,22 @@ Future<void> main() async {
 
   await AccentColorCache.init();
   await initializeDateFormatting('uk_UA', null);
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); // Ініціалізація Firebase
+  // Запит дозволу на пуші (важливо для iOS та Android 13+)
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+  print('User granted permission: ${settings.authorizationStatus}');
+
+  // Отримання токена (саме його ти будеш зберігати в БД для відправки пушів)
+  String? token = await messaging.getToken();
+  print("Firebase Token: $token");
   // try {
   //   await dotenv.load(fileName: ".env");
   // } catch (e) {
