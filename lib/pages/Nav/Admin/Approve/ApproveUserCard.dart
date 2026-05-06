@@ -193,7 +193,9 @@ class ApproveUserCard extends StatelessWidget {
   // ------------------------------- SUBWIDGETS -------------------------------
 
   Widget _buildCarInfo(RegistrationDto item, dynamic car) {
-    String imageUrl = item.carImages.first.url ?? CAR_IMAGE_DEFAULT;
+    String imageUrl = item.carImages.isNotEmpty
+        ? (item.carImages.first.url ?? CAR_IMAGE_DEFAULT)
+        : CAR_IMAGE_DEFAULT;
     return TTNeumorphicBox(
       padding: EdgeInsets.only(top: 16, bottom: 24, left: 16, right: 24),
       // width: 300,
