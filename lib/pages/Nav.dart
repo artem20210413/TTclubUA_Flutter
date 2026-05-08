@@ -12,6 +12,7 @@ import 'package:tt_club_ua/pages/Nav/Admin.dart';
 import 'package:tt_club_ua/pages/Nav/Mention.dart';
 import 'package:tt_club_ua/pages/Nav/User.dart';
 
+import '../Services/PushNotificationService.dart';
 import '../Storage/Cache/DeviceInsetsCache.dart';
 import '../components/buttons/NavCircleButton.dart';
 import 'AppUpdateService.dart';
@@ -36,7 +37,7 @@ class NavState extends State<Nav> {
   void initState() {
     super.initState();
     _loadUser();
-
+    PushNotificationService().syncToken();
     Future.microtask(() {
       if (mounted) {
         AppUpdateService.check(context);
