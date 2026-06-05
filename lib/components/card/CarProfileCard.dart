@@ -63,6 +63,7 @@ class _CarProfileCardState extends State<CarProfileCard> {
                       ? widget.dto.images.first.url
                       : CAR_IMAGE_DEFAULT,
                   isActiveUser: isActiveUser,
+                  height: MediaQuery.of(context).size.width * 0.5,
                 ),
                 const SizedBox(height: 4),
                 Column(

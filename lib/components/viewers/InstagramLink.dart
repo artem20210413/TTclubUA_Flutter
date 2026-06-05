@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../../config/LoadingTypeConfig.dart';
 import '../../utils/url_launcher.dart';
 
 class InstagramLink extends StatelessWidget {
@@ -46,7 +47,8 @@ class InstagramLink extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            '$username',
+            LoadingTypeConfig.personalInformationMask(username, defaultValue: "instagram"),
+            // '$username',
             style: TTTextStyle.subtitle.copyWith(
               color: color,
               // decoration: TextDecoration.underline,

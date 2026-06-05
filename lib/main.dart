@@ -33,7 +33,7 @@ import 'package:tt_club_ua/pages/Onboarding.dart';
 import 'Services/PushNotificationService.dart';
 import 'Storage/Cache/AccentColorCache.dart';
 import 'config/HardConfig.dart';
-
+import 'config/LoadingTypeConfig.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -41,8 +41,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print("Handling a background message: ${message.messageId}");
 }
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void _handleMessage(RemoteMessage message) {
   // Тут твоя однакова логіка для всіх станів
@@ -59,54 +59,9 @@ Future<void> main() async {
   await Firebase.initializeApp();
 
   final pushService = PushNotificationService();
-
-  // Реєструємо фоновий обробник (має бути поза класом)
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  // Налаштовуємо дозволи та слухачі
   await pushService.initialize();
-
-//
-//   WidgetsFlutterBinding.ensureInitialized();
-//
-//   // Ініціалізуємо Firebase один раз на старті
-//   await Firebase.initializeApp();
-//
-//   // 2. РЕЄСТРАЦІЯ ОБРОБНИКА
-//   // Цей рядок каже плагіну, яку функцію викликати, коли додаток "вбито"
-//   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-//
-//
-// // 1. Коли додаток ПОВНІСТЮ ЗАКРИТИЙ (Terminated) і ми клікаємо по пушу
-//   // Це дозволяє отримати повідомлення, яке "розбудило" додаток
-//   RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-//   if (initialMessage != null) {
-//     _handleMessage(initialMessage);
-//   }
-//
-//   // 2. Коли додаток ВІДКРИТИЙ (Foreground)
-//   // В Android за замовчуванням пуш не вискакує зверху, якщо додаток відкритий.
-//   // Цей потік дозволяє отримати дані і показати повідомлення вручну або оновити екран.
-//   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-//     print('Отримано повідомлення у відкритому додатку: ${message.data}');
-//     _handleMessage(message);
-//   });
-//
-//   // 3. Коли додаток ЗГОРНУТИЙ (Background), але не вбитий, і ми клікаємо по пушу
-//   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-//     print('Додаток відкритий через клік по пушу!');
-//     _handleMessage(message);
-//   });
-//
-//   FirebaseMessaging messaging = FirebaseMessaging.instance;
-//   NotificationSettings settings = await messaging.requestPermission(
-//     alert: true,
-//     badge: true,
-//     sound: true,
-//   );
-//
-//   String? token = await messaging.getToken();
-//   print("Firebase Token: $token");
 
   await AccentColorCache.init();
   await initializeDateFormatting('uk_UA', null);
@@ -115,6 +70,10 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  const flavorStr = String.fromEnvironment('type', defaultValue: 'standard');
+  /** flutter run --dart-define=type=public */
+  LoadingTypeConfig.type =
+      flavorStr == 'public' ? LoadingType.public : LoadingType.standard;
   try {
     await HardConfig.init();
   } catch (e) {
@@ -122,7 +81,8 @@ Future<void> main() async {
   }
 
   runApp(MaterialApp(
-    navigatorKey: navigatorKey, // <--- Додай цей рядок
+    navigatorKey: navigatorKey,
+    // <--- Додай цей рядок
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
       appBarTheme: const AppBarTheme(
@@ -140,7 +100,6 @@ Future<void> main() async {
       '/nav': (context) => Nav(),
     },
   ));
-
 
   //  // Обов'язково додаємо цей рядок для асинхронних операцій у main
   // WidgetsFlutterBinding.ensureInitialized();

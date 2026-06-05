@@ -10,6 +10,7 @@ import 'package:tt_club_ua/Storage/UserStorage.dart';
 import 'package:tt_club_ua/components/generalModule.dart';
 import 'package:tt_club_ua/api/routs/user.dart';
 import 'package:tt_club_ua/api/routs/root.dart';
+import 'package:tt_club_ua/config/LoadingTypeConfig.dart';
 import 'package:tt_club_ua/config/default.dart';
 import 'package:tt_club_ua/pages/Nav/Admin.dart';
 
@@ -53,6 +54,7 @@ class _UserState extends State<User> {
   bool _isAdmin = false;
   Color accentColorButton = Colors.white;
   late List<String> _carImages;
+  int _logoutTapCount = 0;
 
   String userProfileImage = USER_PROFILE_IMAGE_DEFAULT;
 
@@ -128,11 +130,32 @@ class _UserState extends State<User> {
   }
 
   Future<void> _logout() async {
-    await UserStorage.clearUserInfo();
-    Navigator.pushReplacementNamed(context, '/login');
+    _logoutTapCount++;
+    if (!LoadingTypeConfig.hasLogout) {
+      MessageModule(
+        context,
+        'З TT Club UA просто так не звалиш. У публічній версії ця кнопка — лише для краси.',
+        MessageType.error,
+      );
+    }
+
+    if (LoadingTypeConfig.hasLogout || _logoutTapCount > 5) {
+      await UserStorage.clearUserInfo();
+      Navigator.pushReplacementNamed(context, '/login');
+    }
   }
 
   Future<void> _deleteAccount() async {
+    if (!LoadingTypeConfig.hasDeletedAccount) {
+      MessageModule(
+        context,
+        'Ти що, страх втратив? Зараз як дамо пизди!',
+        // Ти що, страх втратив? Зараз як дамо пизди! У публічній версії аккаунт не видаляється. Смикай адміна, якщо такий сміливий
+        MessageType.error,
+      );
+      return;
+    }
+
     final token = await UserStorage.getToken();
     final res = await API_DELETE_ACCOUNT(token);
     final isSuccess = await CHECK_API(res, context);
@@ -155,6 +178,15 @@ class _UserState extends State<User> {
   }
 
   Future<void> _pickAndUploadImage() async {
+    if (!LoadingTypeConfig.hasChangePhoto) {
+      MessageModule(
+        context,
+        'Ти і так вогонь!',
+        MessageType.success,
+      );
+      return;
+    }
+
     final File? croppedFile = await pickAndCropImage(
       context: context,
       aspectRatio: 1,
@@ -175,6 +207,15 @@ class _UserState extends State<User> {
   }
 
   Future<void> _deleteProfileImage() async {
+    if (!LoadingTypeConfig.hasChangePhoto) {
+      MessageModule(
+        context,
+        'Без фото не можна — як ми тебе в потоці впізнаємо? Залиш як є, бро.',
+        MessageType.error,
+      );
+      return;
+    }
+
     final token = await UserStorage.getToken();
 
     final res = await DELETE_USER_PHOTO(token);
@@ -330,7 +371,9 @@ class _UserState extends State<User> {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  _dto.phoneController.text ?? '',
+                                  LoadingTypeConfig.personalInformationMask(
+                                      _dto.phoneController.text ?? '',
+                                      defaultValue: '380 (XX) XXX-XX-XX'),
                                   style: TTTextStyle.subtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -361,7 +404,9 @@ class _UserState extends State<User> {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  _dto.birthDateController.text ?? '',
+                                  LoadingTypeConfig.personalInformationMask(
+                                      _dto.birthDateController.text ?? '',
+                                      defaultValue: '0000-00-00'),
                                   style: TTTextStyle.subtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -415,6 +460,14 @@ class _UserState extends State<User> {
 
                           Future<void> _pickAndUploadImageCar(
                               CarDto car) async {
+                            if (!LoadingTypeConfig.hasChangePhoto) {
+                              MessageModule(
+                                context,
+                                'Твоя ТТ-шка і так вогонь!',
+                                MessageType.success,
+                              );
+                              return;
+                            }
                             final File? croppedFile = await pickAndCropImage(
                               context: context,
                               aspectRatio: 4 / 3,
@@ -448,6 +501,14 @@ class _UserState extends State<User> {
                           }
 
                           Future<void> _deleteCarImage(CarDto car) async {
+                            if (!LoadingTypeConfig.hasChangePhoto) {
+                              MessageModule(
+                                context,
+                                'Без фото не можна — як ми тебе в потоці впізнаємо? Залиш як є, бро.',
+                                MessageType.error,
+                              );
+                              return;
+                            }
                             if (car.imageUrls == null || car.imageUrls!.isEmpty)
                               return;
 
@@ -595,37 +656,41 @@ class _UserState extends State<User> {
                                                 );
                                               }
                                             : null,
-                                    additionally: ListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      leading: SvgPicture.asset(
-                                        width: 30,
-                                        height: 30,
-                                        'assets/svg/pencil.svg',
-                                        colorFilter: ColorFilter.mode(
-                                          accentColorButton,
-                                          BlendMode.srcIn,
-                                        ),
-                                      ),
-                                      title: Text(
-                                        'Редагувати',
-                                        style: TTTextStyle.subtitle,
-                                      ),
-                                      onTap: () async {
-                                        Navigator.pop(context);
-                                        final result = await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (_) => EditCarScreen(
-                                                car:
-                                                    car), // Передаємо твій CarDto
-                                          ),
-                                        );
+                                    additionally:
+                                        !LoadingTypeConfig.showProfileEditPage
+                                            ? null
+                                            : ListTile(
+                                                contentPadding: EdgeInsets.zero,
+                                                leading: SvgPicture.asset(
+                                                  width: 30,
+                                                  height: 30,
+                                                  'assets/svg/pencil.svg',
+                                                  colorFilter: ColorFilter.mode(
+                                                    accentColorButton,
+                                                    BlendMode.srcIn,
+                                                  ),
+                                                ),
+                                                title: Text(
+                                                  'Редагувати',
+                                                  style: TTTextStyle.subtitle,
+                                                ),
+                                                onTap: () async {
+                                                  Navigator.pop(context);
+                                                  final result =
+                                                      await Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (_) => EditCarScreen(
+                                                          car:
+                                                              car), // Передаємо твій CarDto
+                                                    ),
+                                                  );
 
-                                        if (result == true) {
-                                          _load(); // Твій метод оновлення списку машин
-                                        }
-                                      },
-                                    ),
+                                                  if (result == true) {
+                                                    _load(); // Твій метод оновлення списку машин
+                                                  }
+                                                },
+                                              ),
                                   ),
                                 ),
                               ],
@@ -670,31 +735,32 @@ class _UserState extends State<User> {
                             // isLoading: _isLoadingSubmit,
                           ),
                         ),
-                        Expanded(
-                          flex: 3,
-                          child: GlowingButton(
-                            margin: EdgeInsets.only(left: 30),
-                            text: 'Редагувати',
-                            colorGrowing: accentColorButton,
-                            onPressed: () async {
-                              final result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => ProfileEditPage(),
-                                ),
-                              );
-                              if (result == true) _load();
+                        if (LoadingTypeConfig.showProfileEditPage)
+                          Expanded(
+                            flex: 3,
+                            child: GlowingButton(
+                              margin: EdgeInsets.only(left: 30),
+                              text: 'Редагувати',
+                              colorGrowing: accentColorButton,
+                              onPressed: () async {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => ProfileEditPage(),
+                                  ),
+                                );
+                                if (result == true) _load();
 
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => const ProfileEditPage(),
-                              //   ), // Переход на экран публикаций
-                              // );
-                            },
-                            // isLoading: _isLoadingSubmit,
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => const ProfileEditPage(),
+                                //   ), // Переход на экран публикаций
+                                // );
+                              },
+                              // isLoading: _isLoadingSubmit,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -713,19 +779,21 @@ class _UserState extends State<User> {
                       },
                     ),
 
-                  GlowingButton(
-                    margin: const EdgeInsets.only(top: 20),
-                    text: 'Мої відрахування',
-                    colorGrowing: accentColorButton,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FinanceScreen(userId: _dto.id),
-                        ),
-                      );
-                    },
-                  ),
+                  if (LoadingTypeConfig.showFinanceScreen)
+                    GlowingButton(
+                      margin: const EdgeInsets.only(top: 20),
+                      text: 'Мої відрахування',
+                      colorGrowing: accentColorButton,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                FinanceScreen(userId: _dto.id),
+                          ),
+                        );
+                      },
+                    ),
                   Padding(
                     padding: const EdgeInsets.only(top: 34),
                     child: Center(

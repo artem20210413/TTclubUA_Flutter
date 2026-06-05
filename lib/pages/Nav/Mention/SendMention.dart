@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tt_club_ua/Storage/Search/CarSearchDto.dart';
+import 'package:tt_club_ua/config/LoadingTypeConfig.dart';
 
 import '../../../Storage/UserStorage.dart';
 import '../../../api/routs/car/car.dart';
@@ -34,7 +35,13 @@ class _SendMentionScreenState extends State<SendMentionScreen> {
   bool _isSending = false;
 
   void _sendMention() async {
+    if (!LoadingTypeConfig.hasFaFA) {
+      MessageModule(context, 'Вітання передано', MessageType.success);
+      Navigator.pop(context);
+      return;
+    }
     if (_isSending) return;
+
     setState(() => _isSending = true);
 
     final token = await UserStorage.getToken();
@@ -73,43 +80,104 @@ class _SendMentionScreenState extends State<SendMentionScreen> {
                 children: [
                   const SizedBox(height: 9),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const SizedBox(width: 2),
-                      SvgPicture.asset(
-                        'assets/svg/user.svg',
-                        width: 14,
-                        colorFilter: ColorFilter.mode(
-                          TTColors.text,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
                       Expanded(
-                        child: Text(
-                          widget.dto.user.name,
-                          style: TTTextStyle.subtitle
-                              .copyWith(color: TTColors.text),
+                        flex: 2,
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 2),
+                            SvgPicture.asset(
+                              'assets/svg/user.svg',
+                              width: 14,
+                              colorFilter: ColorFilter.mode(
+                                  TTColors.text, BlendMode.srcIn),
+                            ),
+                            const SizedBox(width: 12),
+                            Flexible(
+                              // Дозволяє тексту скорочуватися, якщо ім'я задовге
+                              child: Text(
+                                widget.dto.user.name,
+                                style: TTTextStyle.subtitle
+                                    .copyWith(color: TTColors.text),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+
                       const SizedBox(width: 12),
-                      SvgPicture.asset(
-                        'assets/svg/location.svg',
-                        width: 15,
-                        colorFilter: ColorFilter.mode(
-                          TTColors.text_secondary,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Expanded(
-                        child: Text(
-                          widget.dto.user.citiesText ?? '',
-                          style: TTTextStyle.subtitle,
-                          overflow: TextOverflow.ellipsis,
+
+                      Flexible(
+                        flex: 2,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/svg/location.svg',
+                              width: 15,
+                              colorFilter: ColorFilter.mode(
+                                  TTColors.text_secondary, BlendMode.srcIn),
+                            ),
+                            const SizedBox(width: 4),
+                            Flexible(
+                              child: Text(
+                                widget.dto.user.citiesText ?? '',
+                                style: TTTextStyle.subtitle,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
+                  // Row(
+                  //   children: [
+                  //     const SizedBox(width: 2),
+                  //     Expanded(
+                  //       flex: 3,
+                  //       child: Row(
+                  //         children: [
+                  //           SvgPicture.asset(
+                  //             'assets/svg/user.svg',
+                  //             width: 14,
+                  //             colorFilter: ColorFilter.mode(
+                  //               TTColors.text,
+                  //               BlendMode.srcIn,
+                  //             ),
+                  //           ),
+                  //           const SizedBox(width: 12),
+                  //           Expanded(
+                  //             child: Text(
+                  //               widget.dto.user.name,
+                  //               style: TTTextStyle.subtitle
+                  //                   .copyWith(color: TTColors.text),
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     const SizedBox(width: 12),
+                  //     SvgPicture.asset(
+                  //       'assets/svg/location.svg',
+                  //       width: 15,
+                  //       colorFilter: ColorFilter.mode(
+                  //         TTColors.text_secondary,
+                  //         BlendMode.srcIn,
+                  //       ),
+                  //     ),
+                  //     const SizedBox(width: 4),
+                  //     Expanded(
+                  //       child: Text(
+                  //         widget.dto.user.citiesText ?? '',
+                  //         style: TTTextStyle.subtitle,
+                  //         overflow: TextOverflow.ellipsis,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   const SizedBox(height: 12),
                   Row(
                     children: [

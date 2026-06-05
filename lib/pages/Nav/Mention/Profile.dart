@@ -15,6 +15,7 @@ import '../../../components/card/CarImageBlock.dart';
 import '../../../components/inputs/CustomInputField.dart';
 import '../../../components/layout/TTScaffold.dart';
 import '../../../components/viewers/InstagramLink.dart';
+import '../../../config/LoadingTypeConfig.dart';
 
 class Profile extends StatefulWidget {
   final int? id;
@@ -179,37 +180,6 @@ class _ProfileState extends State<Profile> {
                                 )
                             ]),
                             SizedBox(height: 18),
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //   crossAxisAlignment: CrossAxisAlignment.center,
-                            //   children: [
-                            //     Container(
-                            //       child: Row(
-                            //         children: [
-                            //           SvgPicture.asset(
-                            //             'assets/svg/location.svg',
-                            //             width: 15,
-                            //             colorFilter: ColorFilter.mode(
-                            //               TTColors.text_secondary,
-                            //               BlendMode.srcIn,
-                            //             ),
-                            //           ),
-                            //           const SizedBox(width: 4),
-                            //
-                            //           Text(
-                            //             _dto.citiesText ?? '',
-                            //             style: TTTextStyle.subtitle,
-                            //             overflow: TextOverflow.ellipsis,
-                            //           ),
-                            //         ],
-                            //       ),
-                            //     ),
-                            //     InstagramLink(
-                            //       username:
-                            //           _dto.instagramNicknameController.text,
-                            //     ),
-                            //   ],
-                            // ),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -222,8 +192,6 @@ class _ProfileState extends State<Profile> {
                                   ),
                                 ),
                                 const SizedBox(width: 4),
-
-                                // 👇 ВАЖНО: именно этот Expanded ограничивает ширину текста городов
                                 Expanded(
                                   child: Text(
                                     _dto.citiesText ?? '',
@@ -232,9 +200,7 @@ class _ProfileState extends State<Profile> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-
                                 const SizedBox(width: 8),
-
                                 InstagramLink(
                                   context: context,
                                   username:

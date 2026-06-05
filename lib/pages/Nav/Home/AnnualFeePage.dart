@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui';
 
@@ -32,6 +33,10 @@ class _AnnualFeePageState extends State<AnnualFeePage> {
     );
     // await launchUrl(url, mode: LaunchMode.externalApplication);
   }
+  Future<String> _getJarUrl() async {
+    final userID = await UserStorage.getId();
+    return URL_REDIRECT_JAK.replaceAll('{userId}', userID.toString());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +66,61 @@ class _AnnualFeePageState extends State<AnnualFeePage> {
                   //   ),
                   // ),
                   const SizedBox(height: 20),
-                  GlowingButton(
-                    text: 'Підтримати клуб',
-                    onPressed: _launchMonobankJar,
-                    colorGrowing: accentColor,
+
+                  FutureBuilder<String>(
+                    future: _getJarUrl(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const SizedBox(
+                          height: 150,
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      }
+
+                      return Column(
+                        children: [
+                          // Додаємо можливість кліку прямо по QR
+                          GestureDetector(
+                            onTap: _launchMonobankJar, // Викликає перехід на банку
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                // Можна додати легку тінь, щоб було зрозуміло, що це кнопка
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 10,
+                                    spreadRadius: 2,
+                                  ),
+                                ],
+                              ),
+                              child: QrImageView(
+                                data: snapshot.data!,
+                                version: QrVersions.auto,
+                                size: MediaQuery.of(context).size.width * 0.45,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'Скануй або тисни на QR',
+                            style: TTTextStyle.subtitle.copyWith(
+                              fontSize: 12,
+                              color: TTColors.text_secondary,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
+                  // const SizedBox(height: 15),
+                  // GlowingButton(
+                  //   text: 'Підтримати клуб',
+                  //   onPressed: _launchMonobankJar,
+                  //   colorGrowing: accentColor,
+                  // ),
                   const SizedBox(height: 15),
                   Text(
                     'Підтримка через офіційне посилання Monobank.\n'

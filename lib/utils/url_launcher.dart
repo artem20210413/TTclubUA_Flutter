@@ -1,7 +1,9 @@
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
+import '../components/generalModule.dart';
 import '../components/viewers/ConfirmAndRun.dart';
+import '../config/LoadingTypeConfig.dart';
 
 class UrlHelper {
   /// Открытие ссылки внутри приложения (SafariViewController / WebView)
@@ -29,28 +31,33 @@ class UrlHelper {
   // }
 
   static Future<void> openExternal(
-      BuildContext context,
-      Uri uri, {
-        String title = 'Відкрити стороннє посилання?',
-        String message =
+    BuildContext context,
+    Uri uri, {
+    String title = 'Відкрити стороннє посилання?',
+    String message =
         'Ця дія відкриє стороннє застосування або вебсторінку. Продовжити?',
-      }) async {
+  }) async {
     ConfirmAndRun(
       context: context,
       dialogTitle: title,
       dialogMessage: message,
       action: () async {
-        final ok = await launchUrl(
-          uri,
-          mode: LaunchMode.externalApplication,
-        );
+        var ok = false;
+        if (LoadingTypeConfig.hasClickingOnLink) {
+          ok = await launchUrl(
+            uri,
+            mode: LaunchMode.externalApplication,
+          );
+        }
 
         if (!ok) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Не вдалося відкрити посилання'),
-            ),
-          );
+          MessageModule(
+              context, 'Не вдалось відкрити посилання', MessageType.error);
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   const SnackBar(
+          //     content: Text('Не вдалося відкрити посилання'),
+          //   ),
+          // );
         }
       },
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tt_club_ua/config/LoadingTypeConfig.dart';
 import 'package:tt_club_ua/config/default.dart';
 import 'package:tt_club_ua/components/layout/TTScaffold.dart';
 import 'package:tt_club_ua/components/TTNeumorphicBox.dart';
@@ -9,10 +10,11 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../api/routs/Dto/Event/CalendarItemDto.dart';
 import '../../../components/viewers/ImagesCarousel.dart';
 import '../../../components/viewers/PlaceLink.dart';
+import '../../../utils/url_launcher.dart';
 import '../Mention/Profile.dart';
 import 'ShareEventButton.dart';
 
-class CalendarEventDetailsPage extends StatelessWidget {
+class CalendarEventDetailsPage extends StatefulWidget {
   final CalendarItemDto item;
 
   const CalendarEventDetailsPage({
@@ -20,6 +22,12 @@ class CalendarEventDetailsPage extends StatelessWidget {
     required this.item,
   });
 
+  @override
+  State<CalendarEventDetailsPage> createState() =>
+      _CalendarEventDetailsPageState();
+}
+
+class _CalendarEventDetailsPageState extends State<CalendarEventDetailsPage> {
   String _formatDate(DateTime? d) {
     if (d == null) return '';
     final dd = d.day.toString().padLeft(2, '0');
@@ -29,6 +37,8 @@ class CalendarEventDetailsPage extends StatelessWidget {
   }
 
   void _openUrl(String url) async {
+    if (!LoadingTypeConfig.hasClickingOnLink) return;
+
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -42,7 +52,14 @@ class CalendarEventDetailsPage extends StatelessWidget {
       return const SizedBox.shrink();
     }
     return GestureDetector(
-      onTap: hasMap ? () => _openUrl(item.googleMaps!) : null,
+      // onTap: hasMap ? () => _openUrl(item.googleMaps!) : null,
+      onTap: hasMap
+          ? () => UrlHelper.openExternal(
+                context,
+                Uri.parse(item.googleMaps!),
+                title: 'Перехід у Google map',
+              )
+          : null,
       behavior: HitTestBehavior.opaque,
       child: Row(
         children: [
@@ -114,7 +131,7 @@ class CalendarEventDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasImages = item.images.isNotEmpty;
+    final hasImages = widget.item.images.isNotEmpty;
 
     return TTScaffold(
       title: '',
@@ -131,22 +148,25 @@ class CalendarEventDetailsPage extends StatelessWidget {
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ImagesCarousel(
-                    images: item.dtoImages,
+                    images: widget.item.dtoImages,
                     height: MediaQuery.of(context).size.width * 0.6,
                     borderRadius: 32,
                   ),
 
                   const SizedBox(height: 8),
-                  if (item.date != null ||
-                      (item.time != null && item.time!.isNotEmpty)) ...[
+                  if (widget.item.date != null ||
+                      (widget.item.time != null &&
+                          widget.item.time!.isNotEmpty)) ...[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           [
-                            if (item.date != null) _formatDate(item.date),
-                            if (item.time != null && item.time!.isNotEmpty)
-                              item.time!,
+                            if (widget.item.date != null)
+                              _formatDate(widget.item.date),
+                            if (widget.item.time != null &&
+                                widget.item.time!.isNotEmpty)
+                              widget.item.time!,
                           ].join(' • '),
                           style: TTTextStyle.subtitle,
                         ),
@@ -156,11 +176,11 @@ class CalendarEventDetailsPage extends StatelessWidget {
                   ],
 
                   // PLACE + GOOGLE MAPS (одной логикой)
-                  buildPlaceRow(item),
-                  showProfile(item, context),
+                  buildPlaceRow(widget.item),
+                  showProfile(widget.item, context),
                   const SizedBox(height: 16),
                   Text(
-                    item.title,
+                    widget.item.title,
                     style: TTTextStyle.title18,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -169,7 +189,7 @@ class CalendarEventDetailsPage extends StatelessWidget {
 
                   const SizedBox(height: 8),
                   Text(
-                    item.description,
+                    widget.item.description,
                     style: TTTextStyle.subtitle,
                   ),
                 ],

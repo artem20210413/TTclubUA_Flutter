@@ -13,6 +13,7 @@ import '../../../Storage/UserStorage.dart';
 import '../../../api/routs/events.dart';
 import '../../../api/routs/root.dart';
 import '../../../components/generalModule.dart';
+import '../../../config/LoadingTypeConfig.dart';
 
 class ShareEventButton extends StatelessWidget {
   final dynamic item;
@@ -25,6 +26,8 @@ class ShareEventButton extends StatelessWidget {
   });
 
   void _onShare(BuildContext context) async {
+
+    if (!LoadingTypeConfig.hasClickingOnLink) return;
     final token = await UserStorage.getToken();
 
     final res = await CALENDAR_DESCRIPTION(token, item.id);

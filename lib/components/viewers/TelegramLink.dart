@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tt_club_ua/config/default.dart';
 
+import '../../config/LoadingTypeConfig.dart';
 import '../../utils/url_launcher.dart';
 
 class TelegramLink extends StatelessWidget {
@@ -45,7 +46,9 @@ class TelegramLink extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            '$username',
+            LoadingTypeConfig.personalInformationMask(username,
+                defaultValue: "telegram"),
+            // '$username',
             style: TTTextStyle.subtitle.copyWith(
               color: color,
               // decoration: TextDecoration.underline,
