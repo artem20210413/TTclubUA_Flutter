@@ -26,6 +26,8 @@ class ExternalCarDto {
   final List<ImageUrlDto> images;
   final UserSearchDto? user;
   final DateTime? createdAt;
+  final DateTime? synced_at;
+  final DateTime? add_date;
 
   ExternalCarDto({
     required this.id,
@@ -52,6 +54,8 @@ class ExternalCarDto {
     required this.images,
     this.user,
     this.createdAt,
+    this.synced_at,
+    this.add_date,
   });
 
   factory ExternalCarDto.fromJson(Map<String, dynamic> json) {
@@ -88,6 +92,12 @@ class ExternalCarDto {
       user: json['user'] != null ? UserSearchDto.fromJson(json['user']) : null,
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'])
+          : null,
+      synced_at: json['synced_at'] != null
+          ? DateTime.tryParse(json['synced_at'])
+          : null,
+      add_date: json['add_date'] != null
+          ? DateTime.tryParse(json['add_date'])
           : null,
     );
   }

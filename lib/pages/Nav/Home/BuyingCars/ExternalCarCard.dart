@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/api/routs/Dto/ExternalCars/ExternalCarDto.dart';
 import 'package:tt_club_ua/config/default.dart';
+import '../../../../Helpers/TTTimeFormatter.dart';
 import '../../../../api/routs/Dto/Goods/GoodsDto.dart';
 import '../../../../components/TTNeumorphicBox.dart';
 import '../../../../components/buttons/GlowingButton.dart';
@@ -124,6 +125,19 @@ class ExternalCarCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.right,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                       TTTimeFormatter.format(item.createdAt),
+                    style: TTTextStyle.subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],

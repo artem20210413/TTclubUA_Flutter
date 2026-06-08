@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../Helpers/TTTimeFormatter.dart';
 import '../../../../Storage/Cache/AccentColorCache.dart';
 import '../../../../api/routs/Dto/ExternalCars/ExternalCarDto.dart';
 import '../../../../components/TTNeumorphicBox.dart';
@@ -158,6 +159,16 @@ class _ExternalCarDetailsScreenState extends State<ExternalCarDetailsScreen> {
                       style: TTTextStyle.subtitle,
                     ),
 
+                    const SizedBox(height: 24),
+
+                    Text(
+                     "Оновлено " + TTTimeFormatter.format(item.synced_at),
+                      style: TTTextStyle.subtitle,
+                    ),
+                    Text(
+                     "Створено " + TTTimeFormatter.format(item.createdAt),
+                      style: TTTextStyle.subtitle,
+                    ),
                     const SizedBox(height: 24),
 
                     // --- Кнопка переходу на Auto.ria ---
