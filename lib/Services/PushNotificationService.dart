@@ -19,7 +19,12 @@ class PushNotificationService {
   Future<void> initialize() async {
 
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings();
+    // const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings();
+    const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestSoundPermission: true,
+      requestBadgePermission: true,
+    );
     const InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
@@ -66,9 +71,9 @@ class PushNotificationService {
                 icon: '@mipmap/ic_launcher', // Переконайся, що іконка вірна
               ),
               iOS: const DarwinNotificationDetails(
-                presentAlert: true,
-                presentBadge: true,
-                presentSound: true,
+                presentAlert: true, // 🔥 Обов'язково! Показує банер зверху екрану в iOS
+                presentSound: true, // 🔥 Обов'язково! Вмикає звук сповіщення в iOS
+                presentBadge: true, // 🔥 Обов'язково! Оновлює червоний кружечок на іконці
               ),
             ),
             // Передаємо дані з пуша в локальне сповіщення, щоб обробити клік по ньому
