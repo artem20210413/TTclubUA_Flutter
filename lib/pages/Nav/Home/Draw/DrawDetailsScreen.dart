@@ -249,8 +249,12 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(draw!.descriptionController.text,
-                          style: TTTextStyle.subtitle),
+                      SelectableText(
+                        draw!.descriptionController.text,
+                        style: TTTextStyle.subtitle,
+                      ),
+                      // Text(draw!.descriptionController.text,
+                      //     style: TTTextStyle.subtitle),
                       const SizedBox(height: 16),
 
                       Text("Призи:",

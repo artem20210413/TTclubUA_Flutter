@@ -86,6 +86,16 @@ Future<http.Response> DRAW_PRIZE_UPLOAD(
   return response;
 }
 
+Future<http.Response> DRAW_PRIZE_DELETE(
+    String? token, PrizeDto dto) async {
+  final response = await http.delete(
+    Uri.parse(URL_DRAWS_PRIZES_DELETE.replaceAll('{draw}', dto.drawId.toString()).replaceAll('{prize}', dto.id.toString())),
+    headers: HEADERS(token),
+  );
+
+  return response;
+}
+
 Future<http.Response> DRAW_PRIZE_IMAGE_DELETE(
     String? token, PrizeDto dto) async {
   final url = URL_DRAWS_PRIZES_IMAGE_DELETE
@@ -118,7 +128,7 @@ Future<http.Response> DRAW_PRIZE_IMAGE_ADD(
   return response;
 }
 
-Future<http.Response> DRAW_PRIZE_DELETE(
+Future<http.Response> DRAW_PRIZE_DELETE_IMG(
     String? token, PrizeDto dto, ImageUrlDto img_dto) async {
   final url = URL_DRAWS_PRIZES_IMAGE_DELETE
       .replaceAll('{draw}', dto.drawId.toString())

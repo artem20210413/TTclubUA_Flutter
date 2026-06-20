@@ -154,10 +154,11 @@ class _ExternalCarDetailsScreenState extends State<ExternalCarDetailsScreen> {
                     Text("Опис",
                         style: TTTextStyle.title.copyWith(fontSize: 18)),
                     const SizedBox(height: 8),
-                    Text(
+                    SelectableText(
                       item.description ?? 'Опис відсутній',
                       style: TTTextStyle.subtitle,
                     ),
+
 
                     const SizedBox(height: 24),
 

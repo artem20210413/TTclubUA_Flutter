@@ -32,6 +32,7 @@ class _PrizeUploadScreenState extends State<PrizeUploadScreen> {
   final _formKey = GlobalKey<FormState>();
   late PrizeDto item;
   bool _isLoading = false;
+  bool _isLoadingDel = false;
   Color accentColor = AccentColorCache.accentColor;
 
   @override
@@ -52,19 +53,38 @@ class _PrizeUploadScreenState extends State<PrizeUploadScreen> {
         ? await DRAW_PRIZE_UPLOAD(token, item)
         : await DRAW_PRIZE_CREATE(token, item, null);
     if (await CHECK_API(res, context)) {
-      MessageModule(context, isEdit ? 'Оновлено!' : 'Створено!', MessageType.success);
+      MessageModule(
+          context, isEdit ? 'Оновлено!' : 'Створено!', MessageType.success);
       Navigator.pop(context, true);
     }
     setState(() => _isLoading = false);
   }
 
+  Future<void> _deletePrize() async {
+    final bool isEdit = item.id != null;
+    if (!isEdit) return;
+
+    setState(() => _isLoadingDel = true);
+    final token = await UserStorage.getToken();
+
+    // Для MultipartRequest завантаження файлів при створенні
+    final res = await DRAW_PRIZE_DELETE(token, item);
+    if (await CHECK_API(res, context)) {
+      MessageModule(context, 'Видалено!', MessageType.success);
+      Navigator.pop(context, true);
+    }
+    setState(() => _isLoadingDel = false);
+  }
+
   void _addImage() async {
     if (item.id == null) {
-      MessageModule(context, 'Спочатку збережіть приз', MessageType.information);
+      MessageModule(
+          context, 'Спочатку збережіть приз', MessageType.information);
       return;
     }
 
-    final File? croppedFile = await pickAndCropImage(context: context, aspectRatio: 1.0);
+    final File? croppedFile =
+        await pickAndCropImage(context: context, aspectRatio: 1.0);
     if (croppedFile == null) return;
 
     setState(() => _isLoading = true);
@@ -83,7 +103,7 @@ class _PrizeUploadScreenState extends State<PrizeUploadScreen> {
 
   void _deleteImage(ImageUrlDto img, int index) async {
     final token = await UserStorage.getToken();
-    final res = await DRAW_PRIZE_DELETE(token, item, img);
+    final res = await DRAW_PRIZE_DELETE_IMG(token, item, img);
 
     if (await CHECK_API(res, context)) {
       setState(() => item.images.removeAt(index));
@@ -111,14 +131,13 @@ class _PrizeUploadScreenState extends State<PrizeUploadScreen> {
                 ),
                 const SizedBox(height: 24),
               ],
-
               CustomInputField(
                 controller: item.titleController,
                 label: 'Назва призу',
-                validator: (v) => TTValidators.required(item.titleController.text),
+                validator: (v) =>
+                    TTValidators.required(item.titleController.text),
               ),
               const SizedBox(height: 16),
-
               Row(
                 children: [
                   // Expanded(
@@ -140,12 +159,18 @@ class _PrizeUploadScreenState extends State<PrizeUploadScreen> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 40),
               GlowingButton(
                 text: _isLoading ? 'Збереження...' : 'Зберегти',
                 onPressed: _isLoading ? () {} : _savePrize,
               ),
+              const SizedBox(height: 20),
+              if (item.id != null)
+                GlowingButton(
+                  colorGrowing: TTColors.text_secondary,
+                  text: _isLoadingDel ? 'Видалення...' : 'Видалити',
+                  onPressed: _isLoadingDel ? () {} : _deletePrize,
+                ),
             ],
           ),
         ),
