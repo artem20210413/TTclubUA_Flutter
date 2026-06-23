@@ -18,6 +18,13 @@ class PushNotificationService {
 
   Future<void> initialize() async {
 
+    // 1. Твій запит дозволів
+    NotificationSettings settings = await _fcm.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
     const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings();
     const InitializationSettings initializationSettings = InitializationSettings(
@@ -28,13 +35,6 @@ class PushNotificationService {
       // Тут обробляємо клік по локальному сповіщенню
       print("Клік по локальному пушу: ${details.payload}");
     },);
-    // 1. Твій запит дозволів
-    NotificationSettings settings = await _fcm.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       if (kDebugMode) print('Користувач дозволив сповіщення');
 
