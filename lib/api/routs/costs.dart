@@ -9,7 +9,17 @@ import 'package:tt_club_ua/api/routs/Dto/User/UserUpdateDto.dart';
 Future<http.Response> COSTS_SET(
     String? token, CostsDto dto, int userID) async {
   final response = await http.post(
-    Uri.parse(URL_FINANCE_SET.replaceAll('{userId}', userID.toString())),
+    Uri.parse(URL_COSTS_SET),
+    headers: HEADERS(token),
+    body: jsonEncode(dto.toJson()),
+  );
+
+  return response;
+}
+Future<http.Response> COSTS_EDIT(
+    String? token, CostsDto dto, int userID) async {
+  final response = await http.post(
+    Uri.parse(URL_COSTS_EDIT.replaceAll('{costsId}', dto.id.toString())),
     headers: HEADERS(token),
     body: jsonEncode(dto.toJson()),
   );

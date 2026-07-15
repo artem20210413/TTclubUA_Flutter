@@ -40,6 +40,7 @@ class TTColors {
   static const Color text_secondary = Color(0xFF848484);
 
   static const Color danger = Color(0xBAFF0000);
+  static const Color warning = Color(0xBAFF7300);
   static const Color success = Colors.green;
 }
 

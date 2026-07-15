@@ -69,6 +69,7 @@ const URL_JAK = '${_HOST}/api/finance/jar-monobank?userId={userId}';
 const URL_COSTS_LIST = '${_HOST}/api/costs';
 const URL_COSTS_DELETE = '${_HOST}/api/costs/{costsId}';
 const URL_COSTS_SET = '${_HOST}/api/costs';
+const URL_COSTS_EDIT = '${_HOST}/api/costs/{costsId}';
 
 const URL_GOODS_LIST = '${_HOST}/api/goods';
 const URL_GOODS_CREATE = '${_HOST}/api/goods';

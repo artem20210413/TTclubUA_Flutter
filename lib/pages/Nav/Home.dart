@@ -14,6 +14,7 @@ import '../../components/card/TopActionCard.dart';
 import '../../components/generalModule.dart';
 import '../../utils/url_launcher.dart';
 import '../Nav.dart';
+import 'Admin/Costs/CostsListScreen.dart';
 import 'Calendar.dart';
 import 'Home/AnnualFeePage.dart';
 import 'Home/BuyingCars/BuyingCarsList.dart';
@@ -221,6 +222,20 @@ class _HomeState extends State<Home> {
                   MaterialPageRoute(
                       builder: (context) =>
                           BuyingCarsList()), // Переход на экран публикаций
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            PromoCard(
+              // imagePath: 'assets/ui/banners/banner_raffle.webp',
+              imagePath: 'assets/ui/banners/buying_car.webp',
+              title: 'Базар',
+              onButtonTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          CostsListScreen()), // Переход на экран публикаций
                 );
               },
             ),
