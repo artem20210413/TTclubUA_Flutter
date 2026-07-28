@@ -50,6 +50,6 @@ pubspec.lock
 
 .env
 
-#.claude/
-#.specify/
-#specs/
+.claude/
+.specify/
+specs/
