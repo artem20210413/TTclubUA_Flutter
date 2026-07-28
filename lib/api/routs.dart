@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:tt_club_ua/config/HardConfig.dart';
 
 const _HOST = 'https://ttclub.com.ua';
+const URL_HOST = _HOST;
 
 String buildEnvironment() {
   if (Platform.isAndroid) {
@@ -117,6 +118,8 @@ const URL_CAR_DELETE_COLLECTIONS = '${_HOST}/api/car/{car}/collections/{images}'
 const URL_CAR_FIND = '${_HOST}/api/car/{id}';
 
 const URL_CITIES = '${_HOST}/api/cities';
+const URL_CITIES_MAP = '${_HOST}/api/cities/map';
+const URL_CITIES_USERS = '${_HOST}/api/cities/{id}/users';
 
 const URL_MODELS = '${_HOST}/api/models';
 const URL_GENES = '${_HOST}/api/genes';

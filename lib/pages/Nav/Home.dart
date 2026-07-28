@@ -21,6 +21,7 @@ import 'Home/BuyingCars/BuyingCarsList.dart';
 import 'Home/Draw/DrawsPage.dart';
 import 'Home/Partners/PartnersPage.dart';
 import 'Home/SuggestionsPage.dart';
+import 'Map/CityUsersMapScreen.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -236,6 +237,19 @@ class _HomeState extends State<Home> {
                   MaterialPageRoute(
                       builder: (context) =>
                           CostsListScreen()), // Переход на экран публикаций
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            PromoCard(
+              imagePath: 'assets/ui/banners/ttclubua_in_world.webp',
+              title: 'TTclubUA у світі',
+              onButtonTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          const CityUsersMapScreen()), // Переход на карту учасників
                 );
               },
             ),
