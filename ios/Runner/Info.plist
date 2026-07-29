@@ -27,7 +27,9 @@
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Дозвольте доступ до геолокації, щоб показати карту з учасниками клубу поруч з вами.</string>
+    <string>Дозвольте доступ до геолокації, щоб показати карту з учасниками клубу поруч з вами. Геопозиція використовується лише під час активного використання застосунку.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Дозвольте доступ до геолокації, щоб показати карту з учасниками клубу поруч з вами. Геопозиція використовується лише під час активного використання застосунку.</string>
     <key>UIApplicationSupportsIndirectInputEvents</key>
     <true/>
     <key>UILaunchStoryboardName</key>
