@@ -10,6 +10,8 @@ class TTStatisticGauge extends StatelessWidget {
   final double total;
   final String unit;
   final double size;
+  final String valueLabel;
+  final String totalLabel;
 
   const TTStatisticGauge({
     super.key,
@@ -17,6 +19,8 @@ class TTStatisticGauge extends StatelessWidget {
     required this.total,
     this.unit = '₴',
     this.size = 200, // Діаметр напівкруга
+    this.valueLabel = 'Наразі: ',
+    this.totalLabel = '  •  зібрано з ',
   });
 
   @override
@@ -95,13 +99,13 @@ class TTStatisticGauge extends StatelessWidget {
                 color: TTColors.text_secondary,
               ),
               children: [
-                const TextSpan(text: 'Наразі: '),
+                TextSpan(text: valueLabel),
                 TextSpan(
                   text: '${formattedValue} $unit',
                   style: TextStyle(
                       color: accentColor, fontWeight: FontWeight.bold),
                 ),
-                TextSpan(text: '  •  зібрано з '),
+                TextSpan(text: totalLabel),
                 TextSpan(
                   text: '${formattedTotal} $unit',
                   style: TextStyle(

@@ -67,10 +67,11 @@ const URL_FINANCE_SET = '${_HOST}/api/finance/user/{userId}';
 const URL_REDIRECT_JAK = '${_HOST}/redirect-jar-monobank?userId={userId}';
 const URL_JAK = '${_HOST}/api/finance/jar-monobank?userId={userId}';
 
-const URL_COSTS_LIST = '${_HOST}/api/costs';
 const URL_COSTS_DELETE = '${_HOST}/api/costs/{costsId}';
 const URL_COSTS_SET = '${_HOST}/api/costs';
 const URL_COSTS_EDIT = '${_HOST}/api/costs/{costsId}';
+
+const URL_FINANCE_STATISTICS_SEASONS = '${_HOST}/api/finance/statistics/seasons';
 
 const URL_GOODS_LIST = '${_HOST}/api/goods';
 const URL_GOODS_CREATE = '${_HOST}/api/goods';

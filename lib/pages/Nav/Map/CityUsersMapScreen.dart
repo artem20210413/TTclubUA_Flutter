@@ -12,7 +12,7 @@ import 'CityUsersMapScreen.ios.dart';
 /// (Kyiv), per FR-004.
 const double kDefaultCityMapLatitude = 50.4501;
 const double kDefaultCityMapLongitude = 30.5234;
-const double kDefaultCityMapZoom = 12.0;
+const double kDefaultCityMapZoom = 9.0;
 
 class CityMapCameraTarget {
   final double latitude;

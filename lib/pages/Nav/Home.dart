@@ -228,15 +228,14 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 20),
             PromoCard(
-              // imagePath: 'assets/ui/banners/banner_raffle.webp',
-              imagePath: 'assets/ui/banners/buying_car.webp',
-              title: 'Базар',
+              imagePath: 'assets/ui/banners/budget.webp',
+              title: 'Витрати клубу',
               onButtonTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          CostsListScreen()), // Переход на экран публикаций
+                          CostsListScreen()), // Переход на экран витрат клубу
                 );
               },
             ),
