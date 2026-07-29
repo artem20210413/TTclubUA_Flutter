@@ -201,6 +201,32 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 20),
             PromoCard(
+              imagePath: 'assets/ui/banners/budget.webp',
+              title: 'Витрати клубу',
+              onButtonTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          CostsListScreen()), // Переход на экран витрат клубу
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            PromoCard(
+              imagePath: 'assets/ui/banners/ttclubua_in_world.webp',
+              title: 'TTclubUA у світі',
+              onButtonTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          const CityUsersMapScreen()), // Переход на карту учасників
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            PromoCard(
               imagePath: 'assets/ui/banners/banner_raffle.webp',
               title: 'Розіграші',
               onButtonTap: () {
@@ -223,32 +249,6 @@ class _HomeState extends State<Home> {
                   MaterialPageRoute(
                       builder: (context) =>
                           BuyingCarsList()), // Переход на экран публикаций
-                );
-              },
-            ),
-            const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/budget.webp',
-              title: 'Витрати клубу',
-              onButtonTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          CostsListScreen()), // Переход на экран витрат клубу
-                );
-              },
-            ),
-            const SizedBox(height: 20),
-            PromoCard(
-              imagePath: 'assets/ui/banners/ttclubua_in_world.webp',
-              title: 'TTclubUA у світі',
-              onButtonTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const CityUsersMapScreen()), // Переход на карту учасників
                 );
               },
             ),
