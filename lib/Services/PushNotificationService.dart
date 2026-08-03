@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/foundation.dart';
@@ -104,6 +106,21 @@ class PushNotificationService {
   // Твій метод отримання токена (викликаємо в main або після логіну)
   Future<void> syncToken() async {
     try {
+      // On iOS, getToken() requires the APNS token to be set first; right
+      // after requestPermission() it may not be ready yet, so poll for it
+      // with a short timeout before asking Firebase for the FCM token.
+      if (Platform.isIOS) {
+        final apnsReady = await _waitForApnsToken();
+        if (!apnsReady) {
+          // Expected on the iOS Simulator, which never issues a real APNs
+          // token — not an error, just skip syncing FCM for this session.
+          if (kDebugMode) {
+            print('ℹ️ APNS токен недоступний (ймовірно симулятор), синхронізацію FCM пропущено');
+          }
+          return;
+        }
+      }
+
       String? token = await _fcm.getToken();
       if (token != null) {
         await _sendTokenToBackend(token);
@@ -111,6 +128,19 @@ class PushNotificationService {
     } catch (e) {
       if (kDebugMode) print('Помилка отримання FCM токена: $e');
     }
+  }
+
+  Future<bool> _waitForApnsToken({
+    Duration timeout = const Duration(seconds: 10),
+    Duration pollInterval = const Duration(milliseconds: 500),
+  }) async {
+    final deadline = DateTime.now().add(timeout);
+    while (DateTime.now().isBefore(deadline)) {
+      final apnsToken = await _fcm.getAPNSToken();
+      if (apnsToken != null) return true;
+      await Future.delayed(pollInterval);
+    }
+    return await _fcm.getAPNSToken() != null;
   }
 
   // Твій метод відправки на сервер

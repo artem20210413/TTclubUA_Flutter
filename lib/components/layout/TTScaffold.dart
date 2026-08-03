@@ -12,6 +12,7 @@ class TTScaffold extends StatelessWidget {
   final Widget? floatingActionButton;
   final Widget? bottomNavigationBar;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
+  final VoidCallback? onBackPressed;
 
   const TTScaffold({
     super.key,
@@ -23,6 +24,7 @@ class TTScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.bottomNavigationBar,
     this.floatingActionButtonLocation,
+    this.onBackPressed,
   });
 
   @override
@@ -47,7 +49,7 @@ class TTScaffold extends StatelessWidget {
                     color: Colors.white,
                     size: 20,
                   ),
-                  onPressed: () => Navigator.pop(context, true),
+                  onPressed: onBackPressed ?? () => Navigator.pop(context, true),
                 )
               : null,
           title: title != null

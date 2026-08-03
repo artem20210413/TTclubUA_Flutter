@@ -88,10 +88,15 @@ class _LoginTgPhoneScreenState extends State<LoginTgPhoneScreen> {
     }
   }
 
+  void _popWithPhone() {
+    Navigator.pop(context, _phoneController.text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return TTScaffold(
       title: 'Вхід через Telegram',
+      onBackPressed: _popWithPhone,
       body: Center(
         child: _isLoading
             ? const TTLoading()
