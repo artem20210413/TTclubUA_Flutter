@@ -30,6 +30,19 @@
     <string>Дозвольте доступ до геолокації, щоб показати карту з учасниками клубу поруч з вами. Геопозиція використовується лише під час активного використання застосунку.</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>Дозвольте доступ до геолокації, щоб показати карту з учасниками клубу поруч з вами. Геопозиція використовується лише під час активного використання застосунку.</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>ua.com.ttclub.app.deeplink</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>ttclubua</string>
+            </array>
+        </dict>
+    </array>
     <key>UIApplicationSupportsIndirectInputEvents</key>
     <true/>
     <key>UILaunchStoryboardName</key>

@@ -47,6 +47,18 @@
                     android:host="ttclub.com.ua"
                     android:pathPrefix="/auth/tg-code"/>
             </intent-filter>
+
+            <!-- Custom-scheme fallback used by the /auth/tg-code web page
+                 when the https App Link isn't verified (e.g. debug builds,
+                 or before the domain association is cached) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="ttclubua"
+                    android:host="login-tg-code"/>
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

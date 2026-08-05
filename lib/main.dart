@@ -30,6 +30,7 @@ import 'package:tt_club_ua/pages/Nav.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/User/UpdateCarScreen.dart';
 import 'package:tt_club_ua/pages/Onboarding.dart';
 
+import 'Services/DeepLinkService.dart';
 import 'Services/PushNotificationService.dart';
 import 'Storage/Cache/AccentColorCache.dart';
 import 'config/HardConfig.dart';
@@ -79,6 +80,10 @@ Future<void> main() async {
   } catch (e) {
     print("Failed to initialize version: $e");
   }
+
+  // Handles the "Підтвердити вхід" Universal Link from the Telegram bot
+  // message (ttclub.com.ua/auth/tg-code?phone=...&code=...).
+  DeepLinkService(navigatorKey: navigatorKey).initialize();
 
   runApp(MaterialApp(
     navigatorKey: navigatorKey,
