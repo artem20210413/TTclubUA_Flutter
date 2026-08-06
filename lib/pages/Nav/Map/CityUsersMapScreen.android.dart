@@ -103,9 +103,9 @@ class _CityUsersMapScreenAndroidState extends State<CityUsersMapScreenAndroid> {
           ),
           children: [
             TileLayer(
-              // CARTO Dark Matter — free, no API key, matches the app's dark theme.
+              // CARTO Voyager — free, no API key, light style close to Apple Maps.
               urlTemplate:
-                  'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+                  'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
               subdomains: const ['a', 'b', 'c', 'd'],
               userAgentPackageName: 'ua.com.ttclub.app',
               retinaMode: RetinaMode.isHighDensity(context),

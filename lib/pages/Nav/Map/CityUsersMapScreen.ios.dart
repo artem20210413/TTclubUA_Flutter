@@ -163,7 +163,31 @@ class _CityUsersMapScreenIOSState extends State<CityUsersMapScreenIOS> {
     _bottomSheetOpen = true;
     showCityMembersBottomSheet(context, point).whenComplete(() {
       _bottomSheetOpen = false;
+      // MKMapView only calls didSelect when an annotation's selection state
+      // actually changes, so re-tapping the same still-selected annotation
+      // is silently ignored by the native map. Removing and re-adding it
+      // resets its native selection state — but the remove and the add must
+      // land in two separate frames, otherwise the AppleMap widget's diffing
+      // sees no net change and never tells the native side anything happened.
+      _reselectableFix(point);
     });
+  }
+
+  Future<void> _reselectableFix(CityMapPointDto point) async {
+    final id = apple_maps.AnnotationId('city_${point.id}');
+    apple_maps.Annotation? existing;
+    for (final annotation in _annotations) {
+      if (annotation.annotationId == id) {
+        existing = annotation;
+        break;
+      }
+    }
+    if (existing == null || !mounted) return;
+
+    setState(() => _annotations.remove(existing));
+    await WidgetsBinding.instance.endOfFrame;
+    if (!mounted) return;
+    setState(() => _annotations.add(existing!));
   }
 
   Future<void> _onZoomIn() async {
