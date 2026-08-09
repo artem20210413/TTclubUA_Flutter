@@ -9,6 +9,11 @@ class CarImageBlock extends StatelessWidget {
   final double borderRadius;
   final String? uniqueKey;
 
+  /// Optional tap override. When provided (e.g. by [ImagesCarousel] to open the
+  /// collection-aware fullscreen gallery) it replaces the default single-image
+  /// [FullImageViewer]. Non-carousel callers keep the default behavior.
+  final VoidCallback? onTap;
+
   const CarImageBlock({
     super.key,
     this.uniqueKey,
@@ -16,13 +21,19 @@ class CarImageBlock extends StatelessWidget {
     this.isActiveUser = true,
     this.height = 200,
     this.borderRadius = 32,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () =>
-          imageUrl != null ? FullImageViewer.show(context, imageUrl!) : null,
+      onTap: () {
+        if (onTap != null) {
+          onTap!();
+        } else if (imageUrl != null) {
+          FullImageViewer.show(context, imageUrl!);
+        }
+      },
 
       child: Hero(
         tag: uniqueKey ?? imageUrl!,

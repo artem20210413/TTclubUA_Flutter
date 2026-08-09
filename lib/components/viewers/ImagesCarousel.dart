@@ -3,6 +3,7 @@ import 'package:tt_club_ua/config/default.dart';
 import 'package:tt_club_ua/Storage/Search/ImageUrlDto.dart';
 
 import '../card/CarImageBlock.dart';
+import 'FullImageGallery.dart';
 
 class ImagesCarousel extends StatefulWidget {
   final List<ImageUrlDto> images;
@@ -32,6 +33,24 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
     super.dispose();
   }
 
+  // Opens the fullscreen gallery on the tapped image and syncs the carousel to
+  // the last image viewed there when it closes (shared collection + index).
+  Future<void> _openGallery(int index) async {
+    if (widget.images.isEmpty) return;
+    final lastIndex = await FullImageGallery.show(
+      context,
+      images: widget.images,
+      initialIndex: index,
+    );
+    if (!mounted) return;
+    if (lastIndex != _current) {
+      if (_pageController.hasClients) {
+        _pageController.jumpToPage(lastIndex);
+      }
+      setState(() => _current = lastIndex);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final hasImages = widget.images.isNotEmpty;
@@ -56,6 +75,7 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
                         return CarImageBlock(
                           uniqueKey: img.id.toString(),
                           imageUrl: img.url,
+                          onTap: () => _openGallery(index),
                         );
                       },
                     )
