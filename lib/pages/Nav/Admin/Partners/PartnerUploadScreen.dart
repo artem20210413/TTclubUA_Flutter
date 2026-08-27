@@ -39,6 +39,7 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
   late TextEditingController _nameController;
   late TextEditingController _descController;
   bool _isLoading = false;
+  bool _canEditContent = false;
 
   @override
   void initState() {
@@ -50,6 +51,14 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
     setState(() {
       item =
           widget.partner ?? PartnerDto.empty(); // 👈 если не передали — пустой
+    });
+    _loadPermissions();
+  }
+
+  Future<void> _loadPermissions() async {
+    final canEdit = await UserStorage.canEditContent();
+    setState(() {
+      _canEditContent = canEdit;
     });
   }
 
@@ -170,7 +179,7 @@ class _PartnerUploadScreenState extends State<PartnerUploadScreen> {
                   images: item.images,
                   accentColor: accentColor,
                   onAdd: _addImage,
-                  onDelete: _deleteImage,
+                  onDelete: _canEditContent ? _deleteImage : null,
                 ),
               const SizedBox(height: 20),
               Row(

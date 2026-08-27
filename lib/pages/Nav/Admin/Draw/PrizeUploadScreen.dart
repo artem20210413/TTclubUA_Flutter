@@ -32,12 +32,21 @@ class _PrizeUploadScreenState extends State<PrizeUploadScreen> {
   final _formKey = GlobalKey<FormState>();
   late PrizeDto item;
   bool _isLoading = false;
+  bool _canEditContent = false;
   Color accentColor = AccentColorCache.accentColor;
 
   @override
   void initState() {
     super.initState();
     item = widget.prize ?? PrizeDto.empty(drawId: widget.drawId);
+    _loadPermissions();
+  }
+
+  Future<void> _loadPermissions() async {
+    final canEdit = await UserStorage.canEditContent();
+    setState(() {
+      _canEditContent = canEdit;
+    });
   }
 
   Future<void> _savePrize() async {
@@ -107,7 +116,7 @@ class _PrizeUploadScreenState extends State<PrizeUploadScreen> {
                   images: item.images,
                   accentColor: accentColor,
                   onAdd: _addImage,
-                  onDelete: _deleteImage,
+                  onDelete: _canEditContent ? _deleteImage : null,
                 ),
                 const SizedBox(height: 24),
               ],

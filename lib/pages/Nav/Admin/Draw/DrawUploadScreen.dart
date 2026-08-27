@@ -38,6 +38,8 @@ class _DrawUploadScreenState extends State<DrawUploadScreen> {
   late DrawDto drawChangeStatus;
   bool _isLoading = false;
   bool _isLoadingChangeStatus = false;
+  bool _canEditContent = false;
+  bool _canDeleteContent = false;
   Color accentColor = AccentColorCache.accentColor;
 
   @override
@@ -46,6 +48,16 @@ class _DrawUploadScreenState extends State<DrawUploadScreen> {
     // Якщо об'єкт передано — редагуємо, інакше — створюємо порожній
     item = widget.draw ?? DrawDto.empty();
     drawChangeStatus = item;
+    _loadPermissions();
+  }
+
+  Future<void> _loadPermissions() async {
+    final canEdit = await UserStorage.canEditContent();
+    final canDelete = await UserStorage.canDeleteContent();
+    setState(() {
+      _canEditContent = canEdit;
+      _canDeleteContent = canDelete;
+    });
   }
 
   Future<void> _saveDraw() async {
@@ -154,7 +166,7 @@ class _DrawUploadScreenState extends State<DrawUploadScreen> {
                   images: item.images,
                   accentColor: accentColor,
                   onAdd: _addImage,
-                  onDelete: _deleteImage,
+                  onDelete: _canEditContent ? _deleteImage : null,
                 ),
                 const SizedBox(height: 24),
                 Text(
@@ -247,7 +259,8 @@ class _DrawUploadScreenState extends State<DrawUploadScreen> {
                 onPressed: _isLoading ? () => {} : _saveDraw,
               ),
 
-              if (item.statusController.text != DrawStatus.cancelled.value)
+              if (_canDeleteContent &&
+                  item.statusController.text != DrawStatus.cancelled.value)
                 GlowingButton(
                   margin: const EdgeInsets.only(top: 18, bottom: 8),
                   text: _isLoadingChangeStatus
@@ -265,7 +278,8 @@ class _DrawUploadScreenState extends State<DrawUploadScreen> {
                   // isLoading: _isLoading,
                 ),
 
-              if (item.statusController.text == DrawStatus.cancelled.value)
+              if (_canDeleteContent &&
+                  item.statusController.text == DrawStatus.cancelled.value)
                 GlowingButton(
                   margin: const EdgeInsets.only(top: 18, bottom: 8),
                   text: _isLoadingChangeStatus
@@ -282,26 +296,27 @@ class _DrawUploadScreenState extends State<DrawUploadScreen> {
                   },
                   // isLoading: _isLoading,
                 ),
-              Padding(
-                padding: const EdgeInsets.only(top: 34, bottom: 16),
-                child: Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      ConfirmAndRun(
-                        context: context,
-                        dialogTitle: 'Видалити розіграш?',
-                        dialogMessage:
-                            'Цю дію неможливо скасувати. Розіграш і всі дані будуть видалені назавжди.',
-                        action: _deleteDraw, // 👈 тут просто передаём метод
-                      );
-                    },
-                    child: Text(
-                      'Видалити розіграш назавжди',
-                      style: TTTextStyle.subtitle,
+              if (_canDeleteContent)
+                Padding(
+                  padding: const EdgeInsets.only(top: 34, bottom: 16),
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: () {
+                        ConfirmAndRun(
+                          context: context,
+                          dialogTitle: 'Видалити розіграш?',
+                          dialogMessage:
+                              'Цю дію неможливо скасувати. Розіграш і всі дані будуть видалені назавжди.',
+                          action: _deleteDraw, // 👈 тут просто передаём метод
+                        );
+                      },
+                      child: Text(
+                        'Видалити розіграш назавжди',
+                        style: TTTextStyle.subtitle,
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

@@ -8,14 +8,14 @@ class GoodsImagesEditor extends StatefulWidget {
   final List<ImageUrlDto> images;
   final VoidCallback onAdd;
   final Color accentColor;
-  final Function(ImageUrlDto img, int index) onDelete;
+  final Function(ImageUrlDto img, int index)? onDelete;
 
   const GoodsImagesEditor({
     super.key,
     required this.images,
     required this.onAdd,
     this.accentColor = Colors.white,
-    required this.onDelete,
+    this.onDelete,
   });
 
   @override
@@ -60,23 +60,29 @@ class _GoodsImagesEditorState extends State<GoodsImagesEditor> {
         Positioned(
           top: 4,
           right: 16,
-          child: GestureDetector(
-            onTap: () => ConfirmAndRun(
-              context: context,
-              action: () async {
-                widget.onDelete(img, index);
-              },
-              dialogTitle: 'Видалити зображення?',
-              dialogMessage:
-                  'Ви дійсно хочете видалити зображення?',
-            ),
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.black54,
+          child: Visibility(
+            visible: widget.onDelete != null,
+            maintainState: true,
+            maintainAnimation: true,
+            maintainSize: true,
+            child: GestureDetector(
+              onTap: () => ConfirmAndRun(
+                context: context,
+                action: () async {
+                  widget.onDelete?.call(img, index);
+                },
+                dialogTitle: 'Видалити зображення?',
+                dialogMessage:
+                    'Ви дійсно хочете видалити зображення?',
               ),
-              child: const Icon(Icons.close, size: 18, color: Colors.white),
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.black54,
+                ),
+                child: const Icon(Icons.close, size: 18, color: Colors.white),
+              ),
             ),
           ),
         ),

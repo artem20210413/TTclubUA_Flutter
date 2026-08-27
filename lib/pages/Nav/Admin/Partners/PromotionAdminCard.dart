@@ -7,13 +7,13 @@ import '../../../../config/default.dart';
 class PromotionAdminCard extends StatelessWidget {
   final PromotionDto promotion;
   final VoidCallback onEdit;
-  final VoidCallback onDelete;
+  final VoidCallback? onDelete;
 
   const PromotionAdminCard({
     super.key,
     required this.promotion,
     required this.onEdit,
-    required this.onDelete,
+    this.onDelete,
   });
 
   @override
@@ -133,17 +133,19 @@ class PromotionAdminCard extends StatelessWidget {
                             .copyWith(color: TTColors.text, fontSize: 16)),
                   ),
                 ),
-                const SizedBox(width: 12),
-                IconButton(
-                  onPressed: onDelete,
-                  icon:
-                      const Icon(Icons.delete_outline, color: Colors.redAccent),
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.redAccent.withOpacity(0.1),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                if (onDelete != null) ...[
+                  const SizedBox(width: 12),
+                  IconButton(
+                    onPressed: onDelete,
+                    icon: const Icon(Icons.delete_outline,
+                        color: Colors.redAccent),
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.redAccent.withOpacity(0.1),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),

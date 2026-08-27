@@ -41,12 +41,21 @@ class _MerchUploadScreenState extends State<MerchUploadScreen> {
   final _formKey = GlobalKey<FormState>();
   late GoodsDto item; // всегда не null внутри стейта
   bool isLoading = false;
+  bool _canEditContent = false;
   Color accentColor = AccentColorCache.accentColor;
 
   @override
   void initState() {
     super.initState();
     item = widget.item ?? GoodsDto.empty(); // 👈 если не передали — пустой
+    _loadPermissions();
+  }
+
+  Future<void> _loadPermissions() async {
+    final canEdit = await UserStorage.canEditContent();
+    setState(() {
+      _canEditContent = canEdit;
+    });
   }
 
   Future<void> _saveGoods() async {
@@ -161,7 +170,7 @@ class _MerchUploadScreenState extends State<MerchUploadScreen> {
                           images: item.images,
                           accentColor: accentColor,
                           onAdd: _addImage,
-                          onDelete: _deleteImage,
+                          onDelete: _canEditContent ? _deleteImage : null,
                         ),
                       const SizedBox(height: 24),
                       CustomInputField(

@@ -4,7 +4,16 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tt_club_ua/api/routs/auth.dart';
 
-enum UserRole { admin, editor, user }
+enum UserRole { admin, editor, user, copywriter, headCopywriter }
+
+/// Maps [UserRole] values to the role strings sent by the backend. Only
+/// `headCopywriter` needs an explicit mapping since Dart enum identifiers
+/// cannot contain the hyphen in `head-copywriter`; every other role's wire
+/// string matches its Dart identifier (`.name`).
+extension UserRoleApi on UserRole {
+  String get apiName =>
+      this == UserRole.headCopywriter ? 'head-copywriter' : name;
+}
 
 class UserStorage {
   static SharedPreferences? _prefs;
@@ -146,7 +155,7 @@ class UserStorage {
     List<dynamic> roleStrings = _userInfo?['roles'] ?? [];
 
     return UserRole.values
-        .where((role) => roleStrings.contains(role.name))
+        .where((role) => roleStrings.contains(role.apiName))
         .toList();
   }
 
@@ -161,5 +170,17 @@ class UserStorage {
 
   static Future<bool> isAdmin() async {
     return await whereInRole([UserRole.admin]);
+  }
+
+  /// View/create/edit access in Merch, Partners, Draws (content), Events.
+  static Future<bool> canEditContent() async {
+    return await whereInRole(
+        [UserRole.admin, UserRole.copywriter, UserRole.headCopywriter]);
+  }
+
+  /// Delete access in the 4 sections, plus draw-execution actions (start
+  /// draw / pick winner / status changes).
+  static Future<bool> canDeleteContent() async {
+    return await whereInRole([UserRole.admin, UserRole.headCopywriter]);
   }
 }

@@ -12,6 +12,7 @@ import '../../components/Selects/TTSelect.dart';
 import '../../components/TTLoading.dart';
 import '../../components/TTNeumorphicBox.dart';
 import '../../components/calendar/CalendarEventCard.dart';
+import 'Admin/Event/EventsScreen.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
@@ -58,6 +59,7 @@ class _CalendarState extends State<Calendar> {
       Color(0xFF98A9D4); //const Color(0xFF767474); // сірий для інших
   List<CalendarItemDto> _items = [];
   bool _isLoading = false;
+  bool _canEditContent = false;
 
   // ---------------- State -----------------------------------------------------
   DateTime _focusedMonth = DateTime.now();
@@ -78,6 +80,14 @@ class _CalendarState extends State<Calendar> {
         DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
 
     _loadCalendarForMonth(_focusedMonth);
+    _loadPermissions();
+  }
+
+  Future<void> _loadPermissions() async {
+    final canEdit = await UserStorage.canEditContent();
+    setState(() {
+      _canEditContent = canEdit;
+    });
   }
 
   CalendarEvent _mapDtoToEvent(CalendarItemDto dto) {
@@ -226,12 +236,43 @@ class _CalendarState extends State<Calendar> {
               // const SizedBox(height: 8),
               // _buildHeader(),
               const SizedBox(height: 16),
+              Visibility(
+                visible: _canEditContent,
+                maintainState: true,
+                maintainAnimation: true,
+                child: _buildEditLink(),
+              ),
               _buildFilter(),
               const SizedBox(height: 16),
               _buildCalendarCard(),
               const SizedBox(height: 16),
               _buildDayEvents(),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEditLink() {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const EventsScreen()),
+            );
+          },
+          child: Text(
+            'Редагувати події',
+            style: TTTextStyle.subtitle.copyWith(
+              color: textSecondary,
+              decoration: TextDecoration.underline,
+              fontSize: 13,
+            ),
           ),
         ),
       ),

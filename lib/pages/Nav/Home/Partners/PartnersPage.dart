@@ -50,9 +50,9 @@ class _PartnersPageState extends State<PartnersPage> {
   }
 
   Future<void> _fetchUser() async {
-    final isAdmin = await UserStorage.isAdmin();
+    final canEdit = await UserStorage.canEditContent();
     setState(() {
-      _isAdmin = isAdmin;
+      _isAdmin = canEdit;
     });
   }
 

@@ -39,6 +39,8 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
   final _formKey = GlobalKey<FormState>();
   late EventDto _event;
   bool _isLoading = false;
+
+  bool _canEditContent = false;
   Color accentColor = AccentColorCache.accentColor;
 
   @override
@@ -48,11 +50,20 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
     _isLoading = true;
     _event = widget.item ?? EventDto.empty();
     _fetchEventType();
+    _loadPermissions();
+  }
+
+  Future<void> _loadPermissions() async {
+    final canEdit = await UserStorage.canEditContent();
+    setState(() {
+      _canEditContent = canEdit;
+    });
   }
 
   Future<void> _fetchEventType() async {
     final token = await UserStorage.getToken();
     final res = await EVENT_TYPE_LIST(token);
+
     final isSuccess = await CHECK_API(res, context);
 
     if (!isSuccess) return;
@@ -262,9 +273,14 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
 
     return TTScaffold(
       title: isEdit ? 'Редагування події' : 'Нова подія',
-      body: _isLoading
-          ? const TTLoading()
-          : SingleChildScrollView(
+      // Keep the SingleChildScrollView mounted the whole time instead of
+      // swapping the whole body between TTLoading() and the form: replacing
+      // the entire subtree right as _fetchEventType() resolves (often mid
+      // push transition) was causing a "RenderBox was not laid out" paint
+      // crash. The loading indicator is now an overlay instead.
+      body: Stack(
+        children: [
+          SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               child: Form(
                 key: _formKey,
@@ -276,7 +292,7 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
                         images: _event.images,
                         accentColor: accentColor,
                         onAdd: _addImage,
-                        onDelete: _deleteImage,
+                        onDelete: _canEditContent ? _deleteImage : null,
                       ),
                     if (isEdit) const SizedBox(height: 24),
 
@@ -328,17 +344,16 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
                     allTypes.isEmpty
                         ? const TTLoading()
                         : SingleChildScrollView(
-
-                      child: TTSelect<EventTypeDto>(
-                        value: _event.eventType,
-                        items: allTypes,
-                        labelBuilder: (t) => t.name,
-                        onChanged: (v) {
-                          if (v == null) return;
-                          setState(() => _event.eventType = v);
-                        },
-                      ),
-                    ),
+                            child: TTSelect<EventTypeDto>(
+                              value: _event.eventType,
+                              items: allTypes,
+                              labelBuilder: (t) => t.name,
+                              onChanged: (v) {
+                                if (v == null) return;
+                                setState(() => _event.eventType = v);
+                              },
+                            ),
+                          ),
                     const SizedBox(height: 16),
 
                     /// Дата події
@@ -443,6 +458,18 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
                 ),
               ),
             ),
+          Positioned.fill(
+            child: Visibility(
+              visible: _isLoading,
+              maintainState: true,
+              child: const ColoredBox(
+                color: Colors.black26,
+                child: TTLoading(),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

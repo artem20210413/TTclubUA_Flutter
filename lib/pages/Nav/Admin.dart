@@ -45,7 +45,17 @@ class _AdminState extends State<Admin> {
   @override
   void initState() {
     super.initState();
+    _guardAdminAccess();
     _loadRegistration();
+  }
+
+  Future<void> _guardAdminAccess() async {
+    final isAdmin = await UserStorage.isAdmin();
+    if (!isAdmin && mounted) {
+      MessageModule(
+          context, 'У вас немає прав для цієї дії', MessageType.error);
+      Navigator.pop(context);
+    }
   }
 
   void _loadRegistration() async {

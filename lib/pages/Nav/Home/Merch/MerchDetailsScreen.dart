@@ -45,9 +45,9 @@ class _MerchDetailsScreenState extends State<MerchDetailsScreen> {
   }
 
   Future<void> fetchUser() async {
-    final isAdmin = await UserStorage.isAdmin();
+    final canEdit = await UserStorage.canEditContent();
     setState(() {
-      _isAdmin = isAdmin;
+      _isAdmin = canEdit;
     });
   }
 

@@ -32,11 +32,20 @@ class _PartnerPromotionsListState extends State<PartnerPromotionsList> {
   late List<PromotionDto> _promotions = [];
   Color accentColor = AccentColorCache.accentColor;
   bool _isLoading = true;
+  bool _canDeleteContent = false;
 
   @override
   void initState() {
     super.initState();
     _fetchPromotions();
+    _loadPermissions();
+  }
+
+  Future<void> _loadPermissions() async {
+    final canDelete = await UserStorage.canDeleteContent();
+    setState(() {
+      _canDeleteContent = canDelete;
+    });
   }
 
   Future<void> _fetchPromotions() async {
@@ -139,19 +148,22 @@ class _PartnerPromotionsListState extends State<PartnerPromotionsList> {
                               return PromotionAdminCard(
                                 promotion: promo,
                                 onEdit: () => onAdd(promo),
-                                // onDelete: () => onDeletePromotion(promo),
-                                onDelete: () =>
-                                    ConfirmAndRun(
-                                      context: context,
-                                      dialogTitle: "Видалити акцію?",
-                                      dialogMessage:
-                                      "Ви впевнені, що хочете видалити акцію '${promo.titleController.text}'? Цю дію неможливо скасувати.",
-                                      buttonClose: Text('Скасувати',
-                                          style: TTTextStyle.subtitle),
-                                      buttonSuccess: Text('Видалити',
-                                          style: TTTextStyle.subtitle.copyWith(color: TTColors.text)),
-                                      action: () => onDeletePromotion(promo),
-                                    ),
+                                onDelete: _canDeleteContent
+                                    ? () => ConfirmAndRun(
+                                          context: context,
+                                          dialogTitle: "Видалити акцію?",
+                                          dialogMessage:
+                                              "Ви впевнені, що хочете видалити акцію '${promo.titleController.text}'? Цю дію неможливо скасувати.",
+                                          buttonClose: Text('Скасувати',
+                                              style: TTTextStyle.subtitle),
+                                          buttonSuccess: Text('Видалити',
+                                              style: TTTextStyle.subtitle
+                                                  .copyWith(
+                                                      color: TTColors.text)),
+                                          action: () =>
+                                              onDeletePromotion(promo),
+                                        )
+                                    : null,
                               );
                             },
                           ),

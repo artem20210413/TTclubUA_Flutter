@@ -41,6 +41,8 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
   bool _isLoadingChangeStatus = true;
   bool isActionLoading = false;
   bool _isAdmin = false;
+  bool _canEditContent = false;
+  bool _canDeleteContent = false;
   Color accentColor = AccentColorCache.accentColor;
 
   @override
@@ -52,6 +54,8 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
   Future<void> _loadData() async {
     final token = await UserStorage.getToken();
     final adminStatus = await UserStorage.isAdmin();
+    final canEdit = await UserStorage.canEditContent();
+    final canDelete = await UserStorage.canDeleteContent();
 
     // Припускаємо метод DRAWS_GET(token, id)
     final res = await DRAW_SHOW(token, widget.drawDto.id!);
@@ -59,6 +63,8 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
       setState(() {
         draw = DrawDto.fromJson(jsonDecode(res.body)['data']);
         _isAdmin = adminStatus;
+        _canEditContent = canEdit;
+        _canDeleteContent = canDelete;
         isLoading = false;
       });
     } else {
@@ -128,8 +134,8 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
 
     return TTScaffold(
       title: draw!.titleController.text,
-      // Кругла кнопка редагування для адміна
-      floatingActionButton: _isAdmin
+      // Кругла кнопка редагування
+      floatingActionButton: _canEditContent
           ? GlassFabFloatingButton(
               iconPath: 'assets/svg/pencil.svg',
               accentColor: accentColor,
@@ -277,7 +283,7 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                               horizontal: 20, vertical: 16),
                         ),
 
-                      if (_isAdmin)
+                      if (_canDeleteContent)
                         Column(
                           children: [
                             if (draw!.getStatus() == DrawStatus.planned ||
@@ -382,7 +388,7 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                 ],
               ),
             ),
-            if (_isAdmin &&
+            if (_canDeleteContent &&
                 !hasWinner &&
                 DrawStatus.active == draw!.getStatus())
               CircleButton(
@@ -398,7 +404,9 @@ class _DrawDetailsScreenState extends State<DrawDetailsScreen> {
                   action: () => _RollDraw(prize),
                 ),
               ),
-            if (_isAdmin && hasWinner && DrawStatus.active == draw!.getStatus())
+            if (_canDeleteContent &&
+                hasWinner &&
+                DrawStatus.active == draw!.getStatus())
               CircleButton(
                 accentColor: accentColor,
                 // iconAsset: 'assets/svg/arrow-counter-clockwise.svg',

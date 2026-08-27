@@ -11,11 +11,21 @@ Future<bool> CHECK_API(http.Response res, BuildContext context,
     return true;
   }
   if (isEx) {
-    final responseBody = jsonDecode(res.body);
-    MessageModule(
-        context,
-        'Error: ${res.statusCode}. Response body: $responseBody',
-        MessageType.error);
+    if (res.statusCode == 403) {
+      MessageModule(
+          context, 'У вас немає прав для цієї дії', MessageType.error);
+    } else {
+      String responseBody;
+      try {
+        responseBody = jsonDecode(res.body).toString();
+      } catch (_) {
+        responseBody = res.body;
+      }
+      MessageModule(
+          context,
+          'Error: ${res.statusCode}. Response body: $responseBody',
+          MessageType.error);
+    }
   }
 
   return false;

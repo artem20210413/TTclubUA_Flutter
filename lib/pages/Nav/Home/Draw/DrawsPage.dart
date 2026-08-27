@@ -54,8 +54,8 @@ class _DrawsPageState extends State<DrawsPage> {
   }
 
   Future<void> _checkAdminStatus() async {
-    final isAdmin = await UserStorage.isAdmin();
-    setState(() => _isAdmin = isAdmin);
+    final canEdit = await UserStorage.canEditContent();
+    setState(() => _isAdmin = canEdit);
   }
 
   Future<void> _fetchDraws({int page = 1, bool append = false}) async {
