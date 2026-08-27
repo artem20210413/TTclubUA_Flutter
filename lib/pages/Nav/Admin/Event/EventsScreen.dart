@@ -58,13 +58,11 @@ class _EventsScreenState extends State<EventsScreen> {
   Color accentColor = AccentColorCache.accentColor;
   EventTypeFilter _typeFilter = EventTypeFilter.all;
   EventActiveFilter _activeFilter = EventActiveFilter.all;
-  bool _canEditContent = false;
 
   @override
   void initState() {
     super.initState();
     _fetchEvents();
-    _loadPermissions();
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -89,13 +87,6 @@ class _EventsScreenState extends State<EventsScreen> {
     _scrollController.dispose();
     _searchController.dispose();
     super.dispose();
-  }
-
-  Future<void> _loadPermissions() async {
-    final canEdit = await UserStorage.canEditContent();
-    setState(() {
-      _canEditContent = canEdit;
-    });
   }
 
   Future<void> _fetchEvents({int page = 1, bool append = false}) async {
@@ -217,12 +208,10 @@ class _EventsScreenState extends State<EventsScreen> {
   Widget build(BuildContext context) {
     return TTScaffold(
       title: 'Події',
-      floatingActionButton: _canEditContent
-          ? GlassFabFloatingButton(
-              accentColor: accentColor,
-              onPressed: () => _openEventForm(),
-            )
-          : null,
+      floatingActionButton: GlassFabFloatingButton(
+        accentColor: accentColor,
+        onPressed: () => _openEventForm(),
+      ),
       body: Column(
         children: [
           _buildFiltersRow(),
@@ -259,9 +248,7 @@ class _EventsScreenState extends State<EventsScreen> {
                             child: EventAdminCard(
                               accentColor: accentColor,
                               event: event,
-                              onEdit: !_canEditContent
-                                  ? () {}
-                                  : () => _openEventForm(item: event),
+                              onEdit: () => _openEventForm(item: event),
                             ),
                           );
                         },

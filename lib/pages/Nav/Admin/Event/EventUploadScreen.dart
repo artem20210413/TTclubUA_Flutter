@@ -40,7 +40,6 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
   late EventDto _event;
   bool _isLoading = false;
 
-  bool _canEditContent = false;
   Color accentColor = AccentColorCache.accentColor;
 
   @override
@@ -50,14 +49,6 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
     _isLoading = true;
     _event = widget.item ?? EventDto.empty();
     _fetchEventType();
-    _loadPermissions();
-  }
-
-  Future<void> _loadPermissions() async {
-    final canEdit = await UserStorage.canEditContent();
-    setState(() {
-      _canEditContent = canEdit;
-    });
   }
 
   Future<void> _fetchEventType() async {
@@ -287,7 +278,7 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
                         images: _event.images,
                         accentColor: accentColor,
                         onAdd: _addImage,
-                        onDelete: _canEditContent ? _deleteImage : null,
+                        onDelete: _deleteImage,
                       ),
                     if (isEdit) const SizedBox(height: 24),
 
