@@ -74,14 +74,6 @@ class _EventsScreenState extends State<EventsScreen> {
     });
   }
 
-  Future<void> _openEventForm({EventDto? item}) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => EventUploadScreen(item: item)),
-    );
-    if (result == true) _onSearch();
-  }
-
   @override
   void dispose() {
     _scrollController.dispose();
@@ -210,7 +202,13 @@ class _EventsScreenState extends State<EventsScreen> {
       title: 'Події',
       floatingActionButton: GlassFabFloatingButton(
         accentColor: accentColor,
-        onPressed: () => _openEventForm(),
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => EventUploadScreen()),
+          );
+          if (result == true) _onSearch();
+        },
       ),
       body: Column(
         children: [
@@ -248,7 +246,17 @@ class _EventsScreenState extends State<EventsScreen> {
                             child: EventAdminCard(
                               accentColor: accentColor,
                               event: event,
-                              onEdit: () => _openEventForm(item: event),
+                              onEdit: () async {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => EventUploadScreen(
+                                      item: event, // 👉 создаём новую подію
+                                    ),
+                                  ),
+                                );
+                                if (result == true) _onSearch();
+                              },
                             ),
                           );
                         },
