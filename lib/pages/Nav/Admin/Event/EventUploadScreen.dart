@@ -273,14 +273,9 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
 
     return TTScaffold(
       title: isEdit ? 'Редагування події' : 'Нова подія',
-      // Keep the SingleChildScrollView mounted the whole time instead of
-      // swapping the whole body between TTLoading() and the form: replacing
-      // the entire subtree right as _fetchEventType() resolves (often mid
-      // push transition) was causing a "RenderBox was not laid out" paint
-      // crash. The loading indicator is now an overlay instead.
-      body: Stack(
-        children: [
-          SingleChildScrollView(
+      body: _isLoading
+          ? const TTLoading()
+          : SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               child: Form(
                 key: _formKey,
@@ -458,18 +453,6 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
                 ),
               ),
             ),
-          Positioned.fill(
-            child: Visibility(
-              visible: _isLoading,
-              maintainState: true,
-              child: const ColoredBox(
-                color: Colors.black26,
-                child: TTLoading(),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

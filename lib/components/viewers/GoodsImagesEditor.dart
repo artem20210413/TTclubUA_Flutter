@@ -57,19 +57,15 @@ class _GoodsImagesEditorState extends State<GoodsImagesEditor> {
         ),
 
         // ❌ кнопка удаления
-        Positioned(
-          top: 4,
-          right: 16,
-          child: Visibility(
-            visible: widget.onDelete != null,
-            maintainState: true,
-            maintainAnimation: true,
-            maintainSize: true,
+        if (widget.onDelete != null)
+          Positioned(
+            top: 4,
+            right: 16,
             child: GestureDetector(
               onTap: () => ConfirmAndRun(
                 context: context,
                 action: () async {
-                  widget.onDelete?.call(img, index);
+                  widget.onDelete!(img, index);
                 },
                 dialogTitle: 'Видалити зображення?',
                 dialogMessage:
@@ -85,7 +81,6 @@ class _GoodsImagesEditorState extends State<GoodsImagesEditor> {
               ),
             ),
           ),
-        ),
       ],
     );
   }

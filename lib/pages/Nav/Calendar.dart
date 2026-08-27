@@ -236,12 +236,7 @@ class _CalendarState extends State<Calendar> {
               // const SizedBox(height: 8),
               // _buildHeader(),
               const SizedBox(height: 16),
-              Visibility(
-                visible: _canEditContent,
-                maintainState: true,
-                maintainAnimation: true,
-                child: _buildEditLink(),
-              ),
+              if (_canEditContent) _buildEditLink(),
               _buildFilter(),
               const SizedBox(height: 16),
               _buildCalendarCard(),

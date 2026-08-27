@@ -59,10 +59,6 @@ class _EventsScreenState extends State<EventsScreen> {
   EventTypeFilter _typeFilter = EventTypeFilter.all;
   EventActiveFilter _activeFilter = EventActiveFilter.all;
   bool _canEditContent = false;
-  // Guards against a double tap firing Navigator.push twice before the
-  // first pushed route has finished laying out (was causing a
-  // "RenderBox was not laid out" paint assertion on rapid double taps).
-  bool _isNavigating = false;
 
   @override
   void initState() {
@@ -81,17 +77,11 @@ class _EventsScreenState extends State<EventsScreen> {
   }
 
   Future<void> _openEventForm({EventDto? item}) async {
-    if (_isNavigating) return;
-    _isNavigating = true;
-    try {
-      final result = await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => EventUploadScreen(item: item)),
-      );
-      if (result == true) _onSearch();
-    } finally {
-      _isNavigating = false;
-    }
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => EventUploadScreen(item: item)),
+    );
+    if (result == true) _onSearch();
   }
 
   @override
@@ -227,16 +217,12 @@ class _EventsScreenState extends State<EventsScreen> {
   Widget build(BuildContext context) {
     return TTScaffold(
       title: 'Події',
-      floatingActionButton: Visibility(
-        visible: _canEditContent,
-        maintainState: true,
-        maintainAnimation: true,
-        maintainSize: true,
-        child: GlassFabFloatingButton(
-          accentColor: accentColor,
-          onPressed: () => _openEventForm(),
-        ),
-      ),
+      floatingActionButton: _canEditContent
+          ? GlassFabFloatingButton(
+              accentColor: accentColor,
+              onPressed: () => _openEventForm(),
+            )
+          : null,
       body: Column(
         children: [
           _buildFiltersRow(),
