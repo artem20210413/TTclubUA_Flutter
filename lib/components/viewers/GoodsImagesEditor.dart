@@ -68,8 +68,7 @@ class _GoodsImagesEditorState extends State<GoodsImagesEditor> {
                   widget.onDelete!(img, index);
                 },
                 dialogTitle: 'Видалити зображення?',
-                dialogMessage:
-                    'Ви дійсно хочете видалити зображення?',
+                dialogMessage: 'Ви дійсно хочете видалити зображення?',
               ),
               child: Container(
                 padding: const EdgeInsets.all(4),

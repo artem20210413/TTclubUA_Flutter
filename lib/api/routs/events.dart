@@ -9,6 +9,13 @@ import 'package:tt_club_ua/api/routs/Dto/User/UserUpdateDto.dart';
 
 import '../../Storage/Search/ImageUrlDto.dart';
 
+Future<http.Response> EVENT_SHOW(String? token, int id) async {
+  final uri = Uri.parse(URL_EVENT_UPLOAD.replaceAll('{event}', id.toString()));
+  final response = await http.get(uri, headers: HEADERS(token));
+
+  return response;
+}
+
 Future<http.Response> EDENT_UPLOAD(String? token, EventDto dto) async {
   final response = await http.put(
     Uri.parse(URL_EVENT_UPLOAD.replaceAll('{event}', dto.id.toString())),

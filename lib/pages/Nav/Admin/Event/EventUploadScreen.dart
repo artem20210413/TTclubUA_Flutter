@@ -45,7 +45,6 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
   @override
   void initState() {
     super.initState();
-
     _isLoading = true;
     _event = widget.item ?? EventDto.empty();
     _fetchEventType();
