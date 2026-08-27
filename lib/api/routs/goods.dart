@@ -83,6 +83,22 @@ Future<http.Response> GOODS_IMAGE_DELETE(
   return response;
 } //
 
+Future<http.Response> GOODS_PURCHASE_REQUEST(
+    String? token, int goodsId, String? description) async {
+  final trimmedDescription = description?.trim();
+  final response = await http.post(
+    Uri.parse(URL_GOODS_PURCHASE_REQUEST),
+    headers: HEADERS(token),
+    body: jsonEncode({
+      'goods_id': goodsId,
+      if (trimmedDescription != null && trimmedDescription.isNotEmpty)
+        'description': trimmedDescription,
+    }),
+  );
+
+  return response;
+}
+
 Future<http.Response> GOODS_IMAGE_ADD(
     String? token, int itemId, String path) async {
   var request = http.MultipartRequest(

@@ -10,6 +10,7 @@ import '../../../../components/layout/TTScaffold.dart';
 import '../../../../components/buttons/GlowingButton.dart';
 import '../../../../components/viewers/ImagesCarousel.dart';
 import '../../Admin/Merch/MerchUploadScreen.dart';
+import '../../../../components/merch/PurchaseRequestBottomSheet.dart';
 
 class MerchDetailsScreen extends StatefulWidget {
   final GoodsDto item;
@@ -27,6 +28,7 @@ class _MerchDetailsScreenState extends State<MerchDetailsScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   bool _isAdmin = false;
+  String? _token;
   late GoodsDto currentItem = new GoodsDto.empty();
 
   @override
@@ -46,8 +48,10 @@ class _MerchDetailsScreenState extends State<MerchDetailsScreen> {
 
   Future<void> fetchUser() async {
     final canEdit = await UserStorage.canEditContent();
+    final token = await UserStorage.getToken();
     setState(() {
       _isAdmin = canEdit;
+      _token = token;
     });
   }
 
@@ -119,18 +123,17 @@ class _MerchDetailsScreenState extends State<MerchDetailsScreen> {
                                 '${currentItem.priceController.text} грн',
                                 style: TTTextStyle.title.copyWith(fontSize: 22),
                               ),
-                              // const Spacer(),
                               const SizedBox(width: 24),
-                              // Expanded(
-                              //   flex: 2,
-                              //   child: GlowingButton(
-                              //     text: 'Купити',
-                              //     colorGrowing: accentColor,
-                              //     onPressed: () {
-                              //       // TODO: логика покупки / переход в Telegram / са
-                              //     },
-                              //   ),
-                              // ),
+                              if (_token != null)
+                                Expanded(
+                                  flex: 2,
+                                  child: GlowingButton(
+                                    text: 'Замовити',
+                                    colorGrowing: accentColor,
+                                    onPressed: () => showPurchaseRequestBottomSheet(
+                                        context, currentItem),
+                                  ),
+                                ),
                             ],
                           ),
                         ],

@@ -79,6 +79,7 @@ const URL_GOODS_UPDATE = '${_HOST}/api/goods/{goods}';
 const URL_GOODS_CHANGE_ACTIVE = '${_HOST}/api/goods/{goods}/active/{active}';
 const URL_GOODS_IMAGE_DELETE = '${_HOST}/api/goods/{goods}/images/{mediaId}';
 const URL_GOODS_IMAGE_CREATE = '${_HOST}/api/goods/{goods}/images';
+const URL_GOODS_PURCHASE_REQUEST = '${_HOST}/api/goods/purchase-request';
 
 
 const URL_CALENDAR_LIST = '${_HOST}/api/calendar';
