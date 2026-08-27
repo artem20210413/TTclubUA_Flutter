@@ -418,19 +418,19 @@ class _EventUploadScreenState extends State<EventUploadScreen> {
                     const SizedBox(height: 16),
 
                     /// Активність
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Статус',
-                          style: TTTextStyle.subtitle,
-                        ),
-                        TTCheckbox(
-                          activeNotifier: _event.activeNotifier,
-                          accentColor: accentColor,
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text(
+                    //       'Статус',
+                    //       style: TTTextStyle.subtitle,
+                    //     ),
+                    //     TTCheckbox(
+                    //       activeNotifier: _event.activeNotifier,
+                    //       accentColor: accentColor,
+                    //     ),
+                    //   ],
+                    // ),
                     const SizedBox(height: 24),
 
                     /// Кнопка збереження
