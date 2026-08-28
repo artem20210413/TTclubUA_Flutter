@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tt_club_ua/config/default.dart';
+import '../../../../Storage/UserStorage.dart';
 import '../../../../api/routs/Dto/Goods/GoodsDto.dart';
 import '../../../../components/TTNeumorphicBox.dart';
 import '../../../../components/buttons/GlowingButton.dart';
+import '../../../../components/merch/PurchaseRequestBottomSheet.dart';
 import '../../../../components/viewers/ImagesCarousel.dart';
 import '../../../../components/card/CarImageBlock.dart';
 
@@ -86,14 +88,21 @@ class GoodsCard extends StatelessWidget {
                       const SizedBox(width: 24),
                     ],
                   ),
-                // Expanded(
-                //   flex: 1,
-                //   child: GlowingButton(
-                //     text: textButton,
-                //     onPressed: onButton ?? () {},
-                //     colorGrowing: accentColor,
-                //   ),
-                // ),
+                FutureBuilder<String?>(
+                  future: UserStorage.getToken(),
+                  builder: (context, snapshot) {
+                    if (snapshot.data == null) return const SizedBox.shrink();
+                    return Expanded(
+                      flex: 1,
+                      child: GlowingButton(
+                        text: 'Замовити',
+                        colorGrowing: accentColor,
+                        onPressed: () =>
+                            showPurchaseRequestBottomSheet(context, item),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ],
