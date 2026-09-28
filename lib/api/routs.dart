@@ -123,6 +123,8 @@ const URL_CITIES = '${_HOST}/api/cities';
 const URL_CITIES_MAP = '${_HOST}/api/cities/map';
 const URL_CITIES_USERS = '${_HOST}/api/cities/{id}/users';
 
+const URL_MENTION_LOCATIONS = '${_HOST}/api/mention/locations';
+
 const URL_MODELS = '${_HOST}/api/models';
 const URL_GENES = '${_HOST}/api/genes';
 const URL_COLOR = '${_HOST}/api/colors';

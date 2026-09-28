@@ -5,8 +5,11 @@ import 'package:geolocator/geolocator.dart';
 
 import '../../../components/TTLoading.dart';
 import '../../../components/layout/TTScaffold.dart';
+import '../../../components/map/MapLayerSwitch.dart';
+import '../../../Storage/UserStorage.dart';
 import 'CityUsersMapScreen.android.dart';
 import 'CityUsersMapScreen.ios.dart';
+import 'MapLayer.dart';
 
 /// Default camera center/zoom when location permission is unavailable/denied
 /// (Kyiv), per FR-004.
@@ -77,11 +80,26 @@ class CityUsersMapScreen extends StatefulWidget {
 class _CityUsersMapScreenState extends State<CityUsersMapScreen> {
   CityMapCameraTarget _initialCameraTarget = CityMapCameraTarget.defaultTarget;
   bool _resolvedLocation = false;
+  MapLayer _activeLayer = MapLayer.ours;
+  // The "fa-fa" layer switch is admin-only for now — everyone else always
+  // sees the "our location" layer, as before this feature existed.
+  bool _isAdmin = false;
+
+  void _setActiveLayer(MapLayer layer) {
+    setState(() => _activeLayer = layer);
+  }
 
   @override
   void initState() {
     super.initState();
     _resolveInitialLocation();
+    _checkAdminStatus();
+  }
+
+  Future<void> _checkAdminStatus() async {
+    final isAdmin = await UserStorage.isAdmin();
+    if (!mounted) return;
+    setState(() => _isAdmin = isAdmin);
   }
 
   /// Resolves the initial camera target from the device's current location,
@@ -103,11 +121,31 @@ class _CityUsersMapScreenState extends State<CityUsersMapScreen> {
             ? const Center(child: TTLoading())
             : Padding(
                 padding: const EdgeInsetsGeometry.only(top: 8),
-                child: Platform.isIOS
-                    ? CityUsersMapScreenIOS(
-                        initialCameraTarget: _initialCameraTarget)
-                    : CityUsersMapScreenAndroid(
-                        initialCameraTarget: _initialCameraTarget),
+                child: Stack(
+                  children: [
+                    Platform.isIOS
+                        ? CityUsersMapScreenIOS(
+                            initialCameraTarget: _initialCameraTarget,
+                            activeLayer: _activeLayer,
+                          )
+                        : CityUsersMapScreenAndroid(
+                            initialCameraTarget: _initialCameraTarget,
+                            activeLayer: _activeLayer,
+                          ),
+                    if (_isAdmin)
+                      Positioned(
+                        top: 8,
+                        left: 0,
+                        right: 0,
+                        child: Center(
+                          child: MapLayerSwitch(
+                            activeLayer: _activeLayer,
+                            onChanged: _setActiveLayer,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ));
   }
 }
