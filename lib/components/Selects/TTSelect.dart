@@ -14,6 +14,10 @@ class TTSelect<T> extends StatelessWidget {
   final Color iconColor;
   final IconData icon;
 
+  /// Optional leading widget rendered before the label (e.g. a color swatch).
+  /// When null, only the text label is shown (default behavior).
+  final Widget? Function(T)? leadingBuilder;
+
   const TTSelect({
     super.key,
     required this.value,
@@ -25,6 +29,7 @@ class TTSelect<T> extends StatelessWidget {
     this.dropdownColor,
     this.iconColor = Colors.white70,
     this.icon = Icons.expand_more,
+    this.leadingBuilder,
   });
 
   @override
@@ -49,17 +54,24 @@ class TTSelect<T> extends StatelessWidget {
           selectedItemBuilder: (context) {
             return items.map((item) {
               final label = labelBuilder(item);
+              final leading = leadingBuilder?.call(item);
+              final text = Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: baseStyle.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              );
               return Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: baseStyle.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                child: leading == null
+                    ? text
+                    : Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [leading, const SizedBox(width: 8), text],
+                      ),
               );
             }).toList();
           },
@@ -68,18 +80,24 @@ class TTSelect<T> extends StatelessWidget {
           items: items.map((item) {
             final bool isSelected = item == value;
             final label = labelBuilder(item);
+            final leading = leadingBuilder?.call(item);
+            final text = Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: baseStyle.copyWith(
+                color: isSelected ? TTColors.text : TTColors.text_secondary,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+              ),
+            );
 
             return DropdownMenuItem<T>(
               value: item,
-              child: Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: baseStyle.copyWith(
-                  color: isSelected ? TTColors.text : TTColors.text_secondary,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                ),
-              ),
+              child: leading == null
+                  ? text
+                  : Row(
+                      children: [leading, const SizedBox(width: 8), text],
+                    ),
             );
           }).toList(),
 

@@ -13,8 +13,13 @@ import '../../../../api/routs/Dto/Car/GeneDto.dart';
 import '../../../../api/routs/Dto/User/UserUpdateDto.dart';
 import '../../../../api/routs/car/car.dart';
 import '../../../../api/routs/root.dart';
+import '../../../../components/Selects/TTSelect.dart';
+import '../../../../components/buttons/GlowingButton.dart';
+import '../../../../components/card/CarImageBlock.dart';
 import '../../../../components/form/FormElements.dart';
 import '../../../../components/generalModule.dart';
+import '../../../../components/inputs/CustomInputField.dart';
+import '../../../../components/layout/TTScaffold.dart';
 
 import 'package:crop_your_image/crop_your_image.dart';
 import 'dart:typed_data';
@@ -151,6 +156,46 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
     }
   }
 
+  Widget _validatedSelect<T>({
+    required T value,
+    required List<T> items,
+    required String Function(T) labelBuilder,
+    required ValueChanged<T?> onChanged,
+    required String errorText,
+    Widget? Function(T)? leadingBuilder,
+  }) {
+    return FormField<T>(
+      initialValue: value,
+      validator: (v) => v == null ? errorText : null,
+      builder: (state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (state.hasError)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4.0, left: 12),
+                child: Text(
+                  state.errorText!,
+                  style: TTTextStyle.subtitle
+                      .copyWith(color: TTColors.danger, fontSize: 13),
+                ),
+              ),
+            TTSelect<T>(
+              value: value,
+              items: items,
+              labelBuilder: labelBuilder,
+              leadingBuilder: leadingBuilder,
+              onChanged: (v) {
+                state.didChange(v);
+                onChanged(v);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -212,7 +257,6 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
     );
   }
 
-
   void _submitImg() async {
     if (widget.carDto.id == 0 || widget.carDto.id == null) {
       MessageModule(
@@ -242,7 +286,7 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
     final isSuccess = await CHECK_API(res, context);
     if (isSuccess) {
       final newImageUrl =
-      jsonDecode(res.body)['data']['imageUrls'].first['url'];
+          jsonDecode(res.body)['data']['imageUrls'].first['url'];
       setState(() {
         customBannerUrl = newImageUrl;
       });
@@ -312,13 +356,14 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
   //
   // }
 
-
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("TT - ${widget.userDto.nameController.text}")),
-      body: Padding(
+    final bool isNewCar = widget.carDto.id == null || widget.carDto.id == 0;
+
+    return TTScaffold(
+      title: "TT - ${widget.userDto.nameController.text}",
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -328,27 +373,25 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
                 onTap: () {
                   _submitImg();
                 },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image(
-                    image: NetworkImage(customBannerUrl ?? CAR_IMAGE_DEFAULT),
-                    height: 220,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+                child: CarImageBlock(
+                  imageUrl: customBannerUrl,
+                  height: 220,
+                ),
+              ),
+              SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Авто ${isNewCar ? 'новий запис' : '#${widget.carDto.id}'} · Власник #${widget.userDto.id}",
+                  style: TTTextStyle.caption,
                 ),
               ),
               SizedBox(height: 24),
-              // SizedBox(height: 16),
-              DropdownButtonFormField<GeneDto>(
+              _validatedSelect<GeneDto?>(
                 value: selectedGene,
-                hint: Text("Виберіть покоління"),
-                items: _genes.map((gene) {
-                  return DropdownMenuItem<GeneDto>(
-                    value: gene,
-                    child: Text(gene.name),
-                  );
-                }).toList(),
+                items: _genes,
+                labelBuilder: (gene) => gene?.name ?? "Виберіть покоління",
+                errorText: "Виберіть покоління",
                 onChanged: (value) {
                   setState(() {
                     if (value != null) {
@@ -356,19 +399,13 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
                     }
                   });
                 },
-                validator: (value) =>
-                    value == null ? "Виберіть покоління" : null,
               ),
               SizedBox(height: 16),
-              DropdownButtonFormField<ModelDto>(
+              _validatedSelect<ModelDto?>(
                 value: selectedModel,
-                hint: Text("Виберіть модель"),
-                items: _models.map((model) {
-                  return DropdownMenuItem<ModelDto>(
-                    value: model,
-                    child: Text(model.name),
-                  );
-                }).toList(),
+                items: _models,
+                labelBuilder: (model) => model?.name ?? "Виберіть модель",
+                errorText: "Виберіть модель",
                 onChanged: (value) {
                   setState(() {
                     if (value != null) {
@@ -376,35 +413,27 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
                     }
                   });
                 },
-                validator: (value) => value == null ? "Виберіть модель" : null,
               ),
               SizedBox(height: 16),
-              DropdownButtonFormField<ColorDto>(
+              _validatedSelect<ColorDto?>(
                 value: selectedColor,
-                hint: Text("Виберіть Колір"),
-                items: _colors.map((color) {
-                  return DropdownMenuItem<ColorDto>(
-                    value: color,
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 16,
-                          height: 16,
-                          margin: const EdgeInsets.only(right: 8),
-                          // отступ справа от кружочка
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: color.hex != null
-                                ? Color(int.parse(
-                                    color.hex!.replaceFirst('#', '0xFF')))
-                                : Colors.transparent,
-                          ),
-                        ),
-                        Text(color.name),
-                      ],
+                items: _colors,
+                labelBuilder: (color) => color?.name ?? "Виберіть колір",
+                errorText: "Виберіть модель",
+                leadingBuilder: (color) {
+                  if (color == null) return null;
+                  return Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: color.hex != null
+                          ? Color(
+                              int.parse(color.hex!.replaceFirst('#', '0xFF')))
+                          : Colors.transparent,
                     ),
                   );
-                }).toList(),
+                },
                 onChanged: (value) {
                   setState(() {
                     if (value != null) {
@@ -412,32 +441,35 @@ class _UpdateCarScreenState extends State<UpdateCarScreen> {
                     }
                   });
                 },
-                validator: (value) => value == null ? "Виберіть модель" : null,
               ),
               SizedBox(height: 16),
-              customBuildTextField('Держ. номер',
-                  widget.carDto.licensePlateController, customValidatorDefault,
-                  isEditable: true),
+              CustomInputField(
+                controller: widget.carDto.licensePlateController,
+                label: 'Держ. номер',
+                validator: customValidatorDefault,
+              ),
               SizedBox(height: 16),
-              customBuildTextField('Індивідуальний номер',
-                  widget.carDto.personalizedLicensePlateController, null,
-                  isEditable: true),
-
+              CustomInputField(
+                controller: widget.carDto.personalizedLicensePlateController,
+                label: 'Індивідуальний номер',
+              ),
               SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    onPressed: _confirmDeleteCar,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red.shade200,
+                  Expanded(
+                    child: GlowingButton(
+                      text: "Видалити",
+                      colorGrowing: Colors.redAccent,
+                      onPressed: _confirmDeleteCar,
                     ),
-                    child: Text("Видалити"),
                   ),
-                  SizedBox(width: 24),
-                  ElevatedButton(
-                    onPressed: _submitForm,
-                    child: Text("Зберегти"),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: GlowingButton(
+                      text: "Зберегти",
+                      onPressed: _submitForm,
+                    ),
                   ),
                 ],
               )

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../api/routs/Dto/Car/CarDto.dart';
 import '../../config/default.dart';
 import '../../pages/Nav/Admin/User/UpdateCarScreen.dart';
+import '../TTNeumorphicBox.dart';
 import '../generalModule.dart';
 
 class CarListWidget extends StatelessWidget {
@@ -36,26 +37,25 @@ class CarListWidget extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: GestureDetector(
                       onTap: onAddTap,
-                      child: Container(
+                      child: TTNeumorphicBox(
                         width: 150,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(color: Colors.black12, blurRadius: 5),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.add, size: 50, color: Colors.black),
-                            SizedBox(height: 10),
-                            Text(
-                              "Додати авто",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                        radius: 24,
+                        padding: const EdgeInsets.all(8),
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.only(right: 8),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add,
+                                  size: 50, color: TTColors.text_secondary),
+                              SizedBox(height: 10),
+                              Text(
+                                "Додати авто",
+                                textAlign: TextAlign.center,
+                                style: TTTextStyle.caption,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -68,36 +68,35 @@ class CarListWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: GestureDetector(
                     onTap: onCarTap != null ? () => onCarTap!(car) : null,
-                    child: Container(
+                    child: TTNeumorphicBox(
                       width: 150,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(color: Colors.black12, blurRadius: 5),
-                        ],
-                      ),
+                      radius: 24,
+                      padding: EdgeInsets.zero,
                       child: Column(
                         children: [
-                          ClipRRect(
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(12)),
-                            child: Image.network(
-                              car.imageUrls.isNotEmpty &&
-                                      car.imageUrls.first?.url != null
-                                  ? car.imageUrls.first!.url
-                                  : CAR_IMAGE_DEFAULT,
-                              width: 150,
-                              height: 120,
-                              fit: BoxFit.cover,
+                          Padding(
+                            padding: EdgeInsetsGeometry.only(right: 8),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(24)),
+                              child: Image.network(
+                                car.imageUrls.isNotEmpty &&
+                                        car.imageUrls.first?.url != null
+                                    ? car.imageUrls.first!.url
+                                    : CAR_IMAGE_DEFAULT,
+                                width: 150,
+                                height: 120,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.only(top: 10),
                             child: Text(
                               "${car.model.name} ${car.gene.name} ${car.generalLicensePlate}",
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TTTextStyle.caption
+                                  .copyWith(fontWeight: FontWeight.w600),
                             ),
                           ),
                         ],
@@ -113,4 +112,3 @@ class CarListWidget extends StatelessWidget {
     );
   }
 }
-

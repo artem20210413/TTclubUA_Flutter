@@ -4,10 +4,15 @@ import 'package:http/http.dart' as http;
 import 'package:tt_club_ua/Storage/Search/UserSearchDto.dart';
 import 'package:tt_club_ua/api/routs/root.dart';
 import 'package:tt_club_ua/api/routs/user.dart';
+import 'package:tt_club_ua/config/default.dart';
 import 'package:tt_club_ua/pages/Nav/Admin/User/UpdateUserScreen.dart';
 
 import '../../../../Storage/UserStorage.dart';
+import '../../../../components/TTLoading.dart';
+import '../../../../components/TTNeumorphicBox.dart';
+import '../../../../components/card/UserAvatar.dart';
 import '../../../../components/interface/SearchBarWidgetState.dart';
+import '../../../../components/layout/TTScaffold.dart';
 import '../../../../components/generalModule.dart';
 
 class SearchUserScreen extends StatefulWidget {
@@ -31,7 +36,6 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
 
   @override
   void initState() {
-
     super.initState();
     fetchSearchResults(page: 1);
     _scrollController = ScrollController();
@@ -89,6 +93,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
       print("Ошибка загрузки: ${res.statusCode}");
     }
   }
+
   void _loadMore() {
     setState(() {
       _isLoadingMore = true;
@@ -97,13 +102,10 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
     fetchSearchResults(page: _page, append: true);
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Користувачі"),
-      ),
+    return TTScaffold(
+      title: "Користувачі",
       body: Column(
         children: [
           SearchBarWidget(
@@ -111,61 +113,91 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
             onSearch: fetchSearchResults,
           ),
           isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? const Expanded(child: Center(child: TTLoading()))
               : Expanded(
                   child: ListView.builder(
                     controller: _scrollController, // ← добавь это
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     itemCount: searchResults.length,
                     itemBuilder: (context, index) {
                       final user = searchResults[index];
                       UserSearchDto dto = UserSearchDto.fromJson(user);
                       bool isActiveUser = dto.active == true;
-                      return Card(
-                        surfaceTintColor:
-                            isActiveUser ? Colors.transparent : Colors.red,
-                        // shadowColor: isActiveUser ? Colors.black : Colors.red,
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 25,
-                            backgroundImage: dto.profileImage,
-                          ),
-                          title: Text(
-                            dto.name,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Column(
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  UpdateUserScreen(dtoSearch: dto),
+                            ),
+                          );
+                        },
+                        child: TTNeumorphicBox(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 16),
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              isActiveUser
-                                  ? SizedBox.shrink()
-                                  : Text("⚠️ Учасник не активний "),
-                              isActiveUser
-                                  ? Text("📍 ${dto.citiesText}")
-                                  : SizedBox.shrink(),
-                              Text("🚗 ${dto.carsText}"),
-                              isActiveUser
-                                  ? Text("📅 ${dto.birthDateText}")
-                                  : SizedBox.shrink(),
-                              isActiveUser
-                                  ? Text("📞 ${dto.phone}")
-                                  : SizedBox.shrink(),
-                              isActiveUser
-                                  ? Text("💼 ${dto.occupationDescription}")
-                                  : SizedBox.shrink(),
+                              UserAvatar(
+                                name: dto.name,
+                                imageUrl: dto.profileImageString,
+                                uniqueKey: 'search-user-${dto.id}',
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      dto.name,
+                                      style: TTTextStyle.title18,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    if (!isActiveUser)
+                                      Text(
+                                        "⚠️ Учасник не активний",
+                                        style: TTTextStyle.caption
+                                            .copyWith(color: TTColors.danger),
+                                      ),
+                                    if (isActiveUser)
+                                      Text(
+                                        "📍 ${dto.citiesText}",
+                                        style: TTTextStyle.caption,
+                                      ),
+                                    Text(
+                                      "🚗 ${dto.carsText}",
+                                      style: TTTextStyle.caption,
+                                    ),
+                                    if (isActiveUser)
+                                      Text(
+                                        "📅 ${dto.birthDateText}",
+                                        style: TTTextStyle.caption,
+                                      ),
+                                    if (isActiveUser)
+                                      Text(
+                                        "📞 ${dto.phone}",
+                                        style: TTTextStyle.caption,
+                                      ),
+                                    if (isActiveUser)
+                                      Text(
+                                        "💼 ${dto.occupationDescription}",
+                                        style: TTTextStyle.caption,
+                                      ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      "#${dto.id}",
+                                      style: TTTextStyle.caption,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Icon(Icons.arrow_forward_ios,
+                                  size: 16, color: TTColors.text_secondary),
                             ],
                           ),
-                          trailing: Icon(Icons.arrow_forward_ios),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    UpdateUserScreen(dtoSearch: dto),
-                              ),
-                            );
-                          },
                         ),
                       );
                     },
