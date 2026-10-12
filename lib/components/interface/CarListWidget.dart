@@ -9,12 +9,14 @@ import '../generalModule.dart';
 class CarListWidget extends StatelessWidget {
   final List<CarDto> cars;
   final void Function(CarDto car)? onCarTap;
+  final void Function(CarDto car)? onImageTap;
   final VoidCallback? onAddTap;
 
   const CarListWidget({
     Key? key,
     required this.cars,
     this.onCarTap,
+    this.onImageTap,
     this.onAddTap,
   }) : super(key: key);
 
@@ -76,18 +78,42 @@ class CarListWidget extends StatelessWidget {
                         children: [
                           Padding(
                             padding: EdgeInsetsGeometry.only(right: 8),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(24)),
-                              child: Image.network(
-                                car.imageUrls.isNotEmpty &&
-                                        car.imageUrls.first?.url != null
-                                    ? car.imageUrls.first!.url
-                                    : CAR_IMAGE_DEFAULT,
-                                width: 150,
-                                height: 120,
-                                fit: BoxFit.cover,
-                              ),
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(24)),
+                                  child: Image.network(
+                                    car.imageUrls.isNotEmpty &&
+                                            car.imageUrls.first?.url != null
+                                        ? car.imageUrls.first!.url
+                                        : CAR_IMAGE_DEFAULT,
+                                    width: 150,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                if (onImageTap != null)
+                                  Positioned(
+                                    bottom: 6,
+                                    right: 6,
+                                    child: GestureDetector(
+                                      onTap: () => onImageTap!(car),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(6),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.black54,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(
+                                          Icons.camera_alt,
+                                          color: Colors.white,
+                                          size: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
                           Padding(

@@ -9,6 +9,7 @@ import 'package:tt_club_ua/api/routs/Dto/User/UserUpdateDto.dart';
 import 'package:tt_club_ua/api/routs/Dto/Car/CarDto.dart';
 import 'package:tt_club_ua/api/routs/user.dart';
 import 'package:tt_club_ua/api/routs/root.dart';
+import 'package:tt_club_ua/api/routs/car/car.dart';
 
 import 'package:tt_club_ua/components/layout/TTScaffold.dart';
 import 'package:tt_club_ua/components/inputs/CustomInputField.dart';
@@ -126,6 +127,28 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
     }
   }
 
+  Future<void> _pickAndUploadCarImage(CarDto car) async {
+    if (car.id == 0 || car.id == null) {
+      MessageModule(
+          context, 'Спочатку збережіть авто', MessageType.information);
+      return;
+    }
+
+    final File? croppedFile = await pickAndCropImage(
+      context: context,
+      aspectRatio: 4 / 3,
+    );
+
+    if (croppedFile == null) return;
+
+    final token = await UserStorage.getToken();
+    final res = await CAR_ADD_COLLECTION(token, car.id ?? 0, croppedFile.path);
+
+    if (await CHECK_API(res, context)) {
+      _fetchUser();
+    }
+  }
+
   Future<void> _pickBirthDate() async {
     final now = DateTime.now();
     DateTime? birthDate = null;
@@ -228,6 +251,7 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                       builder: (_) =>
                           UpdateCarScreen(userDto: dto, carDto: car)),
                 ).then((_) => _fetchUser()),
+                onImageTap: (car) => _pickAndUploadCarImage(car),
                 onAddTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -313,8 +337,8 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                       children: [
                         Text(
                           'Ролі користувача',
-                          style: TTTextStyle.title18
-                              .copyWith(color: Colors.white),
+                          style:
+                              TTTextStyle.title18.copyWith(color: Colors.white),
                         ),
                       ],
                     ),
