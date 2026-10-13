@@ -164,16 +164,16 @@ class _CostFormScreenState extends State<CostFormScreen> {
                   controller: _amountController,
                   label: 'Сума',
                   prefixText: '₴ ',
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true, signed: true),
                   validator: (value) {
                     final v = _amountController.text;
                     if (v == null || v.isEmpty) {
                       return 'Вкажіть суму';
                     }
                     final parsed = double.tryParse(v.trim());
-                    if (parsed == null || parsed <= 0) {
-                      return 'Сума має бути більшою за нуль';
+                    if (parsed == null || parsed == 0) {
+                      return 'Сума не може бути нульовою';
                     }
                     return null;
                   },

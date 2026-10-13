@@ -132,18 +132,18 @@ class _CityUsersMapScreenState extends State<CityUsersMapScreen> {
                             initialCameraTarget: _initialCameraTarget,
                             activeLayer: _activeLayer,
                           ),
-                    if (_isAdmin)
-                      Positioned(
-                        top: 8,
-                        left: 0,
-                        right: 0,
-                        child: Center(
-                          child: MapLayerSwitch(
-                            activeLayer: _activeLayer,
-                            onChanged: _setActiveLayer,
-                          ),
-                        ),
-                      ),
+                    // if (_isAdmin)
+                    //   Positioned(
+                    //     top: 8,
+                    //     left: 0,
+                    //     right: 0,
+                    //     child: Center(
+                    //       child: MapLayerSwitch(
+                    //         activeLayer: _activeLayer,
+                    //         onChanged: _setActiveLayer,
+                    //       ),
+                    //     ),
+                    //   ),
                   ],
                 ),
               ));
